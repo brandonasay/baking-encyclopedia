@@ -1,0 +1,267 @@
+import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import { createClient } from '@/lib/supabase/server'
+import RecipeCard from '@/components/recipes/RecipeCard'
+import RecipeFilters from '@/components/recipes/RecipeFilters'
+import type { RecipeDifficulty, RecipeCategory, Recipe } from '@/lib/database.types'
+
+export const metadata: Metadata = {
+  title: 'Recipes',
+  description:
+    'Browse our full collection of baking recipes — from beginner-friendly breads to advanced pastries.',
+}
+
+const PAGE_SIZE = 24
+
+type SearchParams = Promise<{
+  category?: string
+  difficulty?: string
+  tag?: string | string[]
+  gf?: string
+  hp?: string
+  q?: string
+  page?: string
+}>
+
+export default async function RecipesPage({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams
+  const supabase = await createClient()
+
+  const page = Math.max(1, parseInt(params.page ?? '1', 10))
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
+  // Fetch categories for filter bar
+  const { data: categories } = await supabase
+    .from('recipe_categories')
+    .select('id, slug, name, description, image_url, sort_order, created_at')
+    .order('sort_order')
+
+  // Build recipe query
+  let query = supabase
+    .from('recipes')
+    .select(
+      'id, slug, title, headline, image_url, difficulty, total_time_minutes, tags, has_gluten_free, has_high_protein, category_id',
+      { count: 'exact' }
+    )
+    .eq('published', true)
+    .order('featured', { ascending: false })
+    .order('created_at', { ascending: false })
+    .range(from, to)
+
+  // Text search via search_all RPC — filter ids then query
+  let searchResultIds: string[] | null = null
+  if (params.q) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: searchResults } = await (supabase as any).rpc('search_all', {
+      query: params.q,
+      result_limit: 100,
+    })
+    const typed = (searchResults ?? []) as { id: string; content_type: string }[]
+    searchResultIds = typed
+      .filter((r) => r.content_type === 'recipe')
+      .map((r) => r.id)
+    if (searchResultIds.length === 0) {
+      // No results — short-circuit
+      return (
+        <RecipesPageShell
+          categories={categories ?? []}
+          activeCategory={params.category}
+          activeDifficulty={params.difficulty}
+          activeTags={normalizeTags(params.tag)}
+        >
+          <EmptyState query={params.q} />
+        </RecipesPageShell>
+      )
+    }
+    query = query.in('id', searchResultIds)
+  }
+
+  // Category filter
+  if (params.category) {
+    const { data: cat } = await supabase
+      .from('recipe_categories')
+      .select('id')
+      .eq('slug', params.category)
+      .single()
+    const catTyped = cat as { id: string } | null
+    if (catTyped) {
+      query = query.eq('category_id', catTyped.id)
+    }
+  }
+
+  // Difficulty filter
+  if (params.difficulty) {
+    query = query.eq('difficulty', params.difficulty as RecipeDifficulty)
+  }
+
+  // Tag filter
+  const tags = normalizeTags(params.tag)
+  if (tags.length > 0) {
+    query = query.overlaps('tags', tags)
+  }
+
+  // Diet filters
+  if (params.gf === '1') {
+    query = query.eq('has_gluten_free', true)
+  }
+  if (params.hp === '1') {
+    query = query.eq('has_high_protein', true)
+  }
+
+  const { data: recipesData, count } = await query
+  type RecipeCardFields = Pick<Recipe, 'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'>
+  const recipes = (recipesData ?? []) as RecipeCardFields[]
+
+  const totalCount = count ?? 0
+  const hasMore = to < totalCount - 1
+
+  return (
+    <RecipesPageShell
+      categories={categories ?? []}
+      activeCategory={params.category}
+      activeDifficulty={params.difficulty}
+      activeTags={tags}
+    >
+      {/* Result header */}
+      <div className="flex items-baseline justify-between mb-6">
+        <p className="text-sm text-[#7A6A5E]">
+          {params.q ? (
+            <>
+              {totalCount} result{totalCount !== 1 ? 's' : ''} for{' '}
+              <span className="font-medium text-[#1C1410]">&ldquo;{params.q}&rdquo;</span>
+            </>
+          ) : (
+            <>
+              {totalCount} recipe{totalCount !== 1 ? 's' : ''}
+            </>
+          )}
+        </p>
+      </div>
+
+      {recipes && recipes.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {recipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </div>
+
+          {/* Pagination: load more */}
+          {hasMore && (
+            <div className="mt-12 flex justify-center">
+              <a
+                href={buildPageUrl(params, page + 1)}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C8652A] text-white font-medium hover:bg-[#B55A24] transition-colors"
+              >
+                Load more recipes
+              </a>
+            </div>
+          )}
+        </>
+      ) : (
+        <EmptyState query={params.q} />
+      )}
+    </RecipesPageShell>
+  )
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+function normalizeTags(tag?: string | string[]): string[] {
+  if (!tag) return []
+  return (Array.isArray(tag) ? tag : [tag]).filter(Boolean)
+}
+
+function buildPageUrl(
+  params: Awaited<SearchParams>,
+  nextPage: number
+): string {
+  const qs = new URLSearchParams()
+  if (params.category) qs.set('category', params.category)
+  if (params.difficulty) qs.set('difficulty', params.difficulty)
+  if (params.q) qs.set('q', params.q)
+  if (params.gf) qs.set('gf', params.gf)
+  if (params.hp) qs.set('hp', params.hp)
+  const tags = normalizeTags(params.tag)
+  tags.forEach((t) => qs.append('tag', t))
+  qs.set('page', String(nextPage))
+  return `/recipes?${qs.toString()}`
+}
+
+// ─── Sub-components ─────────────────────────────────────────────────────────
+
+function EmptyState({ query }: { query?: string }) {
+  return (
+    <div className="py-20 text-center space-y-4">
+      <p className="text-5xl" aria-hidden="true">
+        🥐
+      </p>
+      <h2
+        className="text-2xl font-semibold text-[#1C1410]"
+        style={{ fontFamily: 'var(--font-playfair)' }}
+      >
+        No recipes found
+      </h2>
+      <p className="text-[#7A6A5E] max-w-sm mx-auto">
+        {query
+          ? `We couldn't find any recipes matching "${query}". Try a different search or clear your filters.`
+          : "Try adjusting your filters to find what you're looking for."}
+      </p>
+      <a
+        href="/recipes"
+        className="inline-block mt-4 px-5 py-2.5 rounded-xl bg-[#C8652A] text-white font-medium hover:bg-[#B55A24] transition-colors"
+      >
+        Clear all filters
+      </a>
+    </div>
+  )
+}
+
+function RecipesPageShell({
+  categories,
+  activeCategory,
+  activeDifficulty,
+  activeTags,
+  children,
+}: {
+  categories: RecipeCategory[]
+  activeCategory?: string
+  activeDifficulty?: string
+  activeTags: string[]
+  children: React.ReactNode
+}) {
+  return (
+    <main className="min-h-screen bg-[#FAF8F4]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Page header */}
+        <div className="mb-10">
+          <h1
+            className="text-4xl sm:text-5xl font-bold text-[#1C1410] mb-3"
+            style={{ fontFamily: 'var(--font-playfair)' }}
+          >
+            Recipes
+          </h1>
+          <p className="text-lg text-[#7A6A5E]">
+            From simple weeknight bakes to show-stopping celebration cakes.
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div className="mb-8 p-5 bg-white rounded-2xl border border-[#E8E0D5]">
+          <Suspense>
+            <RecipeFilters
+              categories={categories}
+              activeCategory={activeCategory}
+              activeDifficulty={activeDifficulty}
+              activeTags={activeTags}
+            />
+          </Suspense>
+        </div>
+
+        {/* Recipe grid + pagination */}
+        {children}
+      </div>
+    </main>
+  )
+}
