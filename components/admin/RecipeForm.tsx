@@ -309,6 +309,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
   // Image
   const [imageUrl, setImageUrl] = useState(recipe?.image_url ?? iv?.image_url ?? '')
   const [imageAlt, setImageAlt] = useState(recipe?.image_alt ?? '')
+  const [imageUploading, setImageUploading] = useState(false)
 
   // UI state
   const [activeTab, setActiveTab] = useState<Tab>('Basic')
@@ -813,8 +814,43 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
           <>
             <SectionHeading>Image</SectionHeading>
             <div className="space-y-4">
+              {/* Upload */}
               <div>
-                <Label htmlFor="imageUrl">Image URL</Label>
+                <Label>Upload Image</Label>
+                <label className="flex items-center gap-3 cursor-pointer w-fit">
+                  <span className="px-4 py-2 bg-white border border-[#E8E0D5] rounded-lg text-sm text-[#1C1410] hover:border-[#C8652A] hover:text-[#C8652A] transition-colors font-medium">
+                    {imageUploading ? 'Uploading…' : 'Choose file'}
+                  </span>
+                  <span className="text-xs text-[#7A6A5E]">JPG, PNG or WebP · max 5 MB</span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="sr-only"
+                    disabled={imageUploading}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      setImageUploading(true)
+                      try {
+                        const fd = new FormData()
+                        fd.append('file', file)
+                        fd.append('bucket', 'recipe-images')
+                        const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+                        const json = await res.json()
+                        if (!res.ok) throw new Error(json.error ?? 'Upload failed')
+                        setImageUrl(json.url)
+                      } catch (err) {
+                        showToast('error', err instanceof Error ? err.message : 'Upload failed')
+                      } finally {
+                        setImageUploading(false)
+                        e.target.value = ''
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+              <div>
+                <Label htmlFor="imageUrl">Or paste an image URL</Label>
                 <input id="imageUrl" className={inputCls} value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
               </div>
               <div>
