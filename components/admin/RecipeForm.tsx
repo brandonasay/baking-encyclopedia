@@ -475,15 +475,25 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <h1 className="text-2xl font-bold text-[#1C1410]">{isEdit ? `Edit: ${recipe.title}` : 'New Recipe'}</h1>
-        <button
-          type="submit"
-          disabled={saving}
-          className="px-5 py-2.5 bg-[#C8652A] text-white rounded-lg font-medium text-sm hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
-        >
-          {saving ? 'Saving…' : isEdit ? 'Update Recipe' : 'Create Recipe'}
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => setPublished(p => !p)}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors ${published ? 'bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100' : 'bg-white border-[#E8E0D5] text-[#7A6A5E] hover:border-[#C8652A] hover:text-[#C8652A]'}`}
+          >
+            <span className={`w-2 h-2 rounded-full ${published ? 'bg-emerald-500' : 'bg-[#C8B8A2]'}`} />
+            {published ? 'Published' : 'Draft'}
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-5 py-2.5 bg-[#C8652A] text-white rounded-lg font-medium text-sm hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
+          >
+            {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Recipe'}
+          </button>
+        </div>
       </div>
 
       {/* Toast */}
@@ -560,7 +570,6 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               </div>
               <div className="flex gap-6">
                 <Toggle checked={featured} onChange={setFeatured} label="Featured" />
-                <Toggle checked={published} onChange={setPublished} label="Published" />
               </div>
             </div>
           </>
