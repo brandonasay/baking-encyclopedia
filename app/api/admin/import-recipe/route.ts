@@ -4,6 +4,14 @@ import type { RecipeIngredient, RecipeInstruction } from '@/lib/database.types'
 
 const anthropic = new Anthropic()
 
+const BROWSER_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'Accept-Language': 'en-US,en;q=0.9',
+  'Cache-Control': 'no-cache',
+  'Upgrade-Insecure-Requests': '1',
+}
+
 function parseIsoDuration(iso: string | undefined): number | null {
   if (!iso) return null
   const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)
@@ -91,7 +99,7 @@ function mapJsonLd(ld: Record<string, unknown>) {
 
 async function extractWithClaude(pageText: string, url: string) {
   const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: 'claude-haiku-4-5-20251001',
     max_tokens: 4096,
     messages: [{
       role: 'user',
@@ -129,6 +137,17 @@ ${pageText}`,
   return JSON.parse(jsonMatch[0])
 }
 
+// Fetch via Jina.ai Reader — handles JS rendering and bypasses most bot protection, free
+async function fetchViaJina(url: string): Promise<string> {
+  const res = await fetch(`https://r.jina.ai/${url}`, {
+    headers: { ...BROWSER_HEADERS, 'Accept': 'text/plain' },
+    signal: AbortSignal.timeout(30000),
+  })
+  if (!res.ok) throw new Error(`Jina HTTP ${res.status}`)
+  const text = await res.text()
+  return text.slice(0, 12000)
+}
+
 export async function POST(request: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -140,38 +159,27 @@ export async function POST(request: Request) {
   const { url } = await request.json() as { url: string }
   if (!url) return Response.json({ error: 'url is required' }, { status: 400 })
 
-  let html: string
+  // Fast path: direct fetch → JSON-LD (no AI cost)
   try {
     const res = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'none',
-        'Upgrade-Insecure-Requests': '1',
-      },
+      headers: BROWSER_HEADERS,
       signal: AbortSignal.timeout(15000),
     })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    html = await res.text()
-  } catch (err) {
-    return Response.json({ error: `Could not fetch URL: ${(err as Error).message}` }, { status: 422 })
-  }
+    if (res.ok) {
+      const html = await res.text()
+      const ld = extractJsonLd(html)
+      if (ld) {
+        return Response.json({ data: mapJsonLd(ld), source: 'json-ld' })
+      }
+      // No JSON-LD — send page text to Claude
+      const data = await extractWithClaude(stripHtml(html), url)
+      return Response.json({ data, source: 'claude' })
+    }
+  } catch {}
 
-  // Fast path: JSON-LD
-  const ld = extractJsonLd(html)
-  if (ld) {
-    return Response.json({ data: mapJsonLd(ld), source: 'json-ld' })
-  }
-
-  // Slow path: Claude
+  // Fallback: Jina.ai reader handles bot-protected sites → Claude
   try {
-    const pageText = stripHtml(html)
+    const pageText = await fetchViaJina(url)
     const data = await extractWithClaude(pageText, url)
     return Response.json({ data, source: 'claude' })
   } catch (err) {
