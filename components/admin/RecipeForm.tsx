@@ -218,21 +218,25 @@ type Tab = (typeof TABS)[number]
 
 // ─── Main component ─────────────────────────────────────────────────────────
 
+import type { ImportedRecipeData } from '@/components/admin/RecipeImporter'
+
 interface RecipeFormProps {
   recipe?: Recipe
   categories: RecipeCategory[]
   subcategories: RecipeSubcategory[]
+  initialValues?: ImportedRecipeData
 }
 
-export default function RecipeForm({ recipe, categories, subcategories }: RecipeFormProps) {
+export default function RecipeForm({ recipe, categories, subcategories, initialValues }: RecipeFormProps) {
   const router = useRouter()
   const isEdit = !!recipe
+  const iv = initialValues
 
   // Basic Info
-  const [title, setTitle] = useState(recipe?.title ?? '')
+  const [title, setTitle] = useState(recipe?.title ?? iv?.title ?? '')
   const [slug, setSlug] = useState(recipe?.slug ?? '')
   const [slugManual, setSlugManual] = useState(isEdit)
-  const [headline, setHeadline] = useState(recipe?.headline ?? '')
+  const [headline, setHeadline] = useState(recipe?.headline ?? iv?.headline ?? '')
   const [categoryId, setCategoryId] = useState(recipe?.category_id ?? '')
   const [subcategoryId, setSubcategoryId] = useState(recipe?.subcategory_id ?? '')
   const [difficulty, setDifficulty] = useState<RecipeDifficulty>(recipe?.difficulty ?? 'beginner')
@@ -240,25 +244,29 @@ export default function RecipeForm({ recipe, categories, subcategories }: Recipe
   const [published, setPublished] = useState(recipe?.published ?? false)
 
   // Times & Yield
-  const [prepTime, setPrepTime] = useState(String(recipe?.prep_time_minutes ?? ''))
-  const [cookTime, setCookTime] = useState(String(recipe?.cook_time_minutes ?? ''))
-  const [baseYield, setBaseYield] = useState(recipe?.base_yield ?? '')
-  const [baseServings, setBaseServings] = useState(String(recipe?.base_servings ?? ''))
+  const [prepTime, setPrepTime] = useState(String(recipe?.prep_time_minutes ?? iv?.prep_time_minutes ?? ''))
+  const [cookTime, setCookTime] = useState(String(recipe?.cook_time_minutes ?? iv?.cook_time_minutes ?? ''))
+  const [baseYield, setBaseYield] = useState(recipe?.base_yield ?? iv?.base_yield ?? '')
+  const [baseServings, setBaseServings] = useState(String(recipe?.base_servings ?? iv?.base_servings ?? ''))
 
   // Ingredients
   const [ingredients, setIngredients] = useState<RecipeIngredient[]>(
-    recipe?.ingredients?.length ? recipe.ingredients : [emptyIngredient()]
+    recipe?.ingredients?.length ? recipe.ingredients
+    : iv?.ingredients?.length ? iv.ingredients
+    : [emptyIngredient()]
   )
 
   // Instructions
   const [instructions, setInstructions] = useState<RecipeInstruction[]>(
-    recipe?.instructions?.length ? recipe.instructions : [emptyInstruction(1)]
+    recipe?.instructions?.length ? recipe.instructions
+    : iv?.instructions?.length ? iv.instructions
+    : [emptyInstruction(1)]
   )
 
   // Details
-  const [tips, setTips] = useState<string[]>(recipe?.tips ?? [''])
-  const [equipment, setEquipment] = useState<string[]>(recipe?.equipment ?? [''])
-  const [storageInstructions, setStorageInstructions] = useState(recipe?.storage_instructions ?? '')
+  const [tips, setTips] = useState<string[]>(recipe?.tips ?? iv?.tips ?? [''])
+  const [equipment, setEquipment] = useState<string[]>(recipe?.equipment ?? iv?.equipment ?? [''])
+  const [storageInstructions, setStorageInstructions] = useState(recipe?.storage_instructions ?? iv?.storage_instructions ?? '')
 
   // Variants — Gluten Free
   const [hasGlutenFree, setHasGlutenFree] = useState(recipe?.has_gluten_free ?? false)
@@ -289,7 +297,7 @@ export default function RecipeForm({ recipe, categories, subcategories }: Recipe
   const [fiberG, setFiberG] = useState(String(nutrition?.fiber_g ?? ''))
 
   // Tags
-  const [tags, setTags] = useState(arrayToCSV(recipe?.tags ?? []))
+  const [tags, setTags] = useState(arrayToCSV(recipe?.tags ?? iv?.tags ?? []))
   const [occasionTags, setOccasionTags] = useState(arrayToCSV(recipe?.occasion_tags ?? []))
   const [seasonTags, setSeasonTags] = useState(arrayToCSV(recipe?.season_tags ?? []))
   const [dietaryTags, setDietaryTags] = useState(arrayToCSV(recipe?.dietary_tags ?? []))
@@ -299,7 +307,7 @@ export default function RecipeForm({ recipe, categories, subcategories }: Recipe
   const [seoDescription, setSeoDescription] = useState(recipe?.seo_description ?? '')
 
   // Image
-  const [imageUrl, setImageUrl] = useState(recipe?.image_url ?? '')
+  const [imageUrl, setImageUrl] = useState(recipe?.image_url ?? iv?.image_url ?? '')
   const [imageAlt, setImageAlt] = useState(recipe?.image_alt ?? '')
 
   // UI state
