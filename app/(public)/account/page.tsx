@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Profile } from '@/lib/database.types'
+
+export const revalidate = 0
 import Link from 'next/link'
 import AccountSettingsForm from './AccountSettingsForm'
 import SignOutButton from './SignOutButton'

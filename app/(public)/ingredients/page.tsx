@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
+
+export const revalidate = 3600
 import IngredientCard from '@/components/ingredients/IngredientCard'
 import IngredientSearchBar from '@/components/ingredients/IngredientSearchBar'
 import type { Ingredient } from '@/lib/database.types'

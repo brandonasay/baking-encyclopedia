@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import type { Collection } from '@/lib/database.types'
+
+export const revalidate = 0
 import { BookOpen } from 'lucide-react'
 import CollectionsManager from './CollectionsManager'
 

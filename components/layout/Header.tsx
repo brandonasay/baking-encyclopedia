@@ -78,16 +78,38 @@ export default function Header() {
             <Link
               href="/"
               style={{
-                fontFamily: 'var(--font-playfair), Georgia, serif',
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                color: 'var(--color-text)',
                 textDecoration: 'none',
                 whiteSpace: 'nowrap',
-                letterSpacing: '-0.01em',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1px',
               }}
             >
-              Baking Encyclopedia
+              <span
+                style={{
+                  fontFamily: 'var(--font-playfair), Georgia, serif',
+                  fontSize: '1.25rem',
+                  fontWeight: 700,
+                  color: 'var(--color-text)',
+                  letterSpacing: '-0.01em',
+                  lineHeight: 1.1,
+                }}
+              >
+                Baking Encyclopedia
+              </span>
+              <span
+                style={{
+                  fontSize: '0.625rem',
+                  fontWeight: 600,
+                  color: 'var(--color-muted)',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  fontVariant: 'small-caps',
+                  lineHeight: 1,
+                }}
+              >
+                by Homebaked
+              </span>
             </Link>
 
             <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flex: 1 }} className="hidden md:flex">

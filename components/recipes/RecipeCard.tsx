@@ -17,6 +17,7 @@ type RecipeCardProps = {
     | 'has_gluten_free'
     | 'has_high_protein'
   >
+  categorySlug?: string
 }
 
 const difficultyConfig = {
@@ -34,13 +35,13 @@ const difficultyConfig = {
   },
 }
 
-export default function RecipeCard({ recipe }: RecipeCardProps) {
+export default function RecipeCard({ recipe, categorySlug }: RecipeCardProps) {
   const difficulty = difficultyConfig[recipe.difficulty]
   const visibleTags = recipe.tags?.slice(0, 2) ?? []
 
   return (
     <Link
-      href={`/recipes/${recipe.slug}`}
+      href={categorySlug ? `/recipes/${categorySlug}/${recipe.slug}` : `/recipes/${recipe.slug}`}
       className="group block h-full"
       aria-label={recipe.title}
     >

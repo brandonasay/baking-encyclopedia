@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { GroceryList, GroceryListCheck, RecipeIngredient } from '@/lib/database.types'
+
+export const revalidate = 0
 import { ShoppingCart } from 'lucide-react'
 import GroceryListView from './GroceryListView'
 

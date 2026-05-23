@@ -6,6 +6,8 @@ import HowToCard from '@/components/howto/HowToCard'
 import NewsletterForm from './NewsletterForm'
 import type { Recipe, HowToArticle, RecipeCategory } from '@/lib/database.types'
 
+export const revalidate = 3600
+
 // ---------------------------------------------------------------------------
 // Category emoji map
 // ---------------------------------------------------------------------------
@@ -40,7 +42,7 @@ export default async function HomePage() {
   const [recipesResult, articlesResult, categoriesResult] = await Promise.all([
     supabase
       .from('recipes')
-      .select('id,slug,title,headline,image_url,difficulty,total_time_minutes,tags,has_gluten_free,has_high_protein')
+      .select('id,slug,title,headline,image_url,difficulty,total_time_minutes,tags,has_gluten_free,has_high_protein,recipe_categories(slug)')
       .eq('published', true)
       .eq('featured', true)
       .limit(6),
@@ -56,10 +58,10 @@ export default async function HomePage() {
       .order('sort_order'),
   ])
 
-  const featuredRecipes = (recipesResult.data ?? []) as Array<Pick<
+  const featuredRecipes = (recipesResult.data ?? []) as unknown as Array<Pick<
     Recipe,
     'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'
-  >>
+  > & { recipe_categories: { slug: string } | null }>
   const latestArticles = (articlesResult.data ?? []) as Array<Pick<
     HowToArticle,
     'id' | 'slug' | 'title' | 'headline' | 'section' | 'image_url' | 'read_time_minutes' | 'tags'
@@ -136,7 +138,7 @@ export default async function HomePage() {
         {featuredRecipes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard key={recipe.id} recipe={recipe} categorySlug={(recipe as any).recipe_categories?.slug} />
             ))}
           </div>
         ) : (
@@ -162,7 +164,7 @@ export default async function HomePage() {
               {categories.map((cat) => (
                 <Link
                   key={cat.id}
-                  href={`/recipes?category=${cat.slug}`}
+                  href={`/recipes/${cat.slug}`}
                   className="snap-start shrink-0 flex flex-col items-center gap-2 px-5 py-4 rounded-xl border border-[#E8E0D5] bg-[#FAF8F4] hover:border-[#C8652A] hover:bg-[#F5EDE4] transition-colors duration-150 min-w-[100px]"
                 >
                   <span className="text-2xl" aria-hidden="true">{getCategoryEmoji(cat.slug)}</span>

@@ -8,6 +8,8 @@ import RecipeCard from '@/components/recipes/RecipeCard'
 import HowToCard from '@/components/howto/HowToCard'
 import type { HowToArticle, Recipe } from '@/lib/database.types'
 
+export const revalidate = 3600
+
 type Props = {
   params: Promise<{ slug: string }>
 }
@@ -19,6 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .from('howto_articles')
     .select('title, headline, seo_title, seo_description, image_url')
     .eq('slug', slug)
+    .eq('section', 'baking')
     .eq('published', true)
     .single() as { data: Pick<HowToArticle, 'title' | 'headline' | 'seo_title' | 'seo_description' | 'image_url'> | null; error: unknown }
 
@@ -35,12 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const sectionLabels: Record<string, string> = {
-  baking: 'Baking',
-  microbakery: 'Microbakery',
-}
-
-export default async function HowToArticlePage({ params }: Props) {
+export default async function BakingArticlePage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
 
@@ -48,12 +46,12 @@ export default async function HowToArticlePage({ params }: Props) {
     .from('howto_articles')
     .select('*')
     .eq('slug', slug)
+    .eq('section', 'baking')
     .eq('published', true)
     .single() as { data: HowToArticle | null; error: unknown }
 
   if (!article) notFound()
 
-  // Fetch related content in parallel
   type RelatedRecipe = Pick<
     Recipe,
     'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'
@@ -147,18 +145,14 @@ export default async function HowToArticlePage({ params }: Props) {
                 How-To
               </Link>
               <span>/</span>
-              <span className="text-white/80">{sectionLabels[article.section] ?? article.section}</span>
+              <Link href="/how-to/baking" className="hover:text-white transition-colors">
+                Baking
+              </Link>
             </nav>
 
             <div className="flex items-center gap-3 mb-5">
-              <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                  article.section === 'microbakery'
-                    ? 'bg-stone-100/20 text-stone-100'
-                    : 'bg-[#C8652A]/80 text-white'
-                }`}
-              >
-                {sectionLabels[article.section] ?? article.section}
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#C8652A]/80 text-white">
+                Baking
               </span>
 
               {article.read_time_minutes != null && (

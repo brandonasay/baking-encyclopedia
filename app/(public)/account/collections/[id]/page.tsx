@@ -7,13 +7,16 @@ import CollectionDetailManager from './CollectionDetailManager'
 import RemoveFromCollectionButton from './RemoveFromCollectionButton'
 import { BookOpen, Globe, Lock, ArrowLeft, Link as LinkIcon } from 'lucide-react'
 
+// User-specific page — no ISR caching
+export const revalidate = 0
+
 type CollectionItem = {
   id: string
   sort_order: number
-  recipes: Pick<
+  recipes: (Pick<
     Recipe,
     'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'
-  > | null
+  > & { recipe_categories: { slug: string } | null }) | null
 }
 
 type CollectionWithItems = Collection & {
@@ -33,7 +36,7 @@ export default async function CollectionDetailPage({
 
   const { data } = await supabase
     .from('collections')
-    .select('*, collection_items(id, sort_order, recipes(id,slug,title,headline,image_url,difficulty,total_time_minutes,tags,has_gluten_free,has_high_protein))')
+    .select('*, collection_items(id, sort_order, recipes(id,slug,title,headline,image_url,difficulty,total_time_minutes,tags,has_gluten_free,has_high_protein,recipe_categories(slug)))')
     .eq('id', id)
     .eq('user_id', user.id)
     .single()
@@ -137,7 +140,7 @@ export default async function CollectionDetailPage({
               const recipe = item.recipes!
               return (
                 <div key={item.id} className="relative">
-                  <RecipeCard recipe={recipe} />
+                  <RecipeCard recipe={recipe} categorySlug={(recipe as any).recipe_categories?.slug} />
                   <RemoveFromCollectionButton
                     collectionId={id}
                     itemId={item.id}
@@ -151,4 +154,3 @@ export default async function CollectionDetailPage({
     </div>
   )
 }
-

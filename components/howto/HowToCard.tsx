@@ -26,7 +26,7 @@ export default function HowToCard({ article }: HowToCardProps) {
 
   return (
     <Link
-      href={`/how-to/${article.slug}`}
+      href={`/how-to/${article.section}/${article.slug}`}
       className="group block h-full"
       aria-label={article.title}
     >

@@ -33,6 +33,9 @@ export default async function SearchPage({ searchParams }: PageProps) {
   let results: SearchResult[] = []
   let error = false
 
+  let howtoSectionMap: Record<string, string> = {}
+  let recipeCatMap: Record<string, string> = {}
+
   if (query) {
     const supabase = await createClient()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,6 +47,28 @@ export default async function SearchPage({ searchParams }: PageProps) {
       error = true
     } else {
       results = data ?? []
+
+      // Secondary fetches for correct URLs
+      const howtoIds = results.filter((r) => r.content_type === 'howto').map((r) => r.id)
+      const recipeIds = results.filter((r) => r.content_type === 'recipe').map((r) => r.id)
+
+      const [howtoRes, recipeRes] = await Promise.all([
+        howtoIds.length > 0
+          ? supabase.from('howto_articles').select('id, section').in('id', howtoIds)
+          : Promise.resolve({ data: [] }),
+        recipeIds.length > 0
+          ? supabase.from('recipes').select('id, recipe_categories(slug)').in('id', recipeIds)
+          : Promise.resolve({ data: [] }),
+      ])
+
+      howtoSectionMap = Object.fromEntries(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ((howtoRes.data ?? []) as any[]).map((h) => [h.id, h.section])
+      )
+      recipeCatMap = Object.fromEntries(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ((recipeRes.data ?? []) as any[]).map((r) => [r.id, r.recipe_categories?.slug])
+      )
     }
   }
 
@@ -166,7 +191,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {recipes.map((result) => (
-                    <SearchRecipeCard key={result.id} result={result} />
+                    <SearchRecipeCard key={result.id} result={result} categorySlug={recipeCatMap[result.id]} />
                   ))}
                 </div>
               </section>
@@ -208,7 +233,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {howtos.map((result) => (
-                    <SearchHowToCard key={result.id} result={result} />
+                    <SearchHowToCard key={result.id} result={result} section={howtoSectionMap[result.id]} />
                   ))}
                 </div>
               </section>
@@ -221,9 +246,10 @@ export default async function SearchPage({ searchParams }: PageProps) {
 }
 
 // Lightweight cards built from SearchResult shape (no full row fetch needed)
-function SearchRecipeCard({ result }: { result: SearchResult }) {
+function SearchRecipeCard({ result, categorySlug }: { result: SearchResult; categorySlug?: string }) {
+  const href = categorySlug ? `/recipes/${categorySlug}/${result.slug}` : `/recipes/${result.slug}`
   return (
-    <Link href={`/recipes/${result.slug}`} className="group block h-full">
+    <Link href={href} className="group block h-full">
       <article className="bg-white rounded-xl overflow-hidden border border-[#E8E0D5] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C8652A]/10">
         {result.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -295,9 +321,10 @@ function SearchIngredientCard({ result }: { result: SearchResult }) {
   )
 }
 
-function SearchHowToCard({ result }: { result: SearchResult }) {
+function SearchHowToCard({ result, section }: { result: SearchResult; section?: string }) {
+  const resolvedSection = section ?? 'baking'
   return (
-    <Link href={`/how-to/${result.slug}`} className="group block h-full">
+    <Link href={`/how-to/${resolvedSection}/${result.slug}`} className="group block h-full">
       <article className="bg-white rounded-xl overflow-hidden border border-[#E8E0D5] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C8652A]/10">
         {result.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element

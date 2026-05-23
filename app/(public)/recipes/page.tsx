@@ -5,6 +5,8 @@ import RecipeCard from '@/components/recipes/RecipeCard'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
 import type { RecipeDifficulty, RecipeCategory, Recipe } from '@/lib/database.types'
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Recipes',
   description:
@@ -41,7 +43,7 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
   let query = supabase
     .from('recipes')
     .select(
-      'id, slug, title, headline, image_url, difficulty, total_time_minutes, tags, has_gluten_free, has_high_protein, category_id',
+      'id, slug, title, headline, image_url, difficulty, total_time_minutes, tags, has_gluten_free, has_high_protein, category_id, recipe_categories(slug)',
       { count: 'exact' }
     )
     .eq('published', true)
@@ -110,8 +112,8 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
   }
 
   const { data: recipesData, count } = await query
-  type RecipeCardFields = Pick<Recipe, 'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'>
-  const recipes = (recipesData ?? []) as RecipeCardFields[]
+  type RecipeCardFields = Pick<Recipe, 'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'> & { recipe_categories?: { slug: string } | null }
+  const recipes = (recipesData ?? []) as unknown as RecipeCardFields[]
 
   const totalCount = count ?? 0
   const hasMore = to < totalCount - 1
@@ -143,7 +145,7 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard key={recipe.id} recipe={recipe} categorySlug={(recipe as any).recipe_categories?.slug} />
             ))}
           </div>
 

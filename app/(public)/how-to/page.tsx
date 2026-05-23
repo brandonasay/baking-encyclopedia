@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { BookOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import HowToCard from '@/components/howto/HowToCard'
 import type { HowToArticle } from '@/lib/database.types'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'How-To Guides',
@@ -85,9 +88,12 @@ export default async function HowToPage() {
                 Baking Techniques
               </h2>
               <div className="flex-1 h-px bg-[#E8E0D5]" />
-              <span className="text-sm text-[#7A6A5E]">
-                {baking.length} guide{baking.length === 1 ? '' : 's'}
-              </span>
+              <Link
+                href="/how-to/baking"
+                className="text-sm text-[#C8652A] hover:underline whitespace-nowrap"
+              >
+                See all ({baking.length})
+              </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {baking.map((article) => (
@@ -108,9 +114,12 @@ export default async function HowToPage() {
                 Microbakery
               </h2>
               <div className="flex-1 h-px bg-[#E8E0D5]" />
-              <span className="text-sm text-[#7A6A5E]">
-                {microbakery.length} guide{microbakery.length === 1 ? '' : 's'}
-              </span>
+              <Link
+                href="/how-to/microbakery"
+                className="text-sm text-[#C8652A] hover:underline whitespace-nowrap"
+              >
+                See all ({microbakery.length})
+              </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {microbakery.map((article) => (

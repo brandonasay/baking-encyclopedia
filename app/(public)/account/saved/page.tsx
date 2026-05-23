@@ -6,12 +6,15 @@ import type { Recipe } from '@/lib/database.types'
 import UnsaveButton from './UnsaveButton'
 import { Bookmark } from 'lucide-react'
 
+// User-specific page — no ISR caching
+export const revalidate = 0
+
 type SavedRow = {
   saved_at: string
-  recipes: Pick<
+  recipes: (Pick<
     Recipe,
     'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'
-  > | null
+  > & { recipe_categories: { slug: string } | null }) | null
 }
 
 export default async function SavedRecipesPage() {
@@ -22,7 +25,7 @@ export default async function SavedRecipesPage() {
 
   const { data } = await supabase
     .from('saved_recipes')
-    .select('saved_at, recipes(id,slug,title,headline,image_url,difficulty,total_time_minutes,tags,has_gluten_free,has_high_protein)')
+    .select('saved_at, recipes(id,slug,title,headline,image_url,difficulty,total_time_minutes,tags,has_gluten_free,has_high_protein,recipe_categories(slug))')
     .eq('user_id', user.id)
     .order('saved_at', { ascending: false })
 
@@ -80,7 +83,7 @@ export default async function SavedRecipesPage() {
               const recipe = row.recipes!
               return (
                 <div key={recipe.id} className="relative">
-                  <RecipeCard recipe={recipe} />
+                  <RecipeCard recipe={recipe} categorySlug={(recipe as any).recipe_categories?.slug} />
                   <div className="absolute top-3 right-3 z-10">
                     <UnsaveButton recipeId={recipe.id} />
                   </div>

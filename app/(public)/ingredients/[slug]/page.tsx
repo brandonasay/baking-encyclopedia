@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+
+export const revalidate = 3600
 import type { Ingredient } from '@/lib/database.types'
 
 type Props = {
