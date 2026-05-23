@@ -2,6 +2,8 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import type { Profile } from '@/lib/database.types'
 import ExportMailingListButton from './ExportMailingListButton'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = { title: 'Users' }
 
 function formatDate(dateStr: string) {

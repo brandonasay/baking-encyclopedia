@@ -3,6 +3,8 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import type { HowToArticle } from '@/lib/database.types'
 import DeleteButton from '../recipes/DeleteButton'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = { title: 'How-Tos' }
 
 type ArticleRow = Pick<HowToArticle, 'id' | 'title' | 'slug' | 'section' | 'published' | 'featured' | 'created_at'>

@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import type { Recipe, RecipeDifficulty } from '@/lib/database.types'
 import DeleteButton from './DeleteButton'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Recipes' }
 
 type RecipeRow = Pick<Recipe, 'id' | 'title' | 'slug' | 'difficulty' | 'published' | 'featured' | 'created_at'> & {

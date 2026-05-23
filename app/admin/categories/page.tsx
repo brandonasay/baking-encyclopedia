@@ -1,6 +1,8 @@
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import CategoriesManager from './CategoriesManager'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = { title: 'Categories' }
 
 type SubcategoryRow = {

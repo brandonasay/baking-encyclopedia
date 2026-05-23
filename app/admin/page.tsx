@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import type { AdminCounts, Recipe, HowToArticle } from '@/lib/database.types'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Dashboard' }
 
 export default async function AdminDashboardPage() {
