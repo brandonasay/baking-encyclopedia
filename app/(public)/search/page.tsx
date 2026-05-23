@@ -80,29 +80,29 @@ export default async function SearchPage({ searchParams }: PageProps) {
   const totalCount = results.length
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4]">
+    <div className="min-h-screen bg-[#FCFFEB]">
       {/* Header */}
-      <div className="bg-white border-b border-[#E8E0D5]">
+      <div className="bg-white border-b border-[#EBD2AD]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
           {query ? (
             <h1
-              className="text-3xl md:text-4xl text-[#1C1410] mb-6"
+              className="text-3xl md:text-4xl text-[#201D20] mb-6"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Results for &ldquo;{query}&rdquo;
             </h1>
           ) : (
             <>
-              <p className="text-[#C8652A] text-sm font-medium uppercase tracking-widest mb-3">
+              <p className="text-[#C58930] text-sm font-medium uppercase tracking-widest mb-3">
                 Search
               </p>
               <h1
-                className="text-4xl md:text-5xl text-[#1C1410] mb-4"
+                className="text-4xl md:text-5xl text-[#201D20] mb-4"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
                 Find anything
               </h1>
-              <p className="text-[#7A6A5E] text-lg mb-8">
+              <p className="text-[#6D5E6D] text-lg mb-8">
                 Search across recipes, ingredients, and how-to guides.
               </p>
             </>
@@ -118,7 +118,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
         {/* Error state */}
         {error && (
           <div className="text-center py-16">
-            <p className="text-[#7A6A5E]">Something went wrong. Please try again.</p>
+            <p className="text-[#6D5E6D]">Something went wrong. Please try again.</p>
           </div>
         )}
 
@@ -126,7 +126,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
         {!query && !error && (
           <div>
             <h2
-              className="text-xl text-[#1C1410] mb-5"
+              className="text-xl text-[#201D20] mb-5"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Popular topics
@@ -136,7 +136,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
                 <Link
                   key={s.href}
                   href={s.href}
-                  className="px-4 py-2 rounded-full bg-white border border-[#E8E0D5] text-[#7A6A5E] text-sm hover:border-[#C8652A] hover:text-[#C8652A] transition-colors"
+                  className="px-4 py-2 rounded-full bg-white border border-[#EBD2AD] text-[#6D5E6D] text-sm hover:border-[#C58930] hover:text-[#C58930] transition-colors"
                 >
                   {s.label}
                 </Link>
@@ -149,18 +149,18 @@ export default async function SearchPage({ searchParams }: PageProps) {
         {query && !error && totalCount === 0 && (
           <div className="text-center py-16">
             <p
-              className="text-2xl text-[#1C1410] mb-3"
+              className="text-2xl text-[#201D20] mb-3"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               No results for &ldquo;{query}&rdquo;
             </p>
-            <p className="text-[#7A6A5E] mb-8">Try a different term, or explore these topics:</p>
+            <p className="text-[#6D5E6D] mb-8">Try a different term, or explore these topics:</p>
             <div className="flex flex-wrap gap-3 justify-center">
               {SUGGESTIONS.map((s) => (
                 <Link
                   key={s.href}
                   href={s.href}
-                  className="px-4 py-2 rounded-full bg-white border border-[#E8E0D5] text-[#7A6A5E] text-sm hover:border-[#C8652A] hover:text-[#C8652A] transition-colors"
+                  className="px-4 py-2 rounded-full bg-white border border-[#EBD2AD] text-[#6D5E6D] text-sm hover:border-[#C58930] hover:text-[#C58930] transition-colors"
                 >
                   {s.label}
                 </Link>
@@ -172,7 +172,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
         {/* Results */}
         {query && totalCount > 0 && (
           <div className="space-y-14">
-            <p className="text-sm text-[#7A6A5E] -mt-2 mb-6">
+            <p className="text-sm text-[#6D5E6D] -mt-2 mb-6">
               {totalCount} result{totalCount === 1 ? '' : 's'}
             </p>
 
@@ -181,13 +181,13 @@ export default async function SearchPage({ searchParams }: PageProps) {
               <section>
                 <div className="flex items-center gap-4 mb-6">
                   <h2
-                    className="text-2xl text-[#1C1410]"
+                    className="text-2xl text-[#201D20]"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Recipes
                   </h2>
-                  <div className="flex-1 h-px bg-[#E8E0D5]" />
-                  <span className="text-sm text-[#7A6A5E]">{recipes.length}</span>
+                  <div className="flex-1 h-px bg-[#EBD2AD]" />
+                  <span className="text-sm text-[#6D5E6D]">{recipes.length}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {recipes.map((result) => (
@@ -202,13 +202,13 @@ export default async function SearchPage({ searchParams }: PageProps) {
               <section>
                 <div className="flex items-center gap-4 mb-6">
                   <h2
-                    className="text-2xl text-[#1C1410]"
+                    className="text-2xl text-[#201D20]"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Ingredients
                   </h2>
-                  <div className="flex-1 h-px bg-[#E8E0D5]" />
-                  <span className="text-sm text-[#7A6A5E]">{ingredients.length}</span>
+                  <div className="flex-1 h-px bg-[#EBD2AD]" />
+                  <span className="text-sm text-[#6D5E6D]">{ingredients.length}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {ingredients.map((result) => (
@@ -223,13 +223,13 @@ export default async function SearchPage({ searchParams }: PageProps) {
               <section>
                 <div className="flex items-center gap-4 mb-6">
                   <h2
-                    className="text-2xl text-[#1C1410]"
+                    className="text-2xl text-[#201D20]"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     How-To Guides
                   </h2>
-                  <div className="flex-1 h-px bg-[#E8E0D5]" />
-                  <span className="text-sm text-[#7A6A5E]">{howtos.length}</span>
+                  <div className="flex-1 h-px bg-[#EBD2AD]" />
+                  <span className="text-sm text-[#6D5E6D]">{howtos.length}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {howtos.map((result) => (
@@ -250,7 +250,7 @@ function SearchRecipeCard({ result, categorySlug }: { result: SearchResult; cate
   const href = categorySlug ? `/recipes/${categorySlug}/${result.slug}` : `/recipes/${result.slug}`
   return (
     <Link href={href} className="group block h-full">
-      <article className="bg-white rounded-xl overflow-hidden border border-[#E8E0D5] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C8652A]/10">
+      <article className="bg-white rounded-xl overflow-hidden border border-[#EBD2AD] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C58930]/10">
         {result.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -259,9 +259,9 @@ function SearchRecipeCard({ result, categorySlug }: { result: SearchResult; cate
             className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F5EDE4] to-[#E8D5C4] flex items-end p-4">
+          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F5EAC8] to-[#D6BE97] flex items-end p-4">
             <span
-              className="text-[#7A6A5E] text-sm line-clamp-2"
+              className="text-[#6D5E6D] text-sm line-clamp-2"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {result.title}
@@ -270,13 +270,13 @@ function SearchRecipeCard({ result, categorySlug }: { result: SearchResult; cate
         )}
         <div className="p-4 flex flex-col flex-1 gap-2">
           <h3
-            className="text-lg leading-snug text-[#1C1410] line-clamp-2 group-hover:text-[#C8652A] transition-colors"
+            className="text-lg leading-snug text-[#201D20] line-clamp-2 group-hover:text-[#C58930] transition-colors"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             {result.title}
           </h3>
           {result.headline && (
-            <p className="text-sm text-[#7A6A5E] line-clamp-2 leading-relaxed">{result.headline}</p>
+            <p className="text-sm text-[#6D5E6D] line-clamp-2 leading-relaxed">{result.headline}</p>
           )}
         </div>
       </article>
@@ -287,7 +287,7 @@ function SearchRecipeCard({ result, categorySlug }: { result: SearchResult; cate
 function SearchIngredientCard({ result }: { result: SearchResult }) {
   return (
     <Link href={`/ingredients/${result.slug}`} className="group block h-full">
-      <article className="bg-white rounded-xl overflow-hidden border border-[#E8E0D5] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C8652A]/10">
+      <article className="bg-white rounded-xl overflow-hidden border border-[#EBD2AD] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C58930]/10">
         {result.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -296,9 +296,9 @@ function SearchIngredientCard({ result }: { result: SearchResult }) {
             className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F5EDE4] to-[#E8D5C4] flex items-end p-4">
+          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F5EAC8] to-[#D6BE97] flex items-end p-4">
             <span
-              className="text-[#7A6A5E] text-sm line-clamp-2"
+              className="text-[#6D5E6D] text-sm line-clamp-2"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {result.title}
@@ -307,13 +307,13 @@ function SearchIngredientCard({ result }: { result: SearchResult }) {
         )}
         <div className="p-4 flex flex-col flex-1 gap-2">
           <h3
-            className="text-lg leading-snug text-[#1C1410] line-clamp-2 group-hover:text-[#C8652A] transition-colors"
+            className="text-lg leading-snug text-[#201D20] line-clamp-2 group-hover:text-[#C58930] transition-colors"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             {result.title}
           </h3>
           {result.headline && (
-            <p className="text-sm text-[#7A6A5E] line-clamp-2 leading-relaxed">{result.headline}</p>
+            <p className="text-sm text-[#6D5E6D] line-clamp-2 leading-relaxed">{result.headline}</p>
           )}
         </div>
       </article>
@@ -325,7 +325,7 @@ function SearchHowToCard({ result, section }: { result: SearchResult; section?: 
   const resolvedSection = section ?? 'baking'
   return (
     <Link href={`/how-to/${resolvedSection}/${result.slug}`} className="group block h-full">
-      <article className="bg-white rounded-xl overflow-hidden border border-[#E8E0D5] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C8652A]/10">
+      <article className="bg-white rounded-xl overflow-hidden border border-[#EBD2AD] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C58930]/10">
         {result.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -334,9 +334,9 @@ function SearchHowToCard({ result, section }: { result: SearchResult; section?: 
             className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F5EDE4] to-[#E8D5C4] flex items-end p-4">
+          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F5EAC8] to-[#D6BE97] flex items-end p-4">
             <span
-              className="text-[#7A6A5E] text-sm line-clamp-2"
+              className="text-[#6D5E6D] text-sm line-clamp-2"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {result.title}
@@ -345,13 +345,13 @@ function SearchHowToCard({ result, section }: { result: SearchResult; section?: 
         )}
         <div className="p-4 flex flex-col flex-1 gap-2">
           <h3
-            className="text-lg leading-snug text-[#1C1410] line-clamp-2 group-hover:text-[#C8652A] transition-colors"
+            className="text-lg leading-snug text-[#201D20] line-clamp-2 group-hover:text-[#C58930] transition-colors"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             {result.title}
           </h3>
           {result.headline && (
-            <p className="text-sm text-[#7A6A5E] line-clamp-2 leading-relaxed">{result.headline}</p>
+            <p className="text-sm text-[#6D5E6D] line-clamp-2 leading-relaxed">{result.headline}</p>
           )}
         </div>
       </article>

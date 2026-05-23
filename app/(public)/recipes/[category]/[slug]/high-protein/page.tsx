@@ -97,9 +97,9 @@ export default async function HighProteinVariantPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-[#FAF8F4]">
+      <div className="min-h-screen bg-[#FCFFEB]">
         {/* Hero */}
-        <div className="relative bg-[#1C1410] text-white overflow-hidden">
+        <div className="relative bg-[#201D20] text-white overflow-hidden">
           <div className="absolute inset-0">
             {recipe.image_url ? (
               <Image
@@ -111,9 +111,9 @@ export default async function HighProteinVariantPage({ params }: Props) {
                 sizes="100vw"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-800/50 to-[#1C1410]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-800/50 to-[#201D20]" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1410] via-[#1C1410]/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#201D20] via-[#201D20]/50 to-transparent" />
           </div>
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
@@ -196,10 +196,10 @@ export default async function HighProteinVariantPage({ params }: Props) {
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar: ingredients (desktop) */}
             <aside className="hidden lg:block lg:w-72 shrink-0">
-              <div className="sticky top-6 bg-white rounded-2xl border border-[#E8E0D5] overflow-hidden">
-                <div className="px-5 py-4 bg-blue-50 border-b border-[#E8E0D5]">
+              <div className="sticky top-6 bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
+                <div className="px-5 py-4 bg-blue-50 border-b border-[#EBD2AD]">
                   <h2
-                    className="text-lg font-bold text-[#1C1410]"
+                    className="text-lg font-bold text-[#201D20]"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Ingredients
@@ -214,10 +214,10 @@ export default async function HighProteinVariantPage({ params }: Props) {
             {/* Main column */}
             <div className="flex-1 min-w-0 space-y-12">
               {/* Mobile ingredients */}
-              <div className="lg:hidden bg-white rounded-2xl border border-[#E8E0D5] overflow-hidden">
-                <div className="px-5 py-4 bg-blue-50 border-b border-[#E8E0D5]">
+              <div className="lg:hidden bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
+                <div className="px-5 py-4 bg-blue-50 border-b border-[#EBD2AD]">
                   <h2
-                    className="text-lg font-bold text-[#1C1410]"
+                    className="text-lg font-bold text-[#201D20]"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Ingredients
@@ -235,16 +235,16 @@ export default async function HighProteinVariantPage({ params }: Props) {
                 <section aria-labelledby="tips-heading">
                   <h2
                     id="tips-heading"
-                    className="text-2xl font-bold text-[#1C1410] mb-5"
+                    className="text-2xl font-bold text-[#201D20] mb-5"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Baker&apos;s Tips
                   </h2>
                   <ul className="space-y-3">
                     {recipe.tips.map((tip, i) => (
-                      <li key={i} className="flex gap-3 bg-[#F5EDE4] rounded-xl p-4">
-                        <span className="text-[#C8652A] font-bold text-sm mt-0.5 shrink-0">{i + 1}.</span>
-                        <p className="text-sm text-[#1C1410] leading-relaxed">{tip}</p>
+                      <li key={i} className="flex gap-3 bg-[#F5EAC8] rounded-xl p-4">
+                        <span className="text-[#C58930] font-bold text-sm mt-0.5 shrink-0">{i + 1}.</span>
+                        <p className="text-sm text-[#201D20] leading-relaxed">{tip}</p>
                       </li>
                     ))}
                   </ul>
@@ -257,7 +257,7 @@ export default async function HighProteinVariantPage({ params }: Props) {
                   {recipe.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 rounded-full text-sm text-[#7A6A5E] bg-white border border-[#E8E0D5]"
+                      className="px-3 py-1 rounded-full text-sm text-[#6D5E6D] bg-white border border-[#EBD2AD]"
                     >
                       {tag}
                     </span>

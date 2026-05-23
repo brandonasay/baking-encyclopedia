@@ -25,19 +25,19 @@ export default async function AdminDashboardPage() {
   const recentHowTos = (recentHowTosResult.data ?? []) as Pick<HowToArticle, 'id' | 'title' | 'slug' | 'published' | 'created_at' | 'section'>[]
 
   const statCards = [
-    { label: 'Published Recipes', value: counts?.published_recipes ?? 0, href: '/admin/recipes', color: 'text-emerald-600' },
-    { label: 'Draft Recipes', value: counts?.draft_recipes ?? 0, href: '/admin/recipes', color: 'text-amber-600' },
-    { label: 'Published How-Tos', value: counts?.published_howtos ?? 0, href: '/admin/how-tos', color: 'text-emerald-600' },
-    { label: 'Published Ingredients', value: counts?.published_ingredients ?? 0, href: '/admin/ingredients', color: 'text-emerald-600' },
-    { label: 'Total Users', value: counts?.total_users ?? 0, href: '#', color: 'text-[#1C1410]' },
-    { label: 'Newsletter Subscribers', value: counts?.mailing_list_subscribers ?? 0, href: '#', color: 'text-[#1C1410]' },
+    { label: 'Published Recipes', value: counts?.published_recipes ?? 0, href: '/admin/recipes', color: 'text-[#4E7435]' },
+    { label: 'Draft Recipes', value: counts?.draft_recipes ?? 0, href: '/admin/recipes', color: 'text-[#C58930]' },
+    { label: 'Published How-Tos', value: counts?.published_howtos ?? 0, href: '/admin/how-tos', color: 'text-[#4E7435]' },
+    { label: 'Published Ingredients', value: counts?.published_ingredients ?? 0, href: '/admin/ingredients', color: 'text-[#4E7435]' },
+    { label: 'Total Users', value: counts?.total_users ?? 0, href: '#', color: 'text-[#201D20]' },
+    { label: 'Newsletter Subscribers', value: counts?.mailing_list_subscribers ?? 0, href: '#', color: 'text-[#201D20]' },
   ]
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-[#1C1410]">Dashboard</h1>
-        <p className="text-[#7A6A5E] mt-1">Overview of your baking encyclopedia content.</p>
+        <h1 className="text-2xl font-bold text-[#201D20]">Dashboard</h1>
+        <p className="text-[#6D5E6D] mt-1">Overview of your baking encyclopedia content.</p>
       </div>
 
       {/* Stat cards */}
@@ -46,21 +46,21 @@ export default async function AdminDashboardPage() {
           <Link
             key={card.label}
             href={card.href}
-            className="bg-white rounded-xl border border-[#E8E0D5] p-5 hover:border-[#C8652A] transition-colors group"
+            className="bg-white rounded-xl border border-[#EBD2AD] p-5 hover:border-[#C58930] transition-colors group"
           >
-            <p className="text-xs font-medium text-[#7A6A5E] uppercase tracking-wide">{card.label}</p>
+            <p className="text-xs font-medium text-[#6D5E6D] uppercase tracking-wide">{card.label}</p>
             <p className={`text-3xl font-bold mt-1 ${card.color}`}>{card.value.toLocaleString()}</p>
           </Link>
         ))}
       </div>
 
       {/* Quick actions */}
-      <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
-        <h2 className="text-base font-semibold text-[#1C1410] mb-4">Quick Actions</h2>
+      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
+        <h2 className="text-base font-semibold text-[#201D20] mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-3">
           <Link
             href="/admin/recipes/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#C8652A] text-white rounded-lg font-medium text-sm hover:bg-[#B55A24] transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#C58930] text-white rounded-lg font-medium text-sm hover:bg-[#A87225] transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -69,7 +69,7 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link
             href="/admin/ingredients/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-[#E8E0D5] text-[#1C1410] rounded-lg font-medium text-sm hover:border-[#C8652A] hover:text-[#C8652A] transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-[#EBD2AD] text-[#201D20] rounded-lg font-medium text-sm hover:border-[#C58930] hover:text-[#C58930] transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -78,7 +78,7 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link
             href="/admin/how-tos/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-[#E8E0D5] text-[#1C1410] rounded-lg font-medium text-sm hover:border-[#C8652A] hover:text-[#C8652A] transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-[#EBD2AD] text-[#201D20] rounded-lg font-medium text-sm hover:border-[#C58930] hover:text-[#C58930] transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -91,24 +91,24 @@ export default async function AdminDashboardPage() {
       {/* Recent items */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Recent recipes */}
-        <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
+        <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-[#1C1410]">Recent Recipes</h2>
-            <Link href="/admin/recipes" className="text-xs text-[#C8652A] hover:underline">View all</Link>
+            <h2 className="text-base font-semibold text-[#201D20]">Recent Recipes</h2>
+            <Link href="/admin/recipes" className="text-xs text-[#C58930] hover:underline">View all</Link>
           </div>
           {recentRecipes.length === 0 ? (
-            <p className="text-sm text-[#7A6A5E]">No recipes yet.</p>
+            <p className="text-sm text-[#6D5E6D]">No recipes yet.</p>
           ) : (
             <ul className="space-y-2">
               {recentRecipes.map((recipe) => (
-                <li key={recipe.id} className="flex items-center justify-between gap-2 py-2 border-b border-[#E8E0D5] last:border-0">
+                <li key={recipe.id} className="flex items-center justify-between gap-2 py-2 border-b border-[#EBD2AD] last:border-0">
                   <div className="min-w-0">
-                    <Link href={`/admin/recipes/${recipe.id}`} className="text-sm font-medium text-[#1C1410] hover:text-[#C8652A] truncate block">
+                    <Link href={`/admin/recipes/${recipe.id}`} className="text-sm font-medium text-[#201D20] hover:text-[#C58930] truncate block">
                       {recipe.title}
                     </Link>
-                    <span className="text-xs text-[#7A6A5E] capitalize">{recipe.difficulty}</span>
+                    <span className="text-xs text-[#6D5E6D] capitalize">{recipe.difficulty}</span>
                   </div>
-                  <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${recipe.published ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+                  <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${recipe.published ? 'bg-[#EEF3EA] text-[#41622D]' : 'bg-[#FBF3DC] text-[#A87225]'}`}>
                     {recipe.published ? 'Published' : 'Draft'}
                   </span>
                 </li>
@@ -118,24 +118,24 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Recent how-tos */}
-        <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
+        <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-[#1C1410]">Recent How-Tos</h2>
-            <Link href="/admin/how-tos" className="text-xs text-[#C8652A] hover:underline">View all</Link>
+            <h2 className="text-base font-semibold text-[#201D20]">Recent How-Tos</h2>
+            <Link href="/admin/how-tos" className="text-xs text-[#C58930] hover:underline">View all</Link>
           </div>
           {recentHowTos.length === 0 ? (
-            <p className="text-sm text-[#7A6A5E]">No how-to articles yet.</p>
+            <p className="text-sm text-[#6D5E6D]">No how-to articles yet.</p>
           ) : (
             <ul className="space-y-2">
               {recentHowTos.map((article) => (
-                <li key={article.id} className="flex items-center justify-between gap-2 py-2 border-b border-[#E8E0D5] last:border-0">
+                <li key={article.id} className="flex items-center justify-between gap-2 py-2 border-b border-[#EBD2AD] last:border-0">
                   <div className="min-w-0">
-                    <Link href={`/admin/how-tos/${article.id}`} className="text-sm font-medium text-[#1C1410] hover:text-[#C8652A] truncate block">
+                    <Link href={`/admin/how-tos/${article.id}`} className="text-sm font-medium text-[#201D20] hover:text-[#C58930] truncate block">
                       {article.title}
                     </Link>
-                    <span className="text-xs text-[#7A6A5E] capitalize">{article.section}</span>
+                    <span className="text-xs text-[#6D5E6D] capitalize">{article.section}</span>
                   </div>
-                  <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${article.published ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+                  <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${article.published ? 'bg-[#EEF3EA] text-[#41622D]' : 'bg-[#FBF3DC] text-[#A87225]'}`}>
                     {article.published ? 'Published' : 'Draft'}
                   </span>
                 </li>

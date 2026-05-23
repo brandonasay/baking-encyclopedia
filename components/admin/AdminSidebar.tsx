@@ -75,12 +75,12 @@ export default function AdminSidebar() {
   const NavContent = () => (
     <>
       {/* Logo */}
-      <div className="px-4 py-5 border-b border-[#2C2218]">
+      <div className="px-4 py-5 border-b border-[#201D20]">
         <Link href="/admin" className="flex items-center gap-2.5">
-          <span className="text-[#C8652A] text-xl">&#127859;</span>
+          <span className="text-[#C58930] text-xl">&#127859;</span>
           <span className="text-white font-semibold text-sm leading-tight">
             Baking Encyclopedia
-            <span className="block text-[#9E8E82] font-normal text-xs">Admin</span>
+            <span className="block text-[#8A7D8A] font-normal text-xs">Admin</span>
           </span>
         </Link>
       </div>
@@ -97,11 +97,11 @@ export default function AdminSidebar() {
               className={[
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
                 active
-                  ? 'bg-[#C8652A] text-white'
-                  : 'text-[#C8B8AE] hover:bg-[#2C2218] hover:text-white',
+                  ? 'bg-[#C58930] text-white'
+                  : 'text-[#D4C498] hover:bg-[#201D20] hover:text-white',
               ].join(' ')}
             >
-              <span className={active ? 'text-white' : 'text-[#9E8E82]'}>
+              <span className={active ? 'text-white' : 'text-[#8A7D8A]'}>
                 {item.icon}
               </span>
               {item.label}
@@ -111,10 +111,10 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-[#2C2218]">
+      <div className="px-4 py-4 border-t border-[#201D20]">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xs text-[#9E8E82] hover:text-white transition-colors"
+          className="flex items-center gap-2 text-xs text-[#8A7D8A] hover:text-white transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -128,10 +128,10 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Mobile hamburger */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center gap-3 px-4 py-3 bg-[#1A120C] border-b border-[#2C2218]">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center gap-3 px-4 py-3 bg-[#201D20] border-b border-[#201D20]">
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="text-[#C8B8AE] hover:text-white p-1"
+          className="text-[#D4C498] hover:text-white p-1"
           aria-label="Toggle sidebar"
         >
           {mobileOpen ? (
@@ -158,7 +158,7 @@ export default function AdminSidebar() {
       {/* Mobile sidebar drawer */}
       <aside
         className={[
-          'lg:hidden fixed top-0 left-0 bottom-0 z-40 w-64 bg-[#1A120C] flex flex-col transition-transform duration-200',
+          'lg:hidden fixed top-0 left-0 bottom-0 z-40 w-64 bg-[#201D20] flex flex-col transition-transform duration-200',
           mobileOpen ? 'translate-x-0' : '-translate-x-full',
         ].join(' ')}
       >
@@ -166,7 +166,7 @@ export default function AdminSidebar() {
       </aside>
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-[#1A120C] min-h-screen">
+      <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-[#201D20] min-h-screen">
         <NavContent />
       </aside>
     </>

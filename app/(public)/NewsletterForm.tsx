@@ -31,12 +31,12 @@ export default function NewsletterForm() {
 
   if (status === 'success') {
     return (
-      <div className="flex flex-col items-center gap-2 text-[#1C1410]">
-        <div className="w-12 h-12 rounded-full bg-[#C8652A] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-2 text-[#201D20]">
+        <div className="w-12 h-12 rounded-full bg-[#C58930] flex items-center justify-center">
           <Mail className="w-6 h-6 text-white" />
         </div>
         <p className="text-lg font-semibold">You&apos;re on the list!</p>
-        <p className="text-sm text-[#7A6A5E]">Welcome to the baker community.</p>
+        <p className="text-sm text-[#6D5E6D]">Welcome to the baker community.</p>
       </div>
     )
   }
@@ -49,12 +49,12 @@ export default function NewsletterForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        className="flex-1 px-4 py-3 rounded-lg border border-[#E8E0D5] bg-white text-[#1C1410] placeholder:text-[#7A6A5E] focus:outline-none focus:ring-2 focus:ring-[#C8652A]/40 text-sm"
+        className="flex-1 px-4 py-3 rounded-lg border border-[#EBD2AD] bg-white text-[#201D20] placeholder:text-[#6D5E6D] focus:outline-none focus:ring-2 focus:ring-[#C58930]/40 text-sm"
       />
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="px-6 py-3 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white font-medium text-sm transition-colors duration-150 disabled:opacity-60 whitespace-nowrap"
+        className="px-6 py-3 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-medium text-sm transition-colors duration-150 disabled:opacity-60 whitespace-nowrap"
       >
         {status === 'loading' ? 'Joining…' : 'Join Now'}
       </button>

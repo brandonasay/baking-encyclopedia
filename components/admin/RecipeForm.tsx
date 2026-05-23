@@ -45,18 +45,18 @@ function emptyInstruction(stepNumber: number): RecipeInstruction {
 // ─── Sub-components ─────────────────────────────────────────────────────────
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm font-semibold text-[#1C1410] uppercase tracking-wide mb-4">{children}</h3>
+  return <h3 className="text-sm font-semibold text-[#201D20] uppercase tracking-wide mb-4">{children}</h3>
 }
 
 function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
   return (
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-[#1C1410] mb-1">
+    <label htmlFor={htmlFor} className="block text-sm font-medium text-[#201D20] mb-1">
       {children}
     </label>
   )
 }
 
-const inputCls = 'w-full px-3 py-2 bg-white border border-[#E8E0D5] rounded-lg text-sm text-[#1C1410] placeholder-[#7A6A5E] focus:outline-none focus:ring-2 focus:ring-[#C8652A] focus:border-transparent transition'
+const inputCls = 'w-full px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] placeholder-[#6D5E6D] focus:outline-none focus:ring-2 focus:ring-[#C58930] focus:border-transparent transition'
 const textareaCls = `${inputCls} resize-y min-h-[80px]`
 const selectCls = `${inputCls} cursor-pointer`
 
@@ -68,11 +68,11 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#C8652A] ${checked ? 'bg-[#C8652A]' : 'bg-[#E8E0D5]'}`}
+        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#C58930] ${checked ? 'bg-[#C58930]' : 'bg-[#EBD2AD]'}`}
       >
         <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-4' : 'translate-x-0.5'}`} />
       </button>
-      <span className="text-sm text-[#1C1410]">{label}</span>
+      <span className="text-sm text-[#201D20]">{label}</span>
     </label>
   )
 }
@@ -93,9 +93,9 @@ function IngredientRow({
   onMove: (i: number, dir: -1 | 1) => void
 }) {
   return (
-    <div className="bg-[#FAF8F4] rounded-lg border border-[#E8E0D5] p-3 space-y-2">
+    <div className="bg-[#FCFFEB] rounded-lg border border-[#EBD2AD] p-3 space-y-2">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-[#7A6A5E] font-medium w-5 text-center">{index + 1}</span>
+        <span className="text-xs text-[#6D5E6D] font-medium w-5 text-center">{index + 1}</span>
         <input
           className={inputCls + ' flex-1'}
           placeholder="Ingredient name"
@@ -103,10 +103,10 @@ function IngredientRow({
           onChange={(e) => onChange(index, 'ingredient_name', e.target.value)}
         />
         <div className="flex gap-1">
-          <button type="button" disabled={index === 0} onClick={() => onMove(index, -1)} className="p-1 text-[#7A6A5E] hover:text-[#1C1410] disabled:opacity-30">
+          <button type="button" disabled={index === 0} onClick={() => onMove(index, -1)} className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
           </button>
-          <button type="button" disabled={index === total - 1} onClick={() => onMove(index, 1)} className="p-1 text-[#7A6A5E] hover:text-[#1C1410] disabled:opacity-30">
+          <button type="button" disabled={index === total - 1} onClick={() => onMove(index, 1)} className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
           </button>
           <button type="button" onClick={() => onRemove(index)} className="p-1 text-red-400 hover:text-red-600">
@@ -143,9 +143,9 @@ function InstructionRow({
   onMove: (i: number, dir: -1 | 1) => void
 }) {
   return (
-    <div className="bg-[#FAF8F4] rounded-lg border border-[#E8E0D5] p-3 space-y-2">
+    <div className="bg-[#FCFFEB] rounded-lg border border-[#EBD2AD] p-3 space-y-2">
       <div className="flex items-center gap-2">
-        <span className="text-xs font-semibold text-[#C8652A] w-5 text-center">{index + 1}</span>
+        <span className="text-xs font-semibold text-[#C58930] w-5 text-center">{index + 1}</span>
         <input
           className={inputCls + ' flex-1'}
           placeholder="Step title (optional)"
@@ -153,10 +153,10 @@ function InstructionRow({
           onChange={(e) => onChange(index, 'title', e.target.value)}
         />
         <div className="flex gap-1">
-          <button type="button" disabled={index === 0} onClick={() => onMove(index, -1)} className="p-1 text-[#7A6A5E] hover:text-[#1C1410] disabled:opacity-30">
+          <button type="button" disabled={index === 0} onClick={() => onMove(index, -1)} className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
           </button>
-          <button type="button" disabled={index === total - 1} onClick={() => onMove(index, 1)} className="p-1 text-[#7A6A5E] hover:text-[#1C1410] disabled:opacity-30">
+          <button type="button" disabled={index === total - 1} onClick={() => onMove(index, 1)} className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
           </button>
           <button type="button" onClick={() => onRemove(index)} className="p-1 text-red-400 hover:text-red-600">
@@ -204,7 +204,7 @@ function DynamicStringList({
           </button>
         </div>
       ))}
-      <button type="button" onClick={add} className="text-sm text-[#C8652A] hover:underline font-medium">
+      <button type="button" onClick={add} className="text-sm text-[#C58930] hover:underline font-medium">
         + Add item
       </button>
     </div>
@@ -477,20 +477,20 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <h1 className="text-2xl font-bold text-[#1C1410]">{isEdit ? `Edit: ${recipe.title}` : 'New Recipe'}</h1>
+        <h1 className="text-2xl font-bold text-[#201D20]">{isEdit ? `Edit: ${recipe.title}` : 'New Recipe'}</h1>
         <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={() => setPublished(p => !p)}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors ${published ? 'bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100' : 'bg-white border-[#E8E0D5] text-[#7A6A5E] hover:border-[#C8652A] hover:text-[#C8652A]'}`}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors ${published ? 'bg-[#EEF3EA] border-[#A0B890] text-[#41622D] hover:bg-[#DCE8D5]' : 'bg-white border-[#EBD2AD] text-[#6D5E6D] hover:border-[#C58930] hover:text-[#C58930]'}`}
           >
-            <span className={`w-2 h-2 rounded-full ${published ? 'bg-emerald-500' : 'bg-[#C8B8A2]'}`} />
+            <span className={`w-2 h-2 rounded-full ${published ? 'bg-[#EEF3EA]0' : 'bg-[#D4C498]'}`} />
             {published ? 'Published' : 'Draft'}
           </button>
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-2.5 bg-[#C8652A] text-white rounded-lg font-medium text-sm hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
+            className="px-5 py-2.5 bg-[#C58930] text-white rounded-lg font-medium text-sm hover:bg-[#A87225] disabled:opacity-60 transition-colors"
           >
             {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Recipe'}
           </button>
@@ -499,7 +499,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
 
       {/* Toast */}
       {toast && (
-        <div className={`px-4 py-3 rounded-lg text-sm font-medium ${toast.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+        <div className={`px-4 py-3 rounded-lg text-sm font-medium ${toast.type === 'success' ? 'bg-[#EEF3EA] text-[#41622D] border border-[#B5C9A8]' : 'bg-red-50 text-red-700 border border-red-200'}`}>
           {toast.message}
         </div>
       )}
@@ -511,7 +511,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
             key={tab}
             type="button"
             onClick={() => setActiveTab(tab)}
-            className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeTab === tab ? 'bg-[#C8652A] text-white' : 'bg-white border border-[#E8E0D5] text-[#7A6A5E] hover:text-[#1C1410]'}`}
+            className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeTab === tab ? 'bg-[#C58930] text-white' : 'bg-white border border-[#EBD2AD] text-[#6D5E6D] hover:text-[#201D20]'}`}
           >
             {tab}
           </button>
@@ -519,7 +519,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
       </div>
 
       {/* Tab panels */}
-      <div className="bg-white rounded-xl border border-[#E8E0D5] p-6 space-y-5">
+      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6 space-y-5">
 
         {/* Basic Info */}
         {activeTab === 'Basic' && (
@@ -539,7 +539,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
                   onChange={(e) => { setSlugManual(true); setSlug(e.target.value) }}
                   required
                 />
-                <p className="text-xs text-[#7A6A5E] mt-1">Auto-generated from title. Edit to override.</p>
+                <p className="text-xs text-[#6D5E6D] mt-1">Auto-generated from title. Edit to override.</p>
               </div>
               <div>
                 <Label htmlFor="headline">Headline</Label>
@@ -620,7 +620,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               <button
                 type="button"
                 onClick={() => setIngredients((prev) => [...prev, emptyIngredient()])}
-                className="inline-flex items-center gap-1.5 text-sm text-[#C8652A] font-medium hover:underline"
+                className="inline-flex items-center gap-1.5 text-sm text-[#C58930] font-medium hover:underline"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 Add ingredient
@@ -648,7 +648,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               <button
                 type="button"
                 onClick={() => setInstructions((prev) => [...prev, emptyInstruction(prev.length + 1)])}
-                className="inline-flex items-center gap-1.5 text-sm text-[#C8652A] font-medium hover:underline"
+                className="inline-flex items-center gap-1.5 text-sm text-[#C58930] font-medium hover:underline"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 Add step
@@ -687,27 +687,27 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               <div className="space-y-4">
                 <Toggle checked={hasGlutenFree} onChange={setHasGlutenFree} label="Has Gluten-Free variant" />
                 {hasGlutenFree && (
-                  <div className="pl-4 border-l-2 border-[#E8E0D5] space-y-4">
+                  <div className="pl-4 border-l-2 border-[#EBD2AD] space-y-4">
                     <div>
                       <Label htmlFor="gfNotes">Gluten-Free Notes</Label>
                       <textarea id="gfNotes" className={textareaCls} value={glutenFreeNotes} onChange={(e) => setGlutenFreeNotes(e.target.value)} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1C1410] mb-2">GF Ingredients</p>
+                      <p className="text-sm font-medium text-[#201D20] mb-2">GF Ingredients</p>
                       <div className="space-y-3">
                         {glutenFreeIngredients.map((ing, i) => (
                           <IngredientRow key={i} ing={ing} index={i} total={glutenFreeIngredients.length} onChange={updateGFIngredient} onRemove={removeGFIngredient} onMove={moveGFIngredient} />
                         ))}
-                        <button type="button" onClick={() => setGlutenFreeIngredients((p) => [...p, emptyIngredient()])} className="text-sm text-[#C8652A] font-medium hover:underline">+ Add GF ingredient</button>
+                        <button type="button" onClick={() => setGlutenFreeIngredients((p) => [...p, emptyIngredient()])} className="text-sm text-[#C58930] font-medium hover:underline">+ Add GF ingredient</button>
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1C1410] mb-2">GF Instructions</p>
+                      <p className="text-sm font-medium text-[#201D20] mb-2">GF Instructions</p>
                       <div className="space-y-3">
                         {glutenFreeInstructions.map((inst, i) => (
                           <InstructionRow key={i} inst={inst} index={i} total={glutenFreeInstructions.length} onChange={updateGFInstruction} onRemove={removeGFInstruction} onMove={moveGFInstruction} />
                         ))}
-                        <button type="button" onClick={() => setGlutenFreeInstructions((p) => [...p, emptyInstruction(p.length + 1)])} className="text-sm text-[#C8652A] font-medium hover:underline">+ Add GF step</button>
+                        <button type="button" onClick={() => setGlutenFreeInstructions((p) => [...p, emptyInstruction(p.length + 1)])} className="text-sm text-[#C58930] font-medium hover:underline">+ Add GF step</button>
                       </div>
                     </div>
                   </div>
@@ -718,27 +718,27 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               <div className="space-y-4">
                 <Toggle checked={hasHighProtein} onChange={setHasHighProtein} label="Has High-Protein variant" />
                 {hasHighProtein && (
-                  <div className="pl-4 border-l-2 border-[#E8E0D5] space-y-4">
+                  <div className="pl-4 border-l-2 border-[#EBD2AD] space-y-4">
                     <div>
                       <Label htmlFor="hpNotes">High-Protein Notes</Label>
                       <textarea id="hpNotes" className={textareaCls} value={highProteinNotes} onChange={(e) => setHighProteinNotes(e.target.value)} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1C1410] mb-2">HP Ingredients</p>
+                      <p className="text-sm font-medium text-[#201D20] mb-2">HP Ingredients</p>
                       <div className="space-y-3">
                         {highProteinIngredients.map((ing, i) => (
                           <IngredientRow key={i} ing={ing} index={i} total={highProteinIngredients.length} onChange={updateHPIngredient} onRemove={removeHPIngredient} onMove={moveHPIngredient} />
                         ))}
-                        <button type="button" onClick={() => setHighProteinIngredients((p) => [...p, emptyIngredient()])} className="text-sm text-[#C8652A] font-medium hover:underline">+ Add HP ingredient</button>
+                        <button type="button" onClick={() => setHighProteinIngredients((p) => [...p, emptyIngredient()])} className="text-sm text-[#C58930] font-medium hover:underline">+ Add HP ingredient</button>
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1C1410] mb-2">HP Instructions</p>
+                      <p className="text-sm font-medium text-[#201D20] mb-2">HP Instructions</p>
                       <div className="space-y-3">
                         {highProteinInstructions.map((inst, i) => (
                           <InstructionRow key={i} inst={inst} index={i} total={highProteinInstructions.length} onChange={updateHPInstruction} onRemove={removeHPInstruction} onMove={moveHPInstruction} />
                         ))}
-                        <button type="button" onClick={() => setHighProteinInstructions((p) => [...p, emptyInstruction(p.length + 1)])} className="text-sm text-[#C8652A] font-medium hover:underline">+ Add HP step</button>
+                        <button type="button" onClick={() => setHighProteinInstructions((p) => [...p, emptyInstruction(p.length + 1)])} className="text-sm text-[#C58930] font-medium hover:underline">+ Add HP step</button>
                       </div>
                     </div>
                   </div>
@@ -773,7 +773,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
         {activeTab === 'Tags' && (
           <>
             <SectionHeading>Tags</SectionHeading>
-            <p className="text-xs text-[#7A6A5E] -mt-3 mb-4">Comma-separated values</p>
+            <p className="text-xs text-[#6D5E6D] -mt-3 mb-4">Comma-separated values</p>
             <div className="space-y-4">
               {[
                 { label: 'Tags', value: tags, setter: setTags, id: 'tags' },
@@ -798,12 +798,12 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               <div>
                 <Label htmlFor="seoTitle">SEO Title</Label>
                 <input id="seoTitle" className={inputCls} value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="Overrides title in <head>" />
-                <p className="text-xs text-[#7A6A5E] mt-1">{seoTitle.length}/60 characters</p>
+                <p className="text-xs text-[#6D5E6D] mt-1">{seoTitle.length}/60 characters</p>
               </div>
               <div>
                 <Label htmlFor="seoDesc">SEO Description</Label>
                 <textarea id="seoDesc" className={textareaCls} value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="Meta description..." />
-                <p className="text-xs text-[#7A6A5E] mt-1">{seoDescription.length}/160 characters</p>
+                <p className="text-xs text-[#6D5E6D] mt-1">{seoDescription.length}/160 characters</p>
               </div>
             </div>
           </>
@@ -818,10 +818,10 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               <div>
                 <Label>Upload Image</Label>
                 <label className="flex items-center gap-3 cursor-pointer w-fit">
-                  <span className="px-4 py-2 bg-white border border-[#E8E0D5] rounded-lg text-sm text-[#1C1410] hover:border-[#C8652A] hover:text-[#C8652A] transition-colors font-medium">
+                  <span className="px-4 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] hover:border-[#C58930] hover:text-[#C58930] transition-colors font-medium">
                     {imageUploading ? 'Uploading…' : 'Choose file'}
                   </span>
-                  <span className="text-xs text-[#7A6A5E]">JPG, PNG or WebP · max 5 MB</span>
+                  <span className="text-xs text-[#6D5E6D]">JPG, PNG or WebP · max 5 MB</span>
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -860,7 +860,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
               {imageUrl && (
                 <div className="mt-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imageUrl} alt={imageAlt || 'Preview'} className="max-h-64 rounded-lg border border-[#E8E0D5] object-cover" />
+                  <img src={imageUrl} alt={imageAlt || 'Preview'} className="max-h-64 rounded-lg border border-[#EBD2AD] object-cover" />
                 </div>
               )}
             </div>
@@ -873,7 +873,7 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
         <button
           type="submit"
           disabled={saving}
-          className="px-6 py-3 bg-[#C8652A] text-white rounded-lg font-medium hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
+          className="px-6 py-3 bg-[#C58930] text-white rounded-lg font-medium hover:bg-[#A87225] disabled:opacity-60 transition-colors"
         >
           {saving ? 'Saving…' : isEdit ? 'Update Recipe' : 'Create Recipe'}
         </button>

@@ -18,7 +18,7 @@ export function IngredientsList({ ingredients }: { ingredients: RecipeIngredient
       {groups.map((group, gi) => (
         <div key={gi}>
           {group.label && (
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#7A6A5E] mb-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#6D5E6D] mb-3">
               {group.label}
             </h3>
           )}
@@ -26,15 +26,15 @@ export function IngredientsList({ ingredients }: { ingredients: RecipeIngredient
             {group.items.map((ing, i) => (
               <li key={i} className="flex items-baseline gap-2 text-sm">
                 <span
-                  className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#C8652A] mt-1.5"
+                  className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#C58930] mt-1.5"
                   aria-hidden="true"
                 />
                 <span>
-                  <span className="font-medium text-[#1C1410]">
+                  <span className="font-medium text-[#201D20]">
                     {ing.quantity} {ing.unit}
                   </span>{' '}
-                  <span className="text-[#1C1410]">{ing.ingredient_name}</span>
-                  {ing.notes && <span className="text-[#7A6A5E]">, {ing.notes}</span>}
+                  <span className="text-[#201D20]">{ing.ingredient_name}</span>
+                  {ing.notes && <span className="text-[#6D5E6D]">, {ing.notes}</span>}
                 </span>
               </li>
             ))}

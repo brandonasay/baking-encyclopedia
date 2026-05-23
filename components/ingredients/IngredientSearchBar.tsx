@@ -28,7 +28,7 @@ export default function IngredientSearchBar({ defaultValue = '' }: { defaultValu
   return (
     <div className="relative w-full max-w-lg">
       <Search
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7A6A5E] pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6D5E6D] pointer-events-none"
         aria-hidden="true"
       />
       <input
@@ -36,11 +36,11 @@ export default function IngredientSearchBar({ defaultValue = '' }: { defaultValu
         placeholder="Search ingredients…"
         defaultValue={defaultValue}
         onChange={handleChange}
-        className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#E8E0D5] bg-white text-[#1C1410] placeholder:text-[#7A6A5E] text-sm focus:outline-none focus:ring-2 focus:ring-[#C8652A]/30 focus:border-[#C8652A] transition-colors"
+        className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#EBD2AD] bg-white text-[#201D20] placeholder:text-[#6D5E6D] text-sm focus:outline-none focus:ring-2 focus:ring-[#C58930]/30 focus:border-[#C58930] transition-colors"
         aria-label="Search ingredients"
       />
       {isPending && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-[#C8652A]/40 border-t-[#C8652A] rounded-full animate-spin" />
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-[#C58930]/40 border-t-[#C58930] rounded-full animate-spin" />
       )}
     </div>
   )

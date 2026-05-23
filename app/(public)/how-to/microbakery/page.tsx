@@ -31,27 +31,27 @@ export default async function MicrobakerySection() {
   const allArticles = (articles ?? []) as (CardArticle & { id: string; featured: boolean })[]
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4]">
+    <div className="min-h-screen bg-[#FCFFEB]">
       {/* Hero */}
-      <div className="bg-white border-b border-[#E8E0D5]">
+      <div className="bg-white border-b border-[#EBD2AD]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-          <nav className="text-sm text-[#7A6A5E] mb-4 flex items-center gap-2">
-            <Link href="/how-to" className="hover:text-[#C8652A] transition-colors">
+          <nav className="text-sm text-[#6D5E6D] mb-4 flex items-center gap-2">
+            <Link href="/how-to" className="hover:text-[#C58930] transition-colors">
               How-To
             </Link>
             <span>/</span>
-            <span className="text-[#1C1410]">Microbakery</span>
+            <span className="text-[#201D20]">Microbakery</span>
           </nav>
-          <p className="text-[#C8652A] text-sm font-medium uppercase tracking-widest mb-3">
+          <p className="text-[#C58930] text-sm font-medium uppercase tracking-widest mb-3">
             Microbakery
           </p>
           <h1
-            className="text-4xl md:text-5xl text-[#1C1410] mb-4"
+            className="text-4xl md:text-5xl text-[#201D20] mb-4"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Microbakery Guides
           </h1>
-          <p className="text-[#7A6A5E] text-lg max-w-2xl leading-relaxed">
+          <p className="text-[#6D5E6D] text-lg max-w-2xl leading-relaxed">
             Everything you need to build and run a successful home microbakery business.
           </p>
         </div>
@@ -66,7 +66,7 @@ export default async function MicrobakerySection() {
           </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-[#7A6A5E] text-lg">No guides published yet. Check back soon.</p>
+            <p className="text-[#6D5E6D] text-lg">No guides published yet. Check back soon.</p>
           </div>
         )}
       </div>

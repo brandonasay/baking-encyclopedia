@@ -69,41 +69,41 @@ export default async function HomePage() {
   const categories = (categoriesResult.data ?? []) as RecipeCategory[]
 
   return (
-    <div className="bg-[#FAF8F4]">
+    <div className="bg-[#FCFFEB]">
 
       {/* ------------------------------------------------------------------ */}
       {/* Hero */}
       {/* ------------------------------------------------------------------ */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F5EDE4] to-white">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F5EAC8] to-white">
         {/* Decorative circles */}
-        <div className="pointer-events-none absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#C8652A]/5" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 w-[350px] h-[350px] rounded-full bg-[#C8652A]/5" />
+        <div className="pointer-events-none absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#C58930]/5" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 w-[350px] h-[350px] rounded-full bg-[#C58930]/5" />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
-          <span className="inline-block mb-4 px-3 py-1 rounded-full bg-[#C8652A]/10 text-[#C8652A] text-xs font-semibold uppercase tracking-widest">
+          <span className="inline-block mb-4 px-3 py-1 rounded-full bg-[#C58930]/10 text-[#C58930] text-xs font-semibold uppercase tracking-widest">
             Your Complete Baking Reference
           </span>
           <h1
-            className="text-5xl md:text-7xl font-bold text-[#1C1410] leading-tight mb-6"
+            className="text-5xl md:text-7xl font-bold text-[#201D20] leading-tight mb-6"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             The Baking<br className="hidden sm:block" /> Encyclopedia
           </h1>
-          <p className="text-lg md:text-xl text-[#7A6A5E] max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg md:text-xl text-[#6D5E6D] max-w-2xl mx-auto mb-10 leading-relaxed">
             Your complete reference for recipes, ingredients, and techniques — built for bakers
             who want to understand the why behind every step.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/recipes"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white font-semibold text-base transition-colors duration-150 shadow-sm shadow-[#C8652A]/30"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-semibold text-base transition-colors duration-150 shadow-sm shadow-[#C58930]/30"
             >
               Browse Recipes
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/ingredients"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-white border border-[#E8E0D5] hover:border-[#C8652A] hover:text-[#C8652A] text-[#1C1410] font-semibold text-base transition-colors duration-150"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-white border border-[#EBD2AD] hover:border-[#C58930] hover:text-[#C58930] text-[#201D20] font-semibold text-base transition-colors duration-150"
             >
               Explore Ingredients
               <ChevronRight className="w-4 h-4" />
@@ -119,16 +119,16 @@ export default async function HomePage() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
           <div>
             <h2
-              className="text-3xl md:text-4xl font-bold text-[#1C1410] mb-2"
+              className="text-3xl md:text-4xl font-bold text-[#201D20] mb-2"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Featured Recipes
             </h2>
-            <p className="text-[#7A6A5E]">Hand-picked favorites from our collection</p>
+            <p className="text-[#6D5E6D]">Hand-picked favorites from our collection</p>
           </div>
           <Link
             href="/recipes"
-            className="inline-flex items-center gap-1.5 text-[#C8652A] hover:text-[#b55a25] font-medium text-sm transition-colors duration-150 shrink-0"
+            className="inline-flex items-center gap-1.5 text-[#C58930] hover:text-[#a87225] font-medium text-sm transition-colors duration-150 shrink-0"
           >
             View all recipes
             <ArrowRight className="w-4 h-4" />
@@ -142,7 +142,7 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-[#7A6A5E]">
+          <div className="text-center py-16 text-[#6D5E6D]">
             No featured recipes yet — check back soon!
           </div>
         )}
@@ -152,10 +152,10 @@ export default async function HomePage() {
       {/* Browse by Category */}
       {/* ------------------------------------------------------------------ */}
       {categories.length > 0 && (
-        <section className="border-y border-[#E8E0D5] bg-white py-12">
+        <section className="border-y border-[#EBD2AD] bg-white py-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2
-              className="text-2xl font-bold text-[#1C1410] mb-6 text-center"
+              className="text-2xl font-bold text-[#201D20] mb-6 text-center"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Browse by Category
@@ -165,10 +165,10 @@ export default async function HomePage() {
                 <Link
                   key={cat.id}
                   href={`/recipes/${cat.slug}`}
-                  className="snap-start shrink-0 flex flex-col items-center gap-2 px-5 py-4 rounded-xl border border-[#E8E0D5] bg-[#FAF8F4] hover:border-[#C8652A] hover:bg-[#F5EDE4] transition-colors duration-150 min-w-[100px]"
+                  className="snap-start shrink-0 flex flex-col items-center gap-2 px-5 py-4 rounded-xl border border-[#EBD2AD] bg-[#FCFFEB] hover:border-[#C58930] hover:bg-[#F5EAC8] transition-colors duration-150 min-w-[100px]"
                 >
                   <span className="text-2xl" aria-hidden="true">{getCategoryEmoji(cat.slug)}</span>
-                  <span className="text-xs font-medium text-[#1C1410] text-center leading-tight">{cat.name}</span>
+                  <span className="text-xs font-medium text-[#201D20] text-center leading-tight">{cat.name}</span>
                 </Link>
               ))}
             </div>
@@ -183,16 +183,16 @@ export default async function HomePage() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
           <div>
             <h2
-              className="text-3xl md:text-4xl font-bold text-[#1C1410] mb-2"
+              className="text-3xl md:text-4xl font-bold text-[#201D20] mb-2"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Learn to Bake
             </h2>
-            <p className="text-[#7A6A5E]">Guides and techniques for every skill level</p>
+            <p className="text-[#6D5E6D]">Guides and techniques for every skill level</p>
           </div>
           <Link
             href="/how-to"
-            className="inline-flex items-center gap-1.5 text-[#C8652A] hover:text-[#b55a25] font-medium text-sm transition-colors duration-150 shrink-0"
+            className="inline-flex items-center gap-1.5 text-[#C58930] hover:text-[#a87225] font-medium text-sm transition-colors duration-150 shrink-0"
           >
             All guides
             <ArrowRight className="w-4 h-4" />
@@ -206,7 +206,7 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-[#7A6A5E]">
+          <div className="text-center py-16 text-[#6D5E6D]">
             No guides published yet.
           </div>
         )}
@@ -215,7 +215,7 @@ export default async function HomePage() {
       {/* ------------------------------------------------------------------ */}
       {/* Ingredients Encyclopedia CTA */}
       {/* ------------------------------------------------------------------ */}
-      <section className="bg-gradient-to-br from-[#1C1410] to-[#3a2a1e] py-16 md:py-24">
+      <section className="bg-gradient-to-br from-[#201D20] to-[#201D20] py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:items-center gap-12">
           <div className="flex-1">
             <h2
@@ -224,14 +224,14 @@ export default async function HomePage() {
             >
               Know Your Ingredients
             </h2>
-            <p className="text-[#c9b8a8] text-lg mb-8 leading-relaxed max-w-lg">
+            <p className="text-[#d4c498] text-lg mb-8 leading-relaxed max-w-lg">
               Understand what every ingredient does — from why bread flour gives you chewier loaves
               to how baking soda and powder differ. Our ingredient encyclopedia is your
               baker&apos;s reference guide.
             </p>
             <Link
               href="/ingredients"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white font-semibold text-base transition-colors duration-150"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-semibold text-base transition-colors duration-150"
             >
               Explore Ingredients
               <ArrowRight className="w-4 h-4" />
@@ -255,18 +255,18 @@ export default async function HomePage() {
       {/* ------------------------------------------------------------------ */}
       {/* Newsletter */}
       {/* ------------------------------------------------------------------ */}
-      <section className="bg-[#F5EDE4] py-16 md:py-24">
+      <section className="bg-[#F5EAC8] py-16 md:py-24">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="w-14 h-14 rounded-full bg-[#C8652A]/15 flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-7 h-7 text-[#C8652A]" />
+          <div className="w-14 h-14 rounded-full bg-[#C58930]/15 flex items-center justify-center mx-auto mb-6">
+            <Mail className="w-7 h-7 text-[#C58930]" />
           </div>
           <h2
-            className="text-3xl md:text-4xl font-bold text-[#1C1410] mb-3"
+            className="text-3xl md:text-4xl font-bold text-[#201D20] mb-3"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Join Our Baker Community
           </h2>
-          <p className="text-[#7A6A5E] mb-8 leading-relaxed">
+          <p className="text-[#6D5E6D] mb-8 leading-relaxed">
             New recipes, techniques, and baking science — delivered to your inbox. No spam,
             unsubscribe any time.
           </p>

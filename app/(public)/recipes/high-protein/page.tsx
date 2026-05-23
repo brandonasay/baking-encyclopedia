@@ -42,12 +42,12 @@ export default async function HighProteinRecipesPage() {
   const recipes = (recipesData ?? []) as unknown as RecipeWithCategory[]
 
   return (
-    <main className="min-h-screen bg-[#FAF8F4]">
+    <main className="min-h-screen bg-[#FCFFEB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-10">
-          <nav className="mb-4 flex items-center gap-2 text-sm text-[#7A6A5E]">
-            <Link href="/recipes" className="hover:text-[#C8652A] transition-colors">Recipes</Link>
+          <nav className="mb-4 flex items-center gap-2 text-sm text-[#6D5E6D]">
+            <Link href="/recipes" className="hover:text-[#C58930] transition-colors">Recipes</Link>
             <span>/</span>
             <span>High-Protein</span>
           </nav>
@@ -59,12 +59,12 @@ export default async function HighProteinRecipesPage() {
           </div>
 
           <h1
-            className="text-4xl sm:text-5xl font-bold text-[#1C1410] mb-3"
+            className="text-4xl sm:text-5xl font-bold text-[#201D20] mb-3"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             High-Protein Recipes
           </h1>
-          <p className="text-lg text-[#7A6A5E]">
+          <p className="text-lg text-[#6D5E6D]">
             Packed with protein without sacrificing flavour. {recipes.length}{' '}
             {recipes.length === 1 ? 'recipe' : 'recipes'} available.
           </p>
@@ -84,15 +84,15 @@ export default async function HighProteinRecipesPage() {
           <div className="py-24 text-center space-y-4">
             <p className="text-5xl" aria-hidden="true">💪</p>
             <h2
-              className="text-2xl font-semibold text-[#1C1410]"
+              className="text-2xl font-semibold text-[#201D20]"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               No high-protein recipes yet
             </h2>
-            <p className="text-[#7A6A5E]">We&apos;re working on it — check back soon!</p>
+            <p className="text-[#6D5E6D]">We&apos;re working on it — check back soon!</p>
             <Link
               href="/recipes"
-              className="inline-block mt-4 px-5 py-2.5 rounded-xl bg-[#C8652A] text-white font-medium hover:bg-[#B55A24] transition-colors"
+              className="inline-block mt-4 px-5 py-2.5 rounded-xl bg-[#C58930] text-white font-medium hover:bg-[#A87225] transition-colors"
             >
               Browse all recipes
             </Link>

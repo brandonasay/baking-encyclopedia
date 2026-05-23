@@ -125,7 +125,7 @@ export default function CollectionsManager({ collections: initial }: Props) {
       {!showNewForm ? (
         <button
           onClick={() => setShowNewForm(true)}
-          className="mb-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white font-medium text-sm transition-colors duration-150"
+          className="mb-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-medium text-sm transition-colors duration-150"
         >
           <Plus className="w-4 h-4" />
           New Collection
@@ -133,7 +133,7 @@ export default function CollectionsManager({ collections: initial }: Props) {
       ) : (
         <form
           onSubmit={handleCreate}
-          className="mb-6 flex items-center gap-3 p-4 bg-white rounded-xl border border-[#E8E0D5]"
+          className="mb-6 flex items-center gap-3 p-4 bg-white rounded-xl border border-[#EBD2AD]"
         >
           <input
             type="text"
@@ -141,12 +141,12 @@ export default function CollectionsManager({ collections: initial }: Props) {
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Collection name"
             autoFocus
-            className="flex-1 px-3 py-2 rounded-lg border border-[#E8E0D5] bg-[#FAF8F4] text-sm text-[#1C1410] focus:outline-none focus:ring-2 focus:ring-[#C8652A]/40"
+            className="flex-1 px-3 py-2 rounded-lg border border-[#EBD2AD] bg-[#FCFFEB] text-sm text-[#201D20] focus:outline-none focus:ring-2 focus:ring-[#C58930]/40"
           />
           <button
             type="submit"
             disabled={creating || !newName.trim()}
-            className="px-4 py-2 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white text-sm font-medium disabled:opacity-60 flex items-center gap-1.5"
+            className="px-4 py-2 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white text-sm font-medium disabled:opacity-60 flex items-center gap-1.5"
           >
             {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
             Create
@@ -154,7 +154,7 @@ export default function CollectionsManager({ collections: initial }: Props) {
           <button
             type="button"
             onClick={() => { setShowNewForm(false); setNewName('') }}
-            className="p-2 rounded-lg hover:bg-[#FAF8F4] text-[#7A6A5E]"
+            className="p-2 rounded-lg hover:bg-[#FCFFEB] text-[#6D5E6D]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -163,8 +163,8 @@ export default function CollectionsManager({ collections: initial }: Props) {
 
       {/* Empty state */}
       {collections.length === 0 && (
-        <div className="text-center py-20 text-[#7A6A5E]">
-          <p className="mb-2 text-lg font-medium text-[#1C1410]" style={{ fontFamily: 'var(--font-playfair)' }}>
+        <div className="text-center py-20 text-[#6D5E6D]">
+          <p className="mb-2 text-lg font-medium text-[#201D20]" style={{ fontFamily: 'var(--font-playfair)' }}>
             No collections yet
           </p>
           <p className="text-sm">Create a collection to group your favourite recipes.</p>
@@ -181,7 +181,7 @@ export default function CollectionsManager({ collections: initial }: Props) {
           return (
             <div
               key={col.id}
-              className="bg-white rounded-xl border border-[#E8E0D5] p-5 flex flex-col gap-3"
+              className="bg-white rounded-xl border border-[#EBD2AD] p-5 flex flex-col gap-3"
             >
               {/* Name / edit */}
               {isEditing ? (
@@ -191,18 +191,18 @@ export default function CollectionsManager({ collections: initial }: Props) {
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
                     autoFocus
-                    className="flex-1 px-3 py-1.5 rounded-lg border border-[#E8E0D5] text-sm text-[#1C1410] focus:outline-none focus:ring-2 focus:ring-[#C8652A]/40"
+                    className="flex-1 px-3 py-1.5 rounded-lg border border-[#EBD2AD] text-sm text-[#201D20] focus:outline-none focus:ring-2 focus:ring-[#C58930]/40"
                   />
                   <button
                     onClick={() => handleRename(col.id)}
                     disabled={isLoading}
-                    className="p-1.5 rounded-lg bg-[#C8652A] text-white disabled:opacity-60"
+                    className="p-1.5 rounded-lg bg-[#C58930] text-white disabled:opacity-60"
                   >
                     {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                   </button>
                   <button
                     onClick={() => setEditingId(null)}
-                    className="p-1.5 rounded-lg hover:bg-[#FAF8F4] text-[#7A6A5E]"
+                    className="p-1.5 rounded-lg hover:bg-[#FCFFEB] text-[#6D5E6D]"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -211,14 +211,14 @@ export default function CollectionsManager({ collections: initial }: Props) {
                 <div className="flex items-start justify-between gap-2">
                   <Link
                     href={`/account/collections/${col.id}`}
-                    className="text-base font-semibold text-[#1C1410] hover:text-[#C8652A] transition-colors duration-150 line-clamp-1"
+                    className="text-base font-semibold text-[#201D20] hover:text-[#C58930] transition-colors duration-150 line-clamp-1"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     {col.name}
                   </Link>
                   <Link
                     href={`/account/collections/${col.id}`}
-                    className="shrink-0 text-[#7A6A5E] hover:text-[#C8652A]"
+                    className="shrink-0 text-[#6D5E6D] hover:text-[#C58930]"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </Link>
@@ -226,7 +226,7 @@ export default function CollectionsManager({ collections: initial }: Props) {
               )}
 
               {/* Meta row */}
-              <div className="flex items-center gap-2 text-xs text-[#7A6A5E]">
+              <div className="flex items-center gap-2 text-xs text-[#6D5E6D]">
                 <span>{count} {count === 1 ? 'recipe' : 'recipes'}</span>
                 <span>·</span>
                 <button
@@ -234,8 +234,8 @@ export default function CollectionsManager({ collections: initial }: Props) {
                   disabled={isLoading}
                   className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border transition-colors duration-150 ${
                     col.is_public
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                      : 'bg-[#FAF8F4] text-[#7A6A5E] border-[#E8E0D5] hover:border-[#C8652A]'
+                      ? 'bg-[#EEF3EA] text-[#41622D] border-[#B5C9A8] hover:bg-[#DCE8D5]'
+                      : 'bg-[#FCFFEB] text-[#6D5E6D] border-[#EBD2AD] hover:border-[#C58930]'
                   } disabled:opacity-60`}
                 >
                   {col.is_public ? (
@@ -247,19 +247,19 @@ export default function CollectionsManager({ collections: initial }: Props) {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2 pt-1 border-t border-[#E8E0D5]">
+              <div className="flex items-center gap-2 pt-1 border-t border-[#EBD2AD]">
                 <button
                   onClick={() => { setEditingId(col.id); setEditName(col.name) }}
-                  className="inline-flex items-center gap-1 text-xs text-[#7A6A5E] hover:text-[#C8652A] transition-colors duration-150"
+                  className="inline-flex items-center gap-1 text-xs text-[#6D5E6D] hover:text-[#C58930] transition-colors duration-150"
                 >
                   <Pencil className="w-3.5 h-3.5" />
                   Rename
                 </button>
-                <span className="text-[#E8E0D5]">|</span>
+                <span className="text-[#EBD2AD]">|</span>
                 <button
                   onClick={() => handleDelete(col.id)}
                   disabled={isLoading}
-                  className="inline-flex items-center gap-1 text-xs text-[#7A6A5E] hover:text-red-600 transition-colors duration-150 disabled:opacity-60"
+                  className="inline-flex items-center gap-1 text-xs text-[#6D5E6D] hover:text-red-600 transition-colors duration-150 disabled:opacity-60"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   Delete

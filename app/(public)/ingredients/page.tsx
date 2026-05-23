@@ -61,20 +61,20 @@ export default async function IngredientsPage({ searchParams }: PageProps) {
   ).sort()
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4]">
+    <div className="min-h-screen bg-[#FCFFEB]">
       {/* Hero */}
-      <div className="bg-white border-b border-[#E8E0D5]">
+      <div className="bg-white border-b border-[#EBD2AD]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-          <p className="text-[#C8652A] text-sm font-medium uppercase tracking-widest mb-3">
+          <p className="text-[#C58930] text-sm font-medium uppercase tracking-widest mb-3">
             Reference
           </p>
           <h1
-            className="text-4xl md:text-5xl text-[#1C1410] mb-4"
+            className="text-4xl md:text-5xl text-[#201D20] mb-4"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Ingredients Encyclopedia
           </h1>
-          <p className="text-[#7A6A5E] text-lg max-w-2xl leading-relaxed mb-8">
+          <p className="text-[#6D5E6D] text-lg max-w-2xl leading-relaxed mb-8">
             Deep-dive profiles for every ingredient a baker reaches for — how they work, where they
             come from, and how to swap them.
           </p>
@@ -100,8 +100,8 @@ export default async function IngredientsPage({ searchParams }: PageProps) {
                     aria-disabled={!active}
                     className={`w-8 h-8 flex items-center justify-center rounded text-sm font-medium transition-colors ${
                       active
-                        ? 'bg-white border border-[#E8E0D5] text-[#1C1410] hover:border-[#C8652A] hover:text-[#C8652A]'
-                        : 'text-[#7A6A5E]/40 cursor-default'
+                        ? 'bg-white border border-[#EBD2AD] text-[#201D20] hover:border-[#C58930] hover:text-[#C58930]'
+                        : 'text-[#6D5E6D]/40 cursor-default'
                     }`}
                   >
                     {letter}
@@ -114,7 +114,7 @@ export default async function IngredientsPage({ searchParams }: PageProps) {
 
         {/* Query result header */}
         {query && (
-          <p className="text-[#7A6A5E] mb-8 text-sm">
+          <p className="text-[#6D5E6D] mb-8 text-sm">
             {filtered.length === 0
               ? `No ingredients found for "${q}"`
               : `${filtered.length} ingredient${filtered.length === 1 ? '' : 's'} matching "${q}"`}
@@ -123,8 +123,8 @@ export default async function IngredientsPage({ searchParams }: PageProps) {
 
         {filtered.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-[#7A6A5E] text-lg">No ingredients found.</p>
-            <p className="text-[#7A6A5E] text-sm mt-2">Try a different search term.</p>
+            <p className="text-[#6D5E6D] text-lg">No ingredients found.</p>
+            <p className="text-[#6D5E6D] text-sm mt-2">Try a different search term.</p>
           </div>
         )}
 
@@ -139,13 +139,13 @@ export default async function IngredientsPage({ searchParams }: PageProps) {
             >
               <div className="flex items-center gap-4 mb-6">
                 <h2
-                  className="text-2xl text-[#1C1410]"
+                  className="text-2xl text-[#201D20]"
                   style={{ fontFamily: 'var(--font-playfair)' }}
                 >
                   {category}
                 </h2>
-                <div className="flex-1 h-px bg-[#E8E0D5]" />
-                <span className="text-sm text-[#7A6A5E]">
+                <div className="flex-1 h-px bg-[#EBD2AD]" />
+                <span className="text-sm text-[#6D5E6D]">
                   {grouped[category].length} ingredient{grouped[category].length === 1 ? '' : 's'}
                 </span>
               </div>

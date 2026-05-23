@@ -119,9 +119,9 @@ export default async function BakingArticlePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-[#FAF8F4]">
+      <div className="min-h-screen bg-[#FCFFEB]">
         {/* Hero */}
-        <div className="relative bg-[#1C1410] text-white overflow-hidden">
+        <div className="relative bg-[#201D20] text-white overflow-hidden">
           <div className="absolute inset-0">
             {article.image_url ? (
               <Image
@@ -133,9 +133,9 @@ export default async function BakingArticlePage({ params }: Props) {
                 sizes="100vw"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#C8652A]/50 to-[#1C1410]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#C58930]/50 to-[#201D20]" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1410] via-[#1C1410]/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#201D20] via-[#201D20]/50 to-transparent" />
           </div>
 
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
@@ -151,7 +151,7 @@ export default async function BakingArticlePage({ params }: Props) {
             </nav>
 
             <div className="flex items-center gap-3 mb-5">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#C8652A]/80 text-white">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#C58930]/80 text-white">
                 Baking
               </span>
 
@@ -182,7 +182,7 @@ export default async function BakingArticlePage({ params }: Props) {
           {hasSteps && (
             <section className="mb-12">
               <h2
-                className="text-2xl text-[#1C1410] mb-6"
+                className="text-2xl text-[#201D20] mb-6"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
                 Steps
@@ -191,11 +191,11 @@ export default async function BakingArticlePage({ params }: Props) {
                 {article.steps.map((step) => (
                   <li
                     key={step.step_number}
-                    className="flex gap-5 bg-white rounded-xl border border-[#E8E0D5] p-5"
+                    className="flex gap-5 bg-white rounded-xl border border-[#EBD2AD] p-5"
                   >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#F5EDE4] flex items-center justify-center">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#F5EAC8] flex items-center justify-center">
                       <span
-                        className="text-[#C8652A] font-semibold text-sm"
+                        className="text-[#C58930] font-semibold text-sm"
                         style={{ fontFamily: 'var(--font-playfair)' }}
                       >
                         {step.step_number}
@@ -203,12 +203,12 @@ export default async function BakingArticlePage({ params }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3
-                        className="text-base font-semibold text-[#1C1410] mb-1.5"
+                        className="text-base font-semibold text-[#201D20] mb-1.5"
                         style={{ fontFamily: 'var(--font-playfair)' }}
                       >
                         {step.title}
                       </h3>
-                      <p className="text-sm text-[#7A6A5E] leading-relaxed">{step.description}</p>
+                      <p className="text-sm text-[#6D5E6D] leading-relaxed">{step.description}</p>
                     </div>
                   </li>
                 ))}
@@ -233,7 +233,7 @@ export default async function BakingArticlePage({ params }: Props) {
               {article.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 rounded-full text-sm text-[#7A6A5E] bg-white border border-[#E8E0D5]"
+                  className="px-3 py-1 rounded-full text-sm text-[#6D5E6D] bg-white border border-[#EBD2AD]"
                 >
                   {tag}
                 </span>
@@ -246,12 +246,12 @@ export default async function BakingArticlePage({ params }: Props) {
             <section className="mb-16">
               <div className="flex items-center gap-4 mb-6">
                 <h2
-                  className="text-2xl text-[#1C1410]"
+                  className="text-2xl text-[#201D20]"
                   style={{ fontFamily: 'var(--font-playfair)' }}
                 >
                   Related Recipes
                 </h2>
-                <div className="flex-1 h-px bg-[#E8E0D5]" />
+                <div className="flex-1 h-px bg-[#EBD2AD]" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {relatedRecipes.map((recipe) => (
@@ -266,12 +266,12 @@ export default async function BakingArticlePage({ params }: Props) {
             <section className="mb-16">
               <div className="flex items-center gap-4 mb-6">
                 <h2
-                  className="text-2xl text-[#1C1410]"
+                  className="text-2xl text-[#201D20]"
                   style={{ fontFamily: 'var(--font-playfair)' }}
                 >
                   Related Guides
                 </h2>
-                <div className="flex-1 h-px bg-[#E8E0D5]" />
+                <div className="flex-1 h-px bg-[#EBD2AD]" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {relatedArticles.map((rel) => (

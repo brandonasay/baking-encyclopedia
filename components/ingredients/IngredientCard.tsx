@@ -13,7 +13,7 @@ export default function IngredientCard({ ingredient }: IngredientCardProps) {
       className="group block h-full"
       aria-label={ingredient.name}
     >
-      <article className="bg-white rounded-xl overflow-hidden border border-[#E8E0D5] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C8652A]/10">
+      <article className="bg-white rounded-xl overflow-hidden border border-[#EBD2AD] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C58930]/10">
         {/* Image */}
         <div className="relative w-full aspect-[4/3] overflow-hidden">
           {ingredient.image_url ? (
@@ -25,9 +25,9 @@ export default function IngredientCard({ ingredient }: IngredientCardProps) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-[#F5EDE4] to-[#E8D5C4] flex items-end p-4">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#F5EAC8] to-[#D6BE97] flex items-end p-4">
               <span
-                className="text-[#7A6A5E] text-sm leading-snug line-clamp-3"
+                className="text-[#6D5E6D] text-sm leading-snug line-clamp-3"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
                 {ingredient.name}
@@ -37,7 +37,7 @@ export default function IngredientCard({ ingredient }: IngredientCardProps) {
 
           {/* Category pill */}
           <div className="absolute top-3 left-3">
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#F5EDE4] text-[#C8652A]">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#F5EAC8] text-[#C58930]">
               {ingredient.category}
             </span>
           </div>
@@ -46,14 +46,14 @@ export default function IngredientCard({ ingredient }: IngredientCardProps) {
         {/* Content */}
         <div className="flex flex-col flex-1 p-4 gap-2">
           <h3
-            className="text-lg leading-snug text-[#1C1410] line-clamp-2 group-hover:text-[#C8652A] transition-colors duration-150"
+            className="text-lg leading-snug text-[#201D20] line-clamp-2 group-hover:text-[#C58930] transition-colors duration-150"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             {ingredient.name}
           </h3>
 
           {ingredient.headline && (
-            <p className="text-sm text-[#7A6A5E] line-clamp-2 leading-relaxed flex-1">
+            <p className="text-sm text-[#6D5E6D] line-clamp-2 leading-relaxed flex-1">
               {ingredient.headline}
             </p>
           )}

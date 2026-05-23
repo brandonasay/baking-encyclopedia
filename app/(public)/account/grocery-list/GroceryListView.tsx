@@ -214,7 +214,7 @@ export default function GroceryListView({ groceryList }: Props) {
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#E8E0D5] bg-white text-[#7A6A5E] text-sm hover:border-[#C8652A] hover:text-[#C8652A] transition-colors duration-150"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#EBD2AD] bg-white text-[#6D5E6D] text-sm hover:border-[#C58930] hover:text-[#C58930] transition-colors duration-150"
         >
           <Printer className="w-4 h-4" />
           Print
@@ -222,7 +222,7 @@ export default function GroceryListView({ groceryList }: Props) {
         {checkedCount > 0 && (
           <button
             onClick={clearCompleted}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#E8E0D5] bg-white text-[#7A6A5E] text-sm hover:border-[#C8652A] hover:text-[#C8652A] transition-colors duration-150"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#EBD2AD] bg-white text-[#6D5E6D] text-sm hover:border-[#C58930] hover:text-[#C58930] transition-colors duration-150"
           >
             <CheckCheck className="w-4 h-4" />
             Clear completed ({checkedCount})
@@ -230,7 +230,7 @@ export default function GroceryListView({ groceryList }: Props) {
         )}
         <button
           onClick={clearAll}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#E8E0D5] bg-white text-[#7A6A5E] text-sm hover:border-red-300 hover:text-red-600 transition-colors duration-150 ml-auto"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#EBD2AD] bg-white text-[#6D5E6D] text-sm hover:border-red-300 hover:text-red-600 transition-colors duration-150 ml-auto"
         >
           <Trash2 className="w-4 h-4" />
           Clear all
@@ -243,7 +243,7 @@ export default function GroceryListView({ groceryList }: Props) {
         {/* ---------------------------------------------------------------- */}
         <div className="lg:col-span-2 flex flex-col gap-3">
           <h2
-            className="text-lg font-bold text-[#1C1410]"
+            className="text-lg font-bold text-[#201D20]"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Recipes
@@ -253,19 +253,19 @@ export default function GroceryListView({ groceryList }: Props) {
             return (
               <div
                 key={item.id}
-                className="bg-white rounded-xl border border-[#E8E0D5] p-4 flex flex-col gap-3"
+                className="bg-white rounded-xl border border-[#EBD2AD] p-4 flex flex-col gap-3"
               >
                 <div className="flex items-start justify-between gap-2">
                   <Link
                     href={`/recipes/${item.recipes.slug}`}
-                    className="text-sm font-semibold text-[#1C1410] hover:text-[#C8652A] transition-colors duration-150 leading-tight"
+                    className="text-sm font-semibold text-[#201D20] hover:text-[#C58930] transition-colors duration-150 leading-tight"
                   >
                     {item.recipes.title}
                   </Link>
                   <button
                     onClick={() => handleRemoveRecipe(item.id)}
                     aria-label="Remove recipe"
-                    className="p-1 rounded-md hover:bg-red-50 hover:text-red-600 text-[#7A6A5E] transition-colors duration-150 shrink-0"
+                    className="p-1 rounded-md hover:bg-red-50 hover:text-red-600 text-[#6D5E6D] transition-colors duration-150 shrink-0"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -273,15 +273,15 @@ export default function GroceryListView({ groceryList }: Props) {
 
                 {/* Scale factor */}
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-[#7A6A5E] mr-1">Scale:</span>
+                  <span className="text-xs text-[#6D5E6D] mr-1">Scale:</span>
                   {SCALE_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}
                       onClick={() => handleScaleChange(item.id, opt.value)}
                       className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors duration-150 ${
                         (scaleFactors[item.id] ?? item.scale_factor) === opt.value
-                          ? 'bg-[#C8652A] border-[#C8652A] text-white'
-                          : 'border-[#E8E0D5] text-[#7A6A5E] hover:border-[#C8652A] hover:text-[#C8652A]'
+                          ? 'bg-[#C58930] border-[#C58930] text-white'
+                          : 'border-[#EBD2AD] text-[#6D5E6D] hover:border-[#C58930] hover:text-[#C58930]'
                       }`}
                     >
                       {opt.label}
@@ -299,19 +299,19 @@ export default function GroceryListView({ groceryList }: Props) {
         <div className="lg:col-span-3">
           <div className="flex items-center justify-between mb-3">
             <h2
-              className="text-lg font-bold text-[#1C1410]"
+              className="text-lg font-bold text-[#201D20]"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Ingredients
             </h2>
-            <span className="text-xs text-[#7A6A5E]">
+            <span className="text-xs text-[#6D5E6D]">
               {checkedCount}/{totalCount} checked
             </span>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E8E0D5] divide-y divide-[#E8E0D5] overflow-hidden">
+          <div className="bg-white rounded-xl border border-[#EBD2AD] divide-y divide-[#EBD2AD] overflow-hidden">
             {consolidated.length === 0 && (
-              <div className="px-5 py-8 text-center text-sm text-[#7A6A5E]">
+              <div className="px-5 py-8 text-center text-sm text-[#6D5E6D]">
                 No ingredients to show.
               </div>
             )}
@@ -323,7 +323,7 @@ export default function GroceryListView({ groceryList }: Props) {
               return (
                 <label
                   key={ing.key}
-                  className={`flex items-start gap-3 px-5 py-3.5 cursor-pointer hover:bg-[#FAF8F4] transition-colors duration-100 ${
+                  className={`flex items-start gap-3 px-5 py-3.5 cursor-pointer hover:bg-[#FCFFEB] transition-colors duration-100 ${
                     isChecked ? 'opacity-50' : ''
                   }`}
                 >
@@ -338,8 +338,8 @@ export default function GroceryListView({ groceryList }: Props) {
                     <div
                       className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors duration-150 ${
                         isChecked
-                          ? 'bg-[#C8652A] border-[#C8652A]'
-                          : 'border-[#E8E0D5] bg-white hover:border-[#C8652A]'
+                          ? 'bg-[#C58930] border-[#C58930]'
+                          : 'border-[#EBD2AD] bg-white hover:border-[#C58930]'
                       }`}
                     >
                       {isChecked && (
@@ -351,21 +351,21 @@ export default function GroceryListView({ groceryList }: Props) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <span
-                      className={`text-sm font-medium text-[#1C1410] ${isChecked ? 'line-through' : ''}`}
+                      className={`text-sm font-medium text-[#201D20] ${isChecked ? 'line-through' : ''}`}
                     >
                       {ing.ingredient_name}
                     </span>
-                    <div className="text-xs text-[#7A6A5E] mt-0.5 flex flex-wrap gap-2">
+                    <div className="text-xs text-[#6D5E6D] mt-0.5 flex flex-wrap gap-2">
                       <span>
                         {formatQuantity(ing.totalQuantity)}{ing.unit ? ` ${ing.unit}` : ''}
                       </span>
                       {ing.totalGrams != null && ing.totalGrams > 0 && (
-                        <span className="text-[#C8652A]/80">
+                        <span className="text-[#C58930]/80">
                           ({Math.round(ing.totalGrams)}g)
                         </span>
                       )}
                       {ing.notes.length > 0 && (
-                        <span className="italic text-[#7A6A5E]/70">{ing.notes[0]}</span>
+                        <span className="italic text-[#6D5E6D]/70">{ing.notes[0]}</span>
                       )}
                     </div>
                   </div>
@@ -376,9 +376,9 @@ export default function GroceryListView({ groceryList }: Props) {
 
           {/* Progress bar */}
           {totalCount > 0 && (
-            <div className="mt-3 h-1.5 bg-[#E8E0D5] rounded-full overflow-hidden">
+            <div className="mt-3 h-1.5 bg-[#EBD2AD] rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#C8652A] rounded-full transition-all duration-300"
+                className="h-full bg-[#C58930] rounded-full transition-all duration-300"
                 style={{ width: `${(checkedCount / totalCount) * 100}%` }}
               />
             </div>

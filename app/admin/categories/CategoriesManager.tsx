@@ -130,16 +130,16 @@ export default function CategoriesManager({ categories: initial }: { categories:
   return (
     <div className="space-y-6">
       {/* Category table */}
-      <div className="bg-white rounded-xl border border-[#E8E0D5] overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#EBD2AD] overflow-hidden">
         {categories.length === 0 ? (
-          <div className="py-12 text-center text-[#7A6A5E]">No categories yet.</div>
+          <div className="py-12 text-center text-[#6D5E6D]">No categories yet.</div>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#E8E0D5] bg-[#FAF8F4]">
-                <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Name</th>
-                <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Slug</th>
-                <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Subcategories</th>
+              <tr className="border-b border-[#EBD2AD] bg-[#FCFFEB]">
+                <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Name</th>
+                <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Slug</th>
+                <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Subcategories</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
@@ -148,18 +148,18 @@ export default function CategoriesManager({ categories: initial }: { categories:
                 <>
                   <tr
                     key={cat.id}
-                    className="border-b border-[#E8E0D5] last:border-0 hover:bg-[#FAF8F4] transition-colors"
+                    className="border-b border-[#EBD2AD] last:border-0 hover:bg-[#FCFFEB] transition-colors"
                   >
-                    <td className="px-4 py-3 font-medium text-[#1C1410]">{cat.name}</td>
-                    <td className="px-4 py-3 text-[#7A6A5E] font-mono text-xs">{cat.slug}</td>
-                    <td className="px-4 py-3 text-[#7A6A5E]">
+                    <td className="px-4 py-3 font-medium text-[#201D20]">{cat.name}</td>
+                    <td className="px-4 py-3 text-[#6D5E6D] font-mono text-xs">{cat.slug}</td>
+                    <td className="px-4 py-3 text-[#6D5E6D]">
                       {cat.recipe_subcategories.length}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => setExpandedId(expandedId === cat.id ? null : cat.id)}
-                          className="text-xs text-[#C8652A] hover:underline"
+                          className="text-xs text-[#C58930] hover:underline"
                         >
                           {expandedId === cat.id ? 'Collapse' : 'Manage subcategories'}
                         </button>
@@ -174,9 +174,9 @@ export default function CategoriesManager({ categories: initial }: { categories:
                   </tr>
 
                   {expandedId === cat.id && (
-                    <tr key={`${cat.id}-sub`} className="bg-[#FAF8F4] border-b border-[#E8E0D5]">
+                    <tr key={`${cat.id}-sub`} className="bg-[#FCFFEB] border-b border-[#EBD2AD]">
                       <td colSpan={4} className="px-6 py-4">
-                        <p className="text-xs font-semibold text-[#7A6A5E] uppercase tracking-wider mb-3">
+                        <p className="text-xs font-semibold text-[#6D5E6D] uppercase tracking-wider mb-3">
                           Subcategories of {cat.name}
                         </p>
 
@@ -185,11 +185,11 @@ export default function CategoriesManager({ categories: initial }: { categories:
                             {cat.recipe_subcategories.map((sub) => (
                               <div
                                 key={sub.id}
-                                className="flex items-center justify-between bg-white rounded-lg border border-[#E8E0D5] px-3 py-2"
+                                className="flex items-center justify-between bg-white rounded-lg border border-[#EBD2AD] px-3 py-2"
                               >
                                 <div>
-                                  <span className="text-sm font-medium text-[#1C1410]">{sub.name}</span>
-                                  <span className="ml-2 text-xs font-mono text-[#7A6A5E]">{sub.slug}</span>
+                                  <span className="text-sm font-medium text-[#201D20]">{sub.name}</span>
+                                  <span className="ml-2 text-xs font-mono text-[#6D5E6D]">{sub.slug}</span>
                                 </div>
                                 <button
                                   onClick={() => handleDeleteSubcategory(cat.id, sub.id)}
@@ -201,7 +201,7 @@ export default function CategoriesManager({ categories: initial }: { categories:
                             ))}
                           </div>
                         ) : (
-                          <p className="text-sm text-[#7A6A5E] mb-4">No subcategories yet.</p>
+                          <p className="text-sm text-[#6D5E6D] mb-4">No subcategories yet.</p>
                         )}
 
                         {/* Add subcategory inline form */}
@@ -210,30 +210,30 @@ export default function CategoriesManager({ categories: initial }: { categories:
                           className="flex flex-wrap items-end gap-2"
                         >
                           <div>
-                            <label className="block text-xs font-medium text-[#7A6A5E] mb-1">Name</label>
+                            <label className="block text-xs font-medium text-[#6D5E6D] mb-1">Name</label>
                             <input
                               type="text"
                               required
                               value={newSubName[cat.id] ?? ''}
                               onChange={(e) => setNewSubName((prev) => ({ ...prev, [cat.id]: e.target.value }))}
                               placeholder="Subcategory name"
-                              className="px-3 py-1.5 rounded-lg border border-[#E8E0D5] text-sm text-[#1C1410] bg-white focus:outline-none focus:ring-1 focus:ring-[#C8652A]"
+                              className="px-3 py-1.5 rounded-lg border border-[#EBD2AD] text-sm text-[#201D20] bg-white focus:outline-none focus:ring-1 focus:ring-[#C58930]"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-[#7A6A5E] mb-1">Slug (optional)</label>
+                            <label className="block text-xs font-medium text-[#6D5E6D] mb-1">Slug (optional)</label>
                             <input
                               type="text"
                               value={newSubSlug[cat.id] ?? ''}
                               onChange={(e) => setNewSubSlug((prev) => ({ ...prev, [cat.id]: e.target.value }))}
                               placeholder="auto-generated"
-                              className="px-3 py-1.5 rounded-lg border border-[#E8E0D5] text-sm text-[#7A6A5E] bg-white font-mono focus:outline-none focus:ring-1 focus:ring-[#C8652A]"
+                              className="px-3 py-1.5 rounded-lg border border-[#EBD2AD] text-sm text-[#6D5E6D] bg-white font-mono focus:outline-none focus:ring-1 focus:ring-[#C58930]"
                             />
                           </div>
                           <button
                             type="submit"
                             disabled={addingSub[cat.id]}
-                            className="px-4 py-1.5 rounded-lg bg-[#C8652A] text-white text-sm font-medium hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
+                            className="px-4 py-1.5 rounded-lg bg-[#C58930] text-white text-sm font-medium hover:bg-[#A87225] disabled:opacity-60 transition-colors"
                           >
                             {addingSub[cat.id] ? 'Adding…' : 'Add'}
                           </button>
@@ -252,44 +252,44 @@ export default function CategoriesManager({ categories: initial }: { categories:
       </div>
 
       {/* Create new category */}
-      <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
-        <h2 className="text-base font-semibold text-[#1C1410] mb-4">Add Category</h2>
+      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
+        <h2 className="text-base font-semibold text-[#201D20] mb-4">Add Category</h2>
         <form onSubmit={handleAddCategory} className="flex flex-wrap items-end gap-3">
           <div>
-            <label className="block text-xs font-medium text-[#7A6A5E] mb-1">Name *</label>
+            <label className="block text-xs font-medium text-[#6D5E6D] mb-1">Name *</label>
             <input
               type="text"
               required
               value={newCatName}
               onChange={(e) => setNewCatName(e.target.value)}
               placeholder="e.g. Cakes & Tortes"
-              className="px-3 py-2 rounded-lg border border-[#E8E0D5] text-sm text-[#1C1410] bg-[#FAF8F4] focus:outline-none focus:ring-1 focus:ring-[#C8652A]"
+              className="px-3 py-2 rounded-lg border border-[#EBD2AD] text-sm text-[#201D20] bg-[#FCFFEB] focus:outline-none focus:ring-1 focus:ring-[#C58930]"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-[#7A6A5E] mb-1">Slug (optional)</label>
+            <label className="block text-xs font-medium text-[#6D5E6D] mb-1">Slug (optional)</label>
             <input
               type="text"
               value={newCatSlug}
               onChange={(e) => setNewCatSlug(e.target.value)}
               placeholder="auto-generated"
-              className="px-3 py-2 rounded-lg border border-[#E8E0D5] text-sm text-[#7A6A5E] bg-[#FAF8F4] font-mono focus:outline-none focus:ring-1 focus:ring-[#C8652A]"
+              className="px-3 py-2 rounded-lg border border-[#EBD2AD] text-sm text-[#6D5E6D] bg-[#FCFFEB] font-mono focus:outline-none focus:ring-1 focus:ring-[#C58930]"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-[#7A6A5E] mb-1">Description</label>
+            <label className="block text-xs font-medium text-[#6D5E6D] mb-1">Description</label>
             <input
               type="text"
               value={newCatDesc}
               onChange={(e) => setNewCatDesc(e.target.value)}
               placeholder="Optional description"
-              className="px-3 py-2 rounded-lg border border-[#E8E0D5] text-sm text-[#1C1410] bg-[#FAF8F4] focus:outline-none focus:ring-1 focus:ring-[#C8652A] w-64"
+              className="px-3 py-2 rounded-lg border border-[#EBD2AD] text-sm text-[#201D20] bg-[#FCFFEB] focus:outline-none focus:ring-1 focus:ring-[#C58930] w-64"
             />
           </div>
           <button
             type="submit"
             disabled={addingCat}
-            className="px-5 py-2 rounded-lg bg-[#C8652A] text-white text-sm font-medium hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
+            className="px-5 py-2 rounded-lg bg-[#C58930] text-white text-sm font-medium hover:bg-[#A87225] disabled:opacity-60 transition-colors"
           >
             {addingCat ? 'Adding…' : 'Add Category'}
           </button>

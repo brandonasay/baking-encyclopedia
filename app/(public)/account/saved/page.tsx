@@ -33,22 +33,22 @@ export default async function SavedRecipesPage() {
   const validSaved = saved.filter((s) => s.recipes !== null)
 
   return (
-    <div className="bg-[#FAF8F4] min-h-screen">
+    <div className="bg-[#FCFFEB] min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-[#F5EDE4] flex items-center justify-center">
-            <Bookmark className="w-5 h-5 text-[#C8652A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#F5EAC8] flex items-center justify-center">
+            <Bookmark className="w-5 h-5 text-[#C58930]" />
           </div>
           <div>
             <h1
-              className="text-3xl font-bold text-[#1C1410]"
+              className="text-3xl font-bold text-[#201D20]"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Saved Recipes
             </h1>
-            <p className="text-sm text-[#7A6A5E]">
+            <p className="text-sm text-[#6D5E6D]">
               {validSaved.length} {validSaved.length === 1 ? 'recipe' : 'recipes'} saved
             </p>
           </div>
@@ -57,19 +57,19 @@ export default async function SavedRecipesPage() {
         {/* Empty state */}
         {validSaved.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-            <Bookmark className="w-14 h-14 text-[#E8E0D5]" />
+            <Bookmark className="w-14 h-14 text-[#EBD2AD]" />
             <h2
-              className="text-xl font-bold text-[#1C1410]"
+              className="text-xl font-bold text-[#201D20]"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               No saved recipes yet
             </h2>
-            <p className="text-[#7A6A5E] max-w-sm">
+            <p className="text-[#6D5E6D] max-w-sm">
               When you save a recipe you&apos;ll find it here for quick access.
             </p>
             <Link
               href="/recipes"
-              className="mt-2 px-6 py-2.5 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white font-medium text-sm transition-colors duration-150"
+              className="mt-2 px-6 py-2.5 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-medium text-sm transition-colors duration-150"
             >
               Browse Recipes
             </Link>

@@ -61,7 +61,7 @@ export default function RecipeVariantToggle({
     <div className="space-y-6">
       {/* Variant tabs */}
       <div
-        className="inline-flex bg-[#FAF8F4] border border-[#E8E0D5] rounded-xl p-1 gap-1"
+        className="inline-flex bg-[#FCFFEB] border border-[#EBD2AD] rounded-xl p-1 gap-1"
         role="tablist"
         aria-label="Recipe variant"
       >
@@ -73,8 +73,8 @@ export default function RecipeVariantToggle({
             onClick={() => setVariant(tab.value)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               variant === tab.value
-                ? 'bg-white text-[#C8652A] shadow-sm border border-[#E8E0D5]'
-                : 'text-[#7A6A5E] hover:text-[#1C1410]'
+                ? 'bg-white text-[#C58930] shadow-sm border border-[#EBD2AD]'
+                : 'text-[#6D5E6D] hover:text-[#201D20]'
             }`}
           >
             {tab.label}
@@ -84,16 +84,16 @@ export default function RecipeVariantToggle({
 
       {/* Variant notes */}
       {activeNotes && (
-        <div className="p-4 bg-[#F5EDE4] rounded-xl border-l-4 border-[#C8652A]">
-          <p className="text-sm text-[#1C1410] leading-relaxed">{activeNotes}</p>
+        <div className="p-4 bg-[#F5EAC8] rounded-xl border-l-4 border-[#C58930]">
+          <p className="text-sm text-[#201D20] leading-relaxed">{activeNotes}</p>
         </div>
       )}
 
       {/* Ingredients (shown inline on mobile) */}
-      <div className="lg:hidden bg-white rounded-2xl border border-[#E8E0D5] overflow-hidden">
-        <div className="px-5 py-4 bg-[#F5EDE4] border-b border-[#E8E0D5]">
+      <div className="lg:hidden bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
+        <div className="px-5 py-4 bg-[#F5EAC8] border-b border-[#EBD2AD]">
           <h2
-            className="text-lg font-bold text-[#1C1410]"
+            className="text-lg font-bold text-[#201D20]"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Ingredients

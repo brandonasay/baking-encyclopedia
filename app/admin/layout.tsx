@@ -11,7 +11,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
         {/* Mobile top-bar spacer */}
         <div className="lg:hidden h-14" aria-hidden="true" />
-        <main className="flex-1 bg-[#FAF8F4] p-6 lg:p-8">
+        <main className="flex-1 bg-[#FCFFEB] p-6 lg:p-8">
           {children}
         </main>
       </div>

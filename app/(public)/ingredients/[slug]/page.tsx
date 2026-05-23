@@ -68,9 +68,9 @@ export default async function IngredientDetailPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-[#FAF8F4]">
+      <div className="min-h-screen bg-[#FCFFEB]">
         {/* Hero */}
-        <div className="relative bg-[#1C1410] text-white overflow-hidden">
+        <div className="relative bg-[#201D20] text-white overflow-hidden">
           <div className="absolute inset-0">
             {ingredient.image_url ? (
               <Image
@@ -82,9 +82,9 @@ export default async function IngredientDetailPage({ params }: Props) {
                 sizes="100vw"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#C8652A]/60 to-[#1C1410]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#C58930]/60 to-[#201D20]" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1410] via-[#1C1410]/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#201D20] via-[#201D20]/60 to-transparent" />
           </div>
 
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
@@ -97,7 +97,7 @@ export default async function IngredientDetailPage({ params }: Props) {
               <span className="text-white/80">{ingredient.category}</span>
             </nav>
 
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#C8652A]/80 text-white mb-4">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#C58930]/80 text-white mb-4">
               {ingredient.category}
             </span>
 
@@ -125,7 +125,7 @@ export default async function IngredientDetailPage({ params }: Props) {
               {ingredient.origins && (
                 <section>
                   <h2
-                    className="text-2xl text-[#1C1410] mb-4"
+                    className="text-2xl text-[#201D20] mb-4"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Origins
@@ -142,7 +142,7 @@ export default async function IngredientDetailPage({ params }: Props) {
               {ingredient.how_used_in_baking && (
                 <section>
                   <h2
-                    className="text-2xl text-[#1C1410] mb-4"
+                    className="text-2xl text-[#201D20] mb-4"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     How It&apos;s Used in Baking
@@ -159,7 +159,7 @@ export default async function IngredientDetailPage({ params }: Props) {
               {ingredient.flavor_notes && (
                 <section>
                   <h2
-                    className="text-2xl text-[#1C1410] mb-4"
+                    className="text-2xl text-[#201D20] mb-4"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Flavor Profile
@@ -175,16 +175,16 @@ export default async function IngredientDetailPage({ params }: Props) {
               {/* Baker's percentage */}
               {ingredient.baker_percentage && (
                 <section>
-                  <div className="rounded-xl bg-[#F5EDE4] border border-[#C8652A]/20 p-6">
+                  <div className="rounded-xl bg-[#F5EAC8] border border-[#C58930]/20 p-6">
                     <h2
-                      className="text-xl text-[#C8652A] mb-3"
+                      className="text-xl text-[#C58930] mb-3"
                       style={{ fontFamily: 'var(--font-playfair)' }}
                     >
                       Baker&apos;s Percentage
                     </h2>
                     <div className="prose">
                       {ingredient.baker_percentage.split('\n\n').map((para, i) => (
-                        <p key={i} className="text-[#1C1410]">
+                        <p key={i} className="text-[#201D20]">
                           {para}
                         </p>
                       ))}
@@ -197,7 +197,7 @@ export default async function IngredientDetailPage({ params }: Props) {
               {ingredient.tags && ingredient.tags.length > 0 && (
                 <section>
                   <h2
-                    className="text-lg text-[#7A6A5E] mb-3"
+                    className="text-lg text-[#6D5E6D] mb-3"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Tags
@@ -206,7 +206,7 @@ export default async function IngredientDetailPage({ params }: Props) {
                     {ingredient.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 rounded-full text-sm text-[#7A6A5E] bg-white border border-[#E8E0D5]"
+                        className="px-3 py-1 rounded-full text-sm text-[#6D5E6D] bg-white border border-[#EBD2AD]"
                       >
                         {tag}
                       </span>
@@ -220,14 +220,14 @@ export default async function IngredientDetailPage({ params }: Props) {
             <aside className="space-y-6">
               {/* Storage tips */}
               {ingredient.storage_tips && (
-                <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
+                <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
                   <h3
-                    className="text-lg text-[#1C1410] mb-3"
+                    className="text-lg text-[#201D20] mb-3"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Storage Tips
                   </h3>
-                  <p className="text-sm text-[#7A6A5E] leading-relaxed">
+                  <p className="text-sm text-[#6D5E6D] leading-relaxed">
                     {ingredient.storage_tips}
                   </p>
                 </div>
@@ -235,14 +235,14 @@ export default async function IngredientDetailPage({ params }: Props) {
 
               {/* Buying tips */}
               {ingredient.buying_tips && (
-                <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
+                <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
                   <h3
-                    className="text-lg text-[#1C1410] mb-3"
+                    className="text-lg text-[#201D20] mb-3"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Buying Tips
                   </h3>
-                  <p className="text-sm text-[#7A6A5E] leading-relaxed">
+                  <p className="text-sm text-[#6D5E6D] leading-relaxed">
                     {ingredient.buying_tips}
                   </p>
                 </div>
@@ -250,14 +250,14 @@ export default async function IngredientDetailPage({ params }: Props) {
 
               {/* Sourcing notes */}
               {ingredient.sourcing_notes && (
-                <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
+                <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
                   <h3
-                    className="text-lg text-[#1C1410] mb-3"
+                    className="text-lg text-[#201D20] mb-3"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Sourcing Notes
                   </h3>
-                  <p className="text-sm text-[#7A6A5E] leading-relaxed">
+                  <p className="text-sm text-[#6D5E6D] leading-relaxed">
                     {ingredient.sourcing_notes}
                   </p>
                 </div>
@@ -265,28 +265,28 @@ export default async function IngredientDetailPage({ params }: Props) {
 
               {/* Common substitutes */}
               {ingredient.common_substitutes && ingredient.common_substitutes.length > 0 && (
-                <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
+                <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
                   <h3
-                    className="text-lg text-[#1C1410] mb-4"
+                    className="text-lg text-[#201D20] mb-4"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Common Substitutes
                   </h3>
                   <ul className="space-y-4">
                     {ingredient.common_substitutes.map((sub, i) => (
-                      <li key={i} className="border-b border-[#E8E0D5] last:border-0 pb-4 last:pb-0">
+                      <li key={i} className="border-b border-[#EBD2AD] last:border-0 pb-4 last:pb-0">
                         {sub.ingredient_id ? (
                           <Link
                             href={`/ingredients/${sub.ingredient_id}`}
-                            className="font-medium text-sm text-[#C8652A] hover:underline"
+                            className="font-medium text-sm text-[#C58930] hover:underline"
                           >
                             {sub.name}
                           </Link>
                         ) : (
-                          <span className="font-medium text-sm text-[#1C1410]">{sub.name}</span>
+                          <span className="font-medium text-sm text-[#201D20]">{sub.name}</span>
                         )}
                         {sub.notes && (
-                          <p className="text-xs text-[#7A6A5E] mt-1 leading-relaxed">{sub.notes}</p>
+                          <p className="text-xs text-[#6D5E6D] mt-1 leading-relaxed">{sub.notes}</p>
                         )}
                       </li>
                     ))}

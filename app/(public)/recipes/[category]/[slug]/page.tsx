@@ -100,9 +100,9 @@ export default async function RecipeDetailPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-[#FAF8F4]">
+      <div className="min-h-screen bg-[#FCFFEB]">
         {/* Hero */}
-        <div className="relative bg-[#1C1410] text-white overflow-hidden">
+        <div className="relative bg-[#201D20] text-white overflow-hidden">
           <div className="absolute inset-0">
             {recipe.image_url ? (
               <Image
@@ -114,9 +114,9 @@ export default async function RecipeDetailPage({ params }: Props) {
                 sizes="100vw"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#C8652A]/50 to-[#1C1410]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#C58930]/50 to-[#201D20]" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1410] via-[#1C1410]/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#201D20] via-[#201D20]/50 to-transparent" />
           </div>
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
@@ -180,7 +180,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                 </span>
               )}
               {recipe.has_gluten_free && (
-                <span className="px-2 py-0.5 rounded bg-emerald-800/60 text-emerald-200 text-xs font-medium">
+                <span className="px-2 py-0.5 rounded bg-[#2D4520]/60 text-[#B5C9A8] text-xs font-medium">
                   GF available
                 </span>
               )}
@@ -198,10 +198,10 @@ export default async function RecipeDetailPage({ params }: Props) {
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar: ingredients (desktop) */}
             <aside className="hidden lg:block lg:w-72 shrink-0">
-              <div className="sticky top-6 bg-white rounded-2xl border border-[#E8E0D5] overflow-hidden">
-                <div className="px-5 py-4 bg-[#F5EDE4] border-b border-[#E8E0D5]">
+              <div className="sticky top-6 bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
+                <div className="px-5 py-4 bg-[#F5EAC8] border-b border-[#EBD2AD]">
                   <h2
-                    className="text-lg font-bold text-[#1C1410]"
+                    className="text-lg font-bold text-[#201D20]"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Ingredients
@@ -232,10 +232,10 @@ export default async function RecipeDetailPage({ params }: Props) {
               ) : (
                 <>
                   {/* Mobile-only ingredients */}
-                  <div className="lg:hidden bg-white rounded-2xl border border-[#E8E0D5] overflow-hidden">
-                    <div className="px-5 py-4 bg-[#F5EDE4] border-b border-[#E8E0D5]">
+                  <div className="lg:hidden bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
+                    <div className="px-5 py-4 bg-[#F5EAC8] border-b border-[#EBD2AD]">
                       <h2
-                        className="text-lg font-bold text-[#1C1410]"
+                        className="text-lg font-bold text-[#201D20]"
                         style={{ fontFamily: 'var(--font-playfair)' }}
                       >
                         Ingredients
@@ -250,7 +250,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                   <section aria-labelledby="instructions-heading">
                     <h2
                       id="instructions-heading"
-                      className="text-2xl font-bold text-[#1C1410] mb-6"
+                      className="text-2xl font-bold text-[#201D20] mb-6"
                       style={{ fontFamily: 'var(--font-playfair)' }}
                     >
                       Instructions
@@ -259,16 +259,16 @@ export default async function RecipeDetailPage({ params }: Props) {
                       {recipe.instructions.map((step) => (
                         <li key={step.step_number} className="flex gap-5">
                           <div
-                            className="flex-shrink-0 w-9 h-9 rounded-full bg-[#C8652A] text-white font-bold text-sm flex items-center justify-center mt-0.5"
+                            className="flex-shrink-0 w-9 h-9 rounded-full bg-[#C58930] text-white font-bold text-sm flex items-center justify-center mt-0.5"
                             aria-label={`Step ${step.step_number}`}
                           >
                             {step.step_number}
                           </div>
                           <div className="flex-1 pt-1">
                             {step.title && (
-                              <h3 className="font-semibold text-[#1C1410] mb-1.5">{step.title}</h3>
+                              <h3 className="font-semibold text-[#201D20] mb-1.5">{step.title}</h3>
                             )}
-                            <p className="text-[#1C1410] leading-relaxed">{step.body}</p>
+                            <p className="text-[#201D20] leading-relaxed">{step.body}</p>
                           </div>
                         </li>
                       ))}
@@ -282,18 +282,18 @@ export default async function RecipeDetailPage({ params }: Props) {
                 <section aria-labelledby="tips-heading">
                   <h2
                     id="tips-heading"
-                    className="text-2xl font-bold text-[#1C1410] mb-5"
+                    className="text-2xl font-bold text-[#201D20] mb-5"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Baker&apos;s Tips
                   </h2>
                   <ul className="space-y-3">
                     {recipe.tips.map((tip, i) => (
-                      <li key={i} className="flex gap-3 bg-[#F5EDE4] rounded-xl p-4">
-                        <span className="text-[#C8652A] font-bold text-sm mt-0.5 shrink-0">
+                      <li key={i} className="flex gap-3 bg-[#F5EAC8] rounded-xl p-4">
+                        <span className="text-[#C58930] font-bold text-sm mt-0.5 shrink-0">
                           {i + 1}.
                         </span>
-                        <p className="text-sm text-[#1C1410] leading-relaxed">{tip}</p>
+                        <p className="text-sm text-[#201D20] leading-relaxed">{tip}</p>
                       </li>
                     ))}
                   </ul>
@@ -305,7 +305,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                 <section aria-labelledby="equipment-heading">
                   <h2
                     id="equipment-heading"
-                    className="text-2xl font-bold text-[#1C1410] mb-5"
+                    className="text-2xl font-bold text-[#201D20] mb-5"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Equipment
@@ -314,7 +314,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                     {recipe.equipment.map((item) => (
                       <li
                         key={item}
-                        className="px-3 py-1.5 rounded-lg bg-white border border-[#E8E0D5] text-sm text-[#1C1410]"
+                        className="px-3 py-1.5 rounded-lg bg-white border border-[#EBD2AD] text-sm text-[#201D20]"
                       >
                         {item}
                       </li>
@@ -328,13 +328,13 @@ export default async function RecipeDetailPage({ params }: Props) {
                 <section aria-labelledby="storage-heading">
                   <h2
                     id="storage-heading"
-                    className="text-2xl font-bold text-[#1C1410] mb-4"
+                    className="text-2xl font-bold text-[#201D20] mb-4"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Storage
                   </h2>
-                  <div className="bg-white rounded-xl border border-[#E8E0D5] p-5">
-                    <p className="text-[#1C1410] leading-relaxed">{recipe.storage_instructions}</p>
+                  <div className="bg-white rounded-xl border border-[#EBD2AD] p-5">
+                    <p className="text-[#201D20] leading-relaxed">{recipe.storage_instructions}</p>
                   </div>
                 </section>
               )}
@@ -344,7 +344,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                 <section aria-labelledby="nutrition-heading">
                   <h2
                     id="nutrition-heading"
-                    className="text-2xl font-bold text-[#1C1410] mb-5"
+                    className="text-2xl font-bold text-[#201D20] mb-5"
                     style={{ fontFamily: 'var(--font-playfair)' }}
                   >
                     Nutrition per Serving
@@ -372,7 +372,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                   {recipe.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 rounded-full text-sm text-[#7A6A5E] bg-white border border-[#E8E0D5]"
+                      className="px-3 py-1 rounded-full text-sm text-[#6D5E6D] bg-white border border-[#EBD2AD]"
                     >
                       {tag}
                     </span>
@@ -389,12 +389,12 @@ export default async function RecipeDetailPage({ params }: Props) {
 
 function NutritionBadge({ label, value, unit }: { label: string; value: number; unit: string }) {
   return (
-    <div className="bg-white rounded-xl border border-[#E8E0D5] p-4 text-center">
-      <p className="text-2xl font-bold text-[#C8652A]">
+    <div className="bg-white rounded-xl border border-[#EBD2AD] p-4 text-center">
+      <p className="text-2xl font-bold text-[#C58930]">
         {value}
         {unit}
       </p>
-      <p className="text-xs text-[#7A6A5E] mt-1">{label}</p>
+      <p className="text-xs text-[#6D5E6D] mt-1">{label}</p>
     </div>
   )
 }

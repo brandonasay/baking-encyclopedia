@@ -36,8 +36,8 @@ export default function CollectionDetailManager({ collectionId, isPublic: initia
         disabled={loading}
         className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors duration-150 disabled:opacity-60 ${
           isPublic
-            ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-            : 'border-[#E8E0D5] bg-white text-[#7A6A5E] hover:border-[#C8652A] hover:text-[#C8652A]'
+            ? 'border-[#B5C9A8] bg-[#EEF3EA] text-[#41622D] hover:bg-[#DCE8D5]'
+            : 'border-[#EBD2AD] bg-white text-[#6D5E6D] hover:border-[#C58930] hover:text-[#C58930]'
         }`}
       >
         {loading ? (

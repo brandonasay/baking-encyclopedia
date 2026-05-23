@@ -35,20 +35,20 @@ export default async function HowToPage() {
   const microbakery = allArticles.filter((a) => a.section === 'microbakery')
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4]">
+    <div className="min-h-screen bg-[#FCFFEB]">
       {/* Hero */}
-      <div className="bg-white border-b border-[#E8E0D5]">
+      <div className="bg-white border-b border-[#EBD2AD]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-          <p className="text-[#C8652A] text-sm font-medium uppercase tracking-widest mb-3">
+          <p className="text-[#C58930] text-sm font-medium uppercase tracking-widest mb-3">
             Guides
           </p>
           <h1
-            className="text-4xl md:text-5xl text-[#1C1410] mb-4"
+            className="text-4xl md:text-5xl text-[#201D20] mb-4"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             How-To Guides
           </h1>
-          <p className="text-[#7A6A5E] text-lg max-w-2xl leading-relaxed">
+          <p className="text-[#6D5E6D] text-lg max-w-2xl leading-relaxed">
             Master baking techniques and build your microbakery with step-by-step guides written for
             serious home bakers.
           </p>
@@ -60,14 +60,14 @@ export default async function HowToPage() {
         {featured.length > 0 && (
           <section>
             <div className="flex items-center gap-4 mb-7">
-              <BookOpen className="w-5 h-5 text-[#C8652A]" aria-hidden="true" />
+              <BookOpen className="w-5 h-5 text-[#C58930]" aria-hidden="true" />
               <h2
-                className="text-2xl text-[#1C1410]"
+                className="text-2xl text-[#201D20]"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
                 Featured Guides
               </h2>
-              <div className="flex-1 h-px bg-[#E8E0D5]" />
+              <div className="flex-1 h-px bg-[#EBD2AD]" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {featured.map((article) => (
@@ -82,15 +82,15 @@ export default async function HowToPage() {
           <section>
             <div className="flex items-center gap-4 mb-7">
               <h2
-                className="text-2xl text-[#1C1410]"
+                className="text-2xl text-[#201D20]"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
                 Baking Techniques
               </h2>
-              <div className="flex-1 h-px bg-[#E8E0D5]" />
+              <div className="flex-1 h-px bg-[#EBD2AD]" />
               <Link
                 href="/how-to/baking"
-                className="text-sm text-[#C8652A] hover:underline whitespace-nowrap"
+                className="text-sm text-[#C58930] hover:underline whitespace-nowrap"
               >
                 See all ({baking.length})
               </Link>
@@ -108,15 +108,15 @@ export default async function HowToPage() {
           <section>
             <div className="flex items-center gap-4 mb-7">
               <h2
-                className="text-2xl text-[#1C1410]"
+                className="text-2xl text-[#201D20]"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
                 Microbakery
               </h2>
-              <div className="flex-1 h-px bg-[#E8E0D5]" />
+              <div className="flex-1 h-px bg-[#EBD2AD]" />
               <Link
                 href="/how-to/microbakery"
-                className="text-sm text-[#C8652A] hover:underline whitespace-nowrap"
+                className="text-sm text-[#C58930] hover:underline whitespace-nowrap"
               >
                 See all ({microbakery.length})
               </Link>
@@ -131,7 +131,7 @@ export default async function HowToPage() {
 
         {allArticles.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-[#7A6A5E] text-lg">No guides published yet. Check back soon.</p>
+            <p className="text-[#6D5E6D] text-lg">No guides published yet. Check back soon.</p>
           </div>
         )}
       </div>

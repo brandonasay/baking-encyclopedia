@@ -38,8 +38,8 @@ export default async function AdminCategoriesPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#1C1410]">Categories</h1>
-          <p className="text-sm text-[#7A6A5E] mt-0.5">
+          <h1 className="text-2xl font-bold text-[#201D20]">Categories</h1>
+          <p className="text-sm text-[#6D5E6D] mt-0.5">
             {categories.length} {categories.length === 1 ? 'category' : 'categories'}
           </p>
         </div>

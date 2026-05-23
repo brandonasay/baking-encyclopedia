@@ -73,9 +73,9 @@ export default async function CategoryPage({ params }: Props) {
   const recipes = (recipesData ?? []) as RecipeCardFields[]
 
   return (
-    <main className="min-h-screen bg-[#FAF8F4]">
+    <main className="min-h-screen bg-[#FCFFEB]">
       {/* Category hero */}
-      <div className="relative bg-[#1C1410] text-white overflow-hidden">
+      <div className="relative bg-[#201D20] text-white overflow-hidden">
         {cat.image_url ? (
           <div className="absolute inset-0">
             <Image
@@ -86,10 +86,10 @@ export default async function CategoryPage({ params }: Props) {
               priority
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1410] via-[#1C1410]/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#201D20] via-[#201D20]/60 to-transparent" />
           </div>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#C8652A]/40 to-[#1C1410]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#C58930]/40 to-[#201D20]" />
         )}
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
@@ -130,17 +130,17 @@ export default async function CategoryPage({ params }: Props) {
           <div className="py-24 text-center space-y-4">
             <p className="text-5xl" aria-hidden="true">🥐</p>
             <h2
-              className="text-2xl font-semibold text-[#1C1410]"
+              className="text-2xl font-semibold text-[#201D20]"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               No recipes yet
             </h2>
-            <p className="text-[#7A6A5E]">
+            <p className="text-[#6D5E6D]">
               We&apos;re working on {cat.name.toLowerCase()} recipes — check back soon!
             </p>
             <Link
               href="/recipes"
-              className="inline-block mt-4 px-5 py-2.5 rounded-xl bg-[#C8652A] text-white font-medium hover:bg-[#B55A24] transition-colors"
+              className="inline-block mt-4 px-5 py-2.5 rounded-xl bg-[#C58930] text-white font-medium hover:bg-[#A87225] transition-colors"
             >
               Browse all recipes
             </Link>

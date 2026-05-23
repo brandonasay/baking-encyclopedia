@@ -25,12 +25,12 @@ function AvatarInitial({ profile }: { profile: Profile }) {
       <img
         src={profile.avatar_url}
         alt={profile.display_name ?? profile.email}
-        className="w-20 h-20 rounded-full object-cover border-4 border-[#E8E0D5]"
+        className="w-20 h-20 rounded-full object-cover border-4 border-[#EBD2AD]"
       />
     )
   }
   return (
-    <div className="w-20 h-20 rounded-full bg-[#C8652A] flex items-center justify-center border-4 border-[#E8E0D5]">
+    <div className="w-20 h-20 rounded-full bg-[#C58930] flex items-center justify-center border-4 border-[#EBD2AD]">
       <span className="text-white text-3xl font-bold" style={{ fontFamily: 'var(--font-playfair)' }}>
         {initial}
       </span>
@@ -49,17 +49,17 @@ export default async function AccountPage() {
   if (!user) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-4">
-        <User className="w-12 h-12 text-[#7A6A5E]" />
+        <User className="w-12 h-12 text-[#6D5E6D]" />
         <h1
-          className="text-2xl font-bold text-[#1C1410]"
+          className="text-2xl font-bold text-[#201D20]"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >
           Please sign in
         </h1>
-        <p className="text-[#7A6A5E]">You need to be signed in to view your account.</p>
+        <p className="text-[#6D5E6D]">You need to be signed in to view your account.</p>
         <Link
           href="/login"
-          className="px-6 py-2.5 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white font-medium transition-colors duration-150"
+          className="px-6 py-2.5 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-medium transition-colors duration-150"
         >
           Sign in
         </Link>
@@ -84,29 +84,29 @@ export default async function AccountPage() {
   ]
 
   return (
-    <div className="bg-[#FAF8F4] min-h-screen">
+    <div className="bg-[#FCFFEB] min-h-screen">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
         {/* Header */}
         <h1
-          className="text-3xl font-bold text-[#1C1410] mb-8"
+          className="text-3xl font-bold text-[#201D20] mb-8"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >
           My Account
         </h1>
 
         {/* Profile card */}
-        <div className="bg-white rounded-2xl border border-[#E8E0D5] p-6 mb-6 flex flex-col sm:flex-row sm:items-center gap-5">
+        <div className="bg-white rounded-2xl border border-[#EBD2AD] p-6 mb-6 flex flex-col sm:flex-row sm:items-center gap-5">
           {profile && <AvatarInitial profile={profile} />}
           <div className="flex-1 min-w-0">
             <p
-              className="text-xl font-bold text-[#1C1410] truncate"
+              className="text-xl font-bold text-[#201D20] truncate"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {profile?.display_name ?? 'Baker'}
             </p>
-            <p className="text-sm text-[#7A6A5E] truncate">{profile?.email ?? user.email}</p>
-            <p className="text-xs text-[#7A6A5E] mt-1">
+            <p className="text-sm text-[#6D5E6D] truncate">{profile?.email ?? user.email}</p>
+            <p className="text-xs text-[#6D5E6D] mt-1">
               Member since {profile ? formatDate(profile.created_at) : '—'}
             </p>
           </div>
@@ -119,38 +119,38 @@ export default async function AccountPage() {
             <Link
               key={href}
               href={href}
-              className="bg-white rounded-xl border border-[#E8E0D5] p-5 flex items-center justify-between hover:border-[#C8652A] hover:shadow-sm transition-all duration-150 group"
+              className="bg-white rounded-xl border border-[#EBD2AD] p-5 flex items-center justify-between hover:border-[#C58930] hover:shadow-sm transition-all duration-150 group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#F5EDE4] flex items-center justify-center">
-                  <Icon className="w-4 h-4 text-[#C8652A]" />
+                <div className="w-9 h-9 rounded-lg bg-[#F5EAC8] flex items-center justify-center">
+                  <Icon className="w-4 h-4 text-[#C58930]" />
                 </div>
                 <div>
-                  <p className="text-xs text-[#7A6A5E]">{label}</p>
+                  <p className="text-xs text-[#6D5E6D]">{label}</p>
                   {count !== null && (
-                    <p className="text-lg font-bold text-[#1C1410]">{count}</p>
+                    <p className="text-lg font-bold text-[#201D20]">{count}</p>
                   )}
                 </div>
               </div>
-              <ChevronRight className="w-4 h-4 text-[#7A6A5E] group-hover:text-[#C8652A] transition-colors duration-150" />
+              <ChevronRight className="w-4 h-4 text-[#6D5E6D] group-hover:text-[#C58930] transition-colors duration-150" />
             </Link>
           ))}
         </div>
 
         {/* Mailing list status */}
         {profile && (
-          <div className="bg-white rounded-xl border border-[#E8E0D5] p-5 mb-6 flex items-center justify-between">
+          <div className="bg-white rounded-xl border border-[#EBD2AD] p-5 mb-6 flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#1C1410]">Newsletter</p>
-              <p className="text-xs text-[#7A6A5E]">
+              <p className="text-sm font-medium text-[#201D20]">Newsletter</p>
+              <p className="text-xs text-[#6D5E6D]">
                 {profile.mailing_list ? 'You are subscribed to our newsletter.' : 'You are not subscribed.'}
               </p>
             </div>
             <span
               className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                 profile.mailing_list
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : 'bg-[#FAF8F4] text-[#7A6A5E] border border-[#E8E0D5]'
+                  ? 'bg-[#EEF3EA] text-[#41622D] border border-[#B5C9A8]'
+                  : 'bg-[#FCFFEB] text-[#6D5E6D] border border-[#EBD2AD]'
               }`}
             >
               {profile.mailing_list ? 'Subscribed' : 'Not subscribed'}
@@ -160,9 +160,9 @@ export default async function AccountPage() {
 
         {/* Settings form */}
         {profile && (
-          <div className="bg-white rounded-2xl border border-[#E8E0D5] p-6">
+          <div className="bg-white rounded-2xl border border-[#EBD2AD] p-6">
             <h2
-              className="text-lg font-bold text-[#1C1410] mb-5"
+              className="text-lg font-bold text-[#201D20] mb-5"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Account Settings

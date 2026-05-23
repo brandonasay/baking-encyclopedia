@@ -37,7 +37,7 @@ export default function SearchBar({ defaultValue = '', autoFocus = false }: Sear
     <div className="w-full">
       <form ref={formRef} onSubmit={handleSubmit} className="relative">
         <Search
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7A6A5E] pointer-events-none"
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6D5E6D] pointer-events-none"
           aria-hidden="true"
         />
         <input
@@ -46,13 +46,13 @@ export default function SearchBar({ defaultValue = '', autoFocus = false }: Sear
           value={value}
           onChange={(e) => setValue(e.target.value)}
           autoFocus={autoFocus}
-          className="w-full pl-12 pr-32 py-4 rounded-xl border border-[#E8E0D5] bg-white text-[#1C1410] placeholder:text-[#7A6A5E] text-base focus:outline-none focus:ring-2 focus:ring-[#C8652A]/30 focus:border-[#C8652A] shadow-sm transition-colors"
+          className="w-full pl-12 pr-32 py-4 rounded-xl border border-[#EBD2AD] bg-white text-[#201D20] placeholder:text-[#6D5E6D] text-base focus:outline-none focus:ring-2 focus:ring-[#C58930]/30 focus:border-[#C58930] shadow-sm transition-colors"
           aria-label="Search the encyclopedia"
         />
         <button
           type="submit"
           disabled={isPending || !value.trim()}
-          className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-lg bg-[#C8652A] text-white text-sm font-medium disabled:opacity-50 hover:bg-[#9E4D1F] transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-lg bg-[#C58930] text-white text-sm font-medium disabled:opacity-50 hover:bg-[#8A5D1A] transition-colors"
         >
           {isPending ? 'Searching…' : 'Search'}
         </button>
@@ -61,7 +61,7 @@ export default function SearchBar({ defaultValue = '', autoFocus = false }: Sear
       {/* Suggestion chips */}
       {!defaultValue && (
         <div className="mt-4 flex flex-wrap gap-2">
-          <span className="text-sm text-[#7A6A5E]">Try:</span>
+          <span className="text-sm text-[#6D5E6D]">Try:</span>
           {SUGGESTIONS.map((s) => (
             <button
               key={s}
@@ -72,7 +72,7 @@ export default function SearchBar({ defaultValue = '', autoFocus = false }: Sear
                   router.push(`/search?q=${encodeURIComponent(s)}`)
                 })
               }}
-              className="px-3 py-1 rounded-full text-sm bg-white border border-[#E8E0D5] text-[#7A6A5E] hover:border-[#C8652A] hover:text-[#C8652A] transition-colors"
+              className="px-3 py-1 rounded-full text-sm bg-white border border-[#EBD2AD] text-[#6D5E6D] hover:border-[#C58930] hover:text-[#C58930] transition-colors"
             >
               {s}
             </button>

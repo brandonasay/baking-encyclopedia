@@ -28,8 +28,8 @@ export default async function AdminUsersPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#1C1410]">Users</h1>
-          <p className="text-sm text-[#7A6A5E] mt-0.5">
+          <h1 className="text-2xl font-bold text-[#201D20]">Users</h1>
+          <p className="text-sm text-[#6D5E6D] mt-0.5">
             {profiles.length} total &middot; {subscriberCount} on mailing list
           </p>
         </div>
@@ -37,37 +37,37 @@ export default async function AdminUsersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-[#E8E0D5] overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#EBD2AD] overflow-hidden">
         {profiles.length === 0 ? (
-          <div className="py-16 text-center text-[#7A6A5E]">No users found.</div>
+          <div className="py-16 text-center text-[#6D5E6D]">No users found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#E8E0D5] bg-[#FAF8F4]">
-                  <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Email</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Display Name</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Role</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Mailing List</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#1C1410]">Joined</th>
+                <tr className="border-b border-[#EBD2AD] bg-[#FCFFEB]">
+                  <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Email</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Display Name</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Role</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Mailing List</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#201D20]">Joined</th>
                 </tr>
               </thead>
               <tbody>
                 {profiles.map((profile) => (
                   <tr
                     key={profile.id}
-                    className="border-b border-[#E8E0D5] last:border-0 hover:bg-[#FAF8F4] transition-colors"
+                    className="border-b border-[#EBD2AD] last:border-0 hover:bg-[#FCFFEB] transition-colors"
                   >
-                    <td className="px-4 py-3 text-[#1C1410]">{profile.email}</td>
-                    <td className="px-4 py-3 text-[#7A6A5E]">
-                      {profile.display_name ?? <span className="text-[#7A6A5E]/40 italic">—</span>}
+                    <td className="px-4 py-3 text-[#201D20]">{profile.email}</td>
+                    <td className="px-4 py-3 text-[#6D5E6D]">
+                      {profile.display_name ?? <span className="text-[#6D5E6D]/40 italic">—</span>}
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                           profile.role === 'admin'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : 'bg-[#FAF8F4] text-[#7A6A5E] border border-[#E8E0D5]'
+                            ? 'bg-[#FBF3DC] text-[#A87225] border border-amber-200'
+                            : 'bg-[#FCFFEB] text-[#6D5E6D] border border-[#EBD2AD]'
                         }`}
                       >
                         {profile.role}
@@ -75,14 +75,14 @@ export default async function AdminUsersPage() {
                     </td>
                     <td className="px-4 py-3">
                       {profile.mailing_list ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#EEF3EA] text-[#41622D] border border-[#B5C9A8]">
                           Subscribed
                         </span>
                       ) : (
-                        <span className="text-[#7A6A5E]/60 text-xs">—</span>
+                        <span className="text-[#6D5E6D]/60 text-xs">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-[#7A6A5E] whitespace-nowrap">
+                    <td className="px-4 py-3 text-[#6D5E6D] whitespace-nowrap">
                       {formatDate(profile.created_at)}
                     </td>
                   </tr>

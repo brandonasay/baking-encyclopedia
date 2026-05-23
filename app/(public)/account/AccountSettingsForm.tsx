@@ -37,7 +37,7 @@ export default function AccountSettingsForm({ profile }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
-        <label htmlFor="display_name" className="block text-sm font-medium text-[#1C1410] mb-1.5">
+        <label htmlFor="display_name" className="block text-sm font-medium text-[#201D20] mb-1.5">
           Display name
         </label>
         <input
@@ -45,7 +45,7 @@ export default function AccountSettingsForm({ profile }: Props) {
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          className="w-full px-4 py-2.5 rounded-lg border border-[#E8E0D5] bg-[#FAF8F4] text-[#1C1410] focus:outline-none focus:ring-2 focus:ring-[#C8652A]/40 text-sm"
+          className="w-full px-4 py-2.5 rounded-lg border border-[#EBD2AD] bg-[#FCFFEB] text-[#201D20] focus:outline-none focus:ring-2 focus:ring-[#C58930]/40 text-sm"
           placeholder="Your name"
         />
       </div>
@@ -56,8 +56,8 @@ export default function AccountSettingsForm({ profile }: Props) {
           role="switch"
           aria-checked={mailingList}
           onClick={() => setMailingList((v) => !v)}
-          className={`relative inline-flex w-10 h-6 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#C8652A]/40 ${
-            mailingList ? 'bg-[#C8652A]' : 'bg-[#E8E0D5]'
+          className={`relative inline-flex w-10 h-6 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#C58930]/40 ${
+            mailingList ? 'bg-[#C58930]' : 'bg-[#EBD2AD]'
           }`}
         >
           <span
@@ -66,7 +66,7 @@ export default function AccountSettingsForm({ profile }: Props) {
             }`}
           />
         </button>
-        <span className="text-sm text-[#1C1410]">Subscribe to newsletter</span>
+        <span className="text-sm text-[#201D20]">Subscribe to newsletter</span>
       </div>
 
       {status === 'error' && (
@@ -77,7 +77,7 @@ export default function AccountSettingsForm({ profile }: Props) {
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#C8652A] hover:bg-[#b55a25] text-white font-medium text-sm transition-colors duration-150 disabled:opacity-60"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-medium text-sm transition-colors duration-150 disabled:opacity-60"
         >
           {status === 'loading' && <Loader2 className="w-4 h-4 animate-spin" />}
           {status === 'success' && <Check className="w-4 h-4" />}

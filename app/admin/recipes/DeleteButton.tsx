@@ -30,7 +30,7 @@ export default function DeleteButton({ id, label, type }: DeleteButtonProps) {
   if (confirming) {
     return (
       <div className="flex items-center gap-1.5">
-        <span className="text-xs text-[#7A6A5E]">Sure?</span>
+        <span className="text-xs text-[#6D5E6D]">Sure?</span>
         <button
           onClick={handleDelete}
           disabled={deleting}
@@ -40,7 +40,7 @@ export default function DeleteButton({ id, label, type }: DeleteButtonProps) {
         </button>
         <button
           onClick={() => setConfirming(false)}
-          className="px-2 py-1 text-xs font-medium border border-[#E8E0D5] text-[#7A6A5E] rounded-lg hover:text-[#1C1410]"
+          className="px-2 py-1 text-xs font-medium border border-[#EBD2AD] text-[#6D5E6D] rounded-lg hover:text-[#201D20]"
         >
           No
         </button>

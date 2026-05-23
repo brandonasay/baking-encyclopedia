@@ -25,22 +25,22 @@ export default async function CollectionsPage() {
   const collections = (data ?? []) as unknown as CollectionWithCount[]
 
   return (
-    <div className="bg-[#FAF8F4] min-h-screen">
+    <div className="bg-[#FCFFEB] min-h-screen">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-[#F5EDE4] flex items-center justify-center">
-            <BookOpen className="w-5 h-5 text-[#C8652A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#F5EAC8] flex items-center justify-center">
+            <BookOpen className="w-5 h-5 text-[#C58930]" />
           </div>
           <div>
             <h1
-              className="text-3xl font-bold text-[#1C1410]"
+              className="text-3xl font-bold text-[#201D20]"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               My Collections
             </h1>
-            <p className="text-sm text-[#7A6A5E]">
+            <p className="text-sm text-[#6D5E6D]">
               {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
             </p>
           </div>

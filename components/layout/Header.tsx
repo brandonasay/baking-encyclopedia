@@ -130,7 +130,7 @@ export default function Header() {
                   onMouseEnter={(e) => {
                     if (!isActive(link.href)) {
                       e.currentTarget.style.color = 'var(--color-text)'
-                      e.currentTarget.style.backgroundColor = '#F5F2EE'
+                      e.currentTarget.style.backgroundColor = '#F5F9DC'
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -161,7 +161,7 @@ export default function Header() {
                 onMouseEnter={(e) => {
                   if (!isActive('/search')) {
                     e.currentTarget.style.color = 'var(--color-text)'
-                    e.currentTarget.style.backgroundColor = '#F5F2EE'
+                    e.currentTarget.style.backgroundColor = '#F5F9DC'
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -298,7 +298,7 @@ export default function Header() {
                     transition: 'background-color 0.15s ease',
                     letterSpacing: '0.01em',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#b5591f' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#a87225' }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-amber)' }}
                 >
                   Sign In
@@ -538,7 +538,7 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () 
               width: '100%',
               padding: '0.6875rem 1rem',
               borderRadius: '8px',
-              backgroundColor: loading ? '#D4A584' : 'var(--color-amber)',
+              backgroundColor: loading ? '#C9A96E' : 'var(--color-amber)',
               color: '#fff',
               fontSize: '0.9375rem',
               fontWeight: 600,

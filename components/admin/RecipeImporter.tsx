@@ -58,11 +58,11 @@ export default function RecipeImporter({ onImport }: Props) {
   }
 
   return (
-    <div className="bg-[#F5EDE4] border border-[#C8652A]/30 rounded-xl p-5 mb-6">
+    <div className="bg-[#F5EAC8] border border-[#C58930]/30 rounded-xl p-5 mb-6">
       <div className="flex items-center gap-2 mb-3">
-        <Link className="w-4 h-4 text-[#C8652A]" />
-        <h3 className="text-sm font-semibold text-[#1C1410]">Import from URL</h3>
-        <span className="text-xs text-[#7A6A5E] ml-auto">Paste a recipe link to auto-fill the form</span>
+        <Link className="w-4 h-4 text-[#C58930]" />
+        <h3 className="text-sm font-semibold text-[#201D20]">Import from URL</h3>
+        <span className="text-xs text-[#6D5E6D] ml-auto">Paste a recipe link to auto-fill the form</span>
       </div>
 
       <div className="flex gap-2">
@@ -72,14 +72,14 @@ export default function RecipeImporter({ onImport }: Props) {
           onChange={e => setUrl(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleImport()}
           placeholder="https://example.com/chocolate-chip-cookies"
-          className="flex-1 px-3 py-2 bg-white border border-[#E8E0D5] rounded-lg text-sm text-[#1C1410] placeholder-[#7A6A5E] focus:outline-none focus:ring-2 focus:ring-[#C8652A] focus:border-transparent"
+          className="flex-1 px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] placeholder-[#6D5E6D] focus:outline-none focus:ring-2 focus:ring-[#C58930] focus:border-transparent"
           disabled={status === 'loading'}
         />
         <button
           type="button"
           onClick={handleImport}
           disabled={status === 'loading' || !url.trim()}
-          className="px-4 py-2 bg-[#C8652A] text-white text-sm font-medium rounded-lg hover:bg-[#9E4D1F] disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2 whitespace-nowrap"
+          className="px-4 py-2 bg-[#C58930] text-white text-sm font-medium rounded-lg hover:bg-[#8A5D1A] disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2 whitespace-nowrap"
         >
           {status === 'loading' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
           {status === 'loading' ? 'Importing…' : 'Import Recipe'}

@@ -27,13 +27,13 @@ function csvToArray(str: string): string[] {
 
 function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
   return (
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-[#1C1410] mb-1">
+    <label htmlFor={htmlFor} className="block text-sm font-medium text-[#201D20] mb-1">
       {children}
     </label>
   )
 }
 
-const inputCls = 'w-full px-3 py-2 bg-white border border-[#E8E0D5] rounded-lg text-sm text-[#1C1410] placeholder-[#7A6A5E] focus:outline-none focus:ring-2 focus:ring-[#C8652A] focus:border-transparent transition'
+const inputCls = 'w-full px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] placeholder-[#6D5E6D] focus:outline-none focus:ring-2 focus:ring-[#C58930] focus:border-transparent transition'
 const textareaCls = `${inputCls} resize-y min-h-[100px]`
 
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
@@ -44,17 +44,17 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#C8652A] ${checked ? 'bg-[#C8652A]' : 'bg-[#E8E0D5]'}`}
+        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#C58930] ${checked ? 'bg-[#C58930]' : 'bg-[#EBD2AD]'}`}
       >
         <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-4' : 'translate-x-0.5'}`} />
       </button>
-      <span className="text-sm text-[#1C1410]">{label}</span>
+      <span className="text-sm text-[#201D20]">{label}</span>
     </label>
   )
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm font-semibold text-[#1C1410] uppercase tracking-wide mb-4">{children}</h3>
+  return <h3 className="text-sm font-semibold text-[#201D20] uppercase tracking-wide mb-4">{children}</h3>
 }
 
 const TABS = ['Basic', 'Content', 'Tips', 'Substitutes', 'Tags', 'SEO', 'Image'] as const
@@ -183,11 +183,11 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
     <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-[#1C1410]">{isEdit ? `Edit: ${ingredient.name}` : 'New Ingredient'}</h1>
+        <h1 className="text-2xl font-bold text-[#201D20]">{isEdit ? `Edit: ${ingredient.name}` : 'New Ingredient'}</h1>
         <button
           type="submit"
           disabled={saving}
-          className="px-5 py-2.5 bg-[#C8652A] text-white rounded-lg font-medium text-sm hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
+          className="px-5 py-2.5 bg-[#C58930] text-white rounded-lg font-medium text-sm hover:bg-[#A87225] disabled:opacity-60 transition-colors"
         >
           {saving ? 'Saving…' : isEdit ? 'Update Ingredient' : 'Create Ingredient'}
         </button>
@@ -195,7 +195,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
 
       {/* Toast */}
       {toast && (
-        <div className={`px-4 py-3 rounded-lg text-sm font-medium ${toast.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+        <div className={`px-4 py-3 rounded-lg text-sm font-medium ${toast.type === 'success' ? 'bg-[#EEF3EA] text-[#41622D] border border-[#B5C9A8]' : 'bg-red-50 text-red-700 border border-red-200'}`}>
           {toast.message}
         </div>
       )}
@@ -207,14 +207,14 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
             key={tab}
             type="button"
             onClick={() => setActiveTab(tab)}
-            className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeTab === tab ? 'bg-[#C8652A] text-white' : 'bg-white border border-[#E8E0D5] text-[#7A6A5E] hover:text-[#1C1410]'}`}
+            className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeTab === tab ? 'bg-[#C58930] text-white' : 'bg-white border border-[#EBD2AD] text-[#6D5E6D] hover:text-[#201D20]'}`}
           >
             {tab}
           </button>
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-[#E8E0D5] p-6 space-y-5">
+      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6 space-y-5">
 
         {/* Basic */}
         {activeTab === 'Basic' && (
@@ -228,7 +228,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
               <div>
                 <Label htmlFor="slug">Slug *</Label>
                 <input id="slug" className={inputCls} value={slug} onChange={(e) => { setSlugManual(true); setSlug(e.target.value) }} required />
-                <p className="text-xs text-[#7A6A5E] mt-1">Auto-generated from name. Edit to override.</p>
+                <p className="text-xs text-[#6D5E6D] mt-1">Auto-generated from name. Edit to override.</p>
               </div>
               <div>
                 <Label htmlFor="category">Category</Label>
@@ -295,7 +295,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
             <SectionHeading>Common Substitutes</SectionHeading>
             <div className="space-y-3">
               {substitutes.map((sub, i) => (
-                <div key={i} className="bg-[#FAF8F4] rounded-lg border border-[#E8E0D5] p-3 space-y-2">
+                <div key={i} className="bg-[#FCFFEB] rounded-lg border border-[#EBD2AD] p-3 space-y-2">
                   <div className="flex gap-2">
                     <input
                       className={inputCls + ' flex-1'}
@@ -318,7 +318,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
               <button
                 type="button"
                 onClick={addSubstitute}
-                className="inline-flex items-center gap-1.5 text-sm text-[#C8652A] font-medium hover:underline"
+                className="inline-flex items-center gap-1.5 text-sm text-[#C58930] font-medium hover:underline"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 Add substitute
@@ -331,7 +331,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
         {activeTab === 'Tags' && (
           <>
             <SectionHeading>Tags</SectionHeading>
-            <p className="text-xs text-[#7A6A5E] -mt-3 mb-4">Comma-separated values</p>
+            <p className="text-xs text-[#6D5E6D] -mt-3 mb-4">Comma-separated values</p>
             <div>
               <Label htmlFor="tags">Tags</Label>
               <input id="tags" className={inputCls} value={tags} onChange={(e) => setTags(e.target.value)} placeholder="e.g. flour, gluten, protein" />
@@ -347,12 +347,12 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
               <div>
                 <Label htmlFor="seoTitle">SEO Title</Label>
                 <input id="seoTitle" className={inputCls} value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="Overrides title in <head>" />
-                <p className="text-xs text-[#7A6A5E] mt-1">{seoTitle.length}/60 characters</p>
+                <p className="text-xs text-[#6D5E6D] mt-1">{seoTitle.length}/60 characters</p>
               </div>
               <div>
                 <Label htmlFor="seoDesc">SEO Description</Label>
                 <textarea id="seoDesc" className={textareaCls} value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="Meta description..." />
-                <p className="text-xs text-[#7A6A5E] mt-1">{seoDescription.length}/160 characters</p>
+                <p className="text-xs text-[#6D5E6D] mt-1">{seoDescription.length}/160 characters</p>
               </div>
             </div>
           </>
@@ -374,7 +374,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
               {imageUrl && (
                 <div className="mt-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imageUrl} alt={imageAlt || 'Preview'} className="max-h-64 rounded-lg border border-[#E8E0D5] object-cover" />
+                  <img src={imageUrl} alt={imageAlt || 'Preview'} className="max-h-64 rounded-lg border border-[#EBD2AD] object-cover" />
                 </div>
               )}
             </div>
@@ -386,7 +386,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
         <button
           type="submit"
           disabled={saving}
-          className="px-6 py-3 bg-[#C8652A] text-white rounded-lg font-medium hover:bg-[#B55A24] disabled:opacity-60 transition-colors"
+          className="px-6 py-3 bg-[#C58930] text-white rounded-lg font-medium hover:bg-[#A87225] disabled:opacity-60 transition-colors"
         >
           {saving ? 'Saving…' : isEdit ? 'Update Ingredient' : 'Create Ingredient'}
         </button>
