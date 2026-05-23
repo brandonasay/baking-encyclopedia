@@ -15,6 +15,19 @@
   --font-serif: var(--font-playfair);
 }
 
+:root {
+  --color-bg: #FCFFEB;
+  --color-surface: #FFFFFF;
+  --color-border: #EBD2AD;
+  --color-text: #201D20;
+  --color-muted: #6D5E6D;
+  --color-amber: #C58930;
+  --color-amber-light: #F5EAC8;
+  --color-amber-dark: #8A5D1A;
+  --color-green: #41622D;
+  --color-green-light: #EEF3EA;
+}
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
