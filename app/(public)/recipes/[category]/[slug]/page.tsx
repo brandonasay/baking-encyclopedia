@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const difficultyConfig = {
-  beginner: { label: 'Beginner', className: 'bg-green-100 text-green-800' },
+  beginner: { label: 'Beginner', className: 'bg-[#EEF3EA] text-[#41622D]' },
   intermediate: { label: 'Intermediate', className: 'bg-amber-100 text-amber-800' },
   advanced: { label: 'Advanced', className: 'bg-red-100 text-red-800' },
 }

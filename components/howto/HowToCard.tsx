@@ -17,7 +17,7 @@ const sectionConfig = {
   },
   microbakery: {
     label: 'Microbakery',
-    className: 'bg-stone-100 text-stone-600',
+    className: 'bg-[#EEF3EA] text-[#41622D]',
   },
 }
 
@@ -30,7 +30,7 @@ export default function HowToCard({ article }: HowToCardProps) {
       className="group block h-full"
       aria-label={article.title}
     >
-      <article className="bg-white rounded-xl overflow-hidden border border-[#EBD2AD] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#C58930]/10">
+      <article className="bg-white rounded-xl overflow-hidden border border-[#EBD2AD] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-[#41622D]/10">
         {/* Image */}
         <div className="relative w-full aspect-[4/3] overflow-hidden">
           {article.image_url ? (
@@ -63,7 +63,7 @@ export default function HowToCard({ article }: HowToCardProps) {
         {/* Content */}
         <div className="flex flex-col flex-1 p-4 gap-2">
           <h3
-            className="text-lg leading-snug text-[#201D20] line-clamp-2 group-hover:text-[#C58930] transition-colors duration-150"
+            className="text-lg leading-snug text-[#201D20] line-clamp-2 group-hover:text-[#41622D] transition-colors duration-150"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             {article.title}

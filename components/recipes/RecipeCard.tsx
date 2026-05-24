@@ -23,7 +23,7 @@ type RecipeCardProps = {
 const difficultyConfig = {
   beginner: {
     label: 'Beginner',
-    className: 'bg-green-100 text-green-800',
+    className: 'bg-[#EEF3EA] text-[#41622D]',
   },
   intermediate: {
     label: 'Intermediate',

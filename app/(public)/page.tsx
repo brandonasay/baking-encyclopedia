@@ -192,7 +192,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/how-to"
-            className="inline-flex items-center gap-1.5 text-[#C58930] hover:text-[#a87225] font-medium text-sm transition-colors duration-150 shrink-0"
+            className="inline-flex items-center gap-1.5 text-[#41622D] hover:text-[#2f4a20] font-medium text-sm transition-colors duration-150 shrink-0"
           >
             All guides
             <ArrowRight className="w-4 h-4" />
@@ -215,7 +215,7 @@ export default async function HomePage() {
       {/* ------------------------------------------------------------------ */}
       {/* Ingredients Encyclopedia CTA */}
       {/* ------------------------------------------------------------------ */}
-      <section className="bg-gradient-to-br from-[#201D20] to-[#201D20] py-16 md:py-24">
+      <section className="bg-gradient-to-br from-[#41622D] to-[#201D20] py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:items-center gap-12">
           <div className="flex-1">
             <h2
