@@ -4,9 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const sections = [
-  { label: 'Recipes', href: '/recipes', accent: '#C58930' },
-  { label: 'How-To', href: '/how-to', accent: '#41622D' },
-  { label: 'Ingredients', href: '/ingredients', accent: '#41622D' },
+  { label: 'Recipes', href: '/recipes', accent: '#C58930', bg: '#F5EAC8' },
+  { label: 'How-To', href: '/how-to', accent: '#41622D', bg: '#EEF3EA' },
+  { label: 'Ingredients', href: '/ingredients', accent: '#41622D', bg: '#EEF3EA' },
 ]
 
 export default function HomePage() {
@@ -71,38 +71,24 @@ export default function HomePage() {
               style={{
                 padding: '2.25rem 2rem',
                 borderRadius: '16px',
-                border: '1px solid var(--color-border)',
-                backgroundColor: 'var(--color-surface)',
+                backgroundColor: section.bg,
                 cursor: 'pointer',
-                transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+                transition: 'filter 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLDivElement
-                el.style.borderColor = section.accent
-                el.style.boxShadow = `0 4px 24px ${section.accent}18`
+                (e.currentTarget as HTMLDivElement).style.filter = 'brightness(0.95)'
               }}
               onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLDivElement
-                el.style.borderColor = 'var(--color-border)'
-                el.style.boxShadow = 'none'
+                (e.currentTarget as HTMLDivElement).style.filter = 'none'
               }}
             >
-              <div
-                style={{
-                  width: '36px',
-                  height: '3px',
-                  borderRadius: '2px',
-                  backgroundColor: section.accent,
-                  marginBottom: '1.25rem',
-                }}
-              />
               <p
                 style={{
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: '1.375rem',
                   fontWeight: 700,
-                  color: 'var(--color-text)',
-                  margin: '0 0 0.5rem',
+                  color: section.accent,
+                  margin: 0,
                 }}
               >
                 {section.label}
