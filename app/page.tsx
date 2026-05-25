@@ -4,24 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const sections = [
-  {
-    label: 'Recipes',
-    href: '/recipes',
-    description: 'Trusted recipes for every skill level',
-    accent: '#C58930',
-  },
-  {
-    label: 'How-To',
-    href: '/how-to',
-    description: 'Techniques and guides to bake better',
-    accent: '#41622D',
-  },
-  {
-    label: 'Ingredients',
-    href: '/ingredients',
-    description: 'Understand what every ingredient does',
-    accent: '#41622D',
-  },
+  { label: 'Recipes', href: '/recipes', accent: '#C58930' },
+  { label: 'How-To', href: '/how-to', accent: '#41622D' },
+  { label: 'Ingredients', href: '/ingredients', accent: '#41622D' },
 ]
 
 export default function HomePage() {
@@ -121,16 +106,6 @@ export default function HomePage() {
                 }}
               >
                 {section.label}
-              </p>
-              <p
-                style={{
-                  fontSize: '0.875rem',
-                  color: 'var(--color-muted)',
-                  margin: 0,
-                  lineHeight: 1.5,
-                }}
-              >
-                {section.description}
               </p>
             </div>
           </Link>
