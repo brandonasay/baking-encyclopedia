@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
-import type { Recipe, RecipeCategory } from '@/lib/database.types'
+import type { Recipe, RecipeCategory, RecipeSubcategory } from '@/lib/database.types'
 
 export const revalidate = 3600
 
@@ -21,18 +21,19 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
   const params = await searchParams
   const supabase = await createClient()
 
-  // Always fetch categories for the browse view
-  const { data: categoriesData } = await supabase
-    .from('recipe_categories')
-    .select('id, slug, name, description, image_url, sort_order, created_at')
-    .order('sort_order')
+  // Always fetch categories + subcategories for the browse view
+  const [{ data: categoriesData }, { data: subcategoriesData }] = await Promise.all([
+    supabase.from('recipe_categories').select('id, slug, name, description, image_url, sort_order, created_at').order('sort_order'),
+    supabase.from('recipe_subcategories').select('id, category_id, slug, name, description, sort_order, created_at').order('sort_order'),
+  ])
   const categories = (categoriesData ?? []) as RecipeCategory[]
+  const subcategories = (subcategoriesData ?? []) as RecipeSubcategory[]
 
   // No search query — show category browse
   if (!params.q) {
     return (
       <PageShell>
-        <CategoryGrid categories={categories} />
+        <CategoryBrowser categories={categories} subcategories={subcategories} />
       </PageShell>
     )
   }
@@ -104,30 +105,73 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
   )
 }
 
-// ─── Category grid ───────────────────────────────────────────────────────────
+// ─── Category browser ────────────────────────────────────────────────────────
 
-function CategoryGrid({ categories }: { categories: RecipeCategory[] }) {
+function CategoryBrowser({ categories, subcategories }: { categories: RecipeCategory[]; subcategories: RecipeSubcategory[] }) {
+  const subsByCategory = subcategories.reduce<Record<string, RecipeSubcategory[]>>((acc, sub) => {
+    if (!acc[sub.category_id]) acc[sub.category_id] = []
+    acc[sub.category_id].push(sub)
+    return acc
+  }, {})
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      {categories.map((cat) => (
-        <Link
-          key={cat.id}
-          href={`/recipes/${cat.slug}`}
-          className="group block rounded-2xl border border-[#EBD2AD] bg-[var(--color-surface)] p-6 hover:border-[#C58930] hover:shadow-md hover:shadow-[#C58930]/10 transition-all duration-150"
-        >
-          <p
-            className="text-lg font-bold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150 leading-snug"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
-            {cat.name}
-          </p>
-          {cat.description && (
-            <p className="mt-1.5 text-sm text-[#6D5E6D] line-clamp-2 leading-relaxed">
-              {cat.description}
-            </p>
-          )}
-        </Link>
-      ))}
+    <div className="space-y-12">
+      {categories.map((cat) => {
+        const subs = subsByCategory[cat.id] ?? []
+        return (
+          <div key={cat.id}>
+            <Link
+              href={`/recipes/${cat.slug}`}
+              className="group inline-flex items-baseline gap-2 mb-5"
+            >
+              <h2
+                className="text-2xl font-bold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150"
+                style={{ fontFamily: 'var(--font-playfair)' }}
+              >
+                {cat.name}
+              </h2>
+              <span className="text-sm text-[#C58930] opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                View all →
+              </span>
+            </Link>
+
+            {subs.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {subs.map((sub) => (
+                  <Link
+                    key={sub.id}
+                    href={`/recipes/${cat.slug}?sub=${sub.slug}`}
+                    className="group block rounded-xl border border-[#EBD2AD] bg-white px-5 py-4 hover:border-[#C58930] hover:shadow-sm hover:shadow-[#C58930]/10 transition-all duration-150"
+                  >
+                    <p
+                      className="font-semibold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150 leading-snug"
+                      style={{ fontFamily: 'var(--font-playfair)' }}
+                    >
+                      {sub.name}
+                    </p>
+                    {sub.description && (
+                      <p className="mt-1 text-xs text-[#6D5E6D] line-clamp-2 leading-relaxed">
+                        {sub.description}
+                      </p>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                <Link
+                  href={`/recipes/${cat.slug}`}
+                  className="group block rounded-xl border border-[#EBD2AD] bg-white px-5 py-4 hover:border-[#C58930] hover:shadow-sm transition-all duration-150"
+                >
+                  <p className="font-semibold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    All {cat.name}
+                  </p>
+                </Link>
+              </div>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
