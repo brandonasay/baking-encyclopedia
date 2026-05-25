@@ -4,9 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const sections = [
-  { label: 'Recipes', href: '/recipes', accent: '#C58930', bg: '#F5EAC8' },
-  { label: 'How-To', href: '/how-to', accent: '#41622D', bg: '#EEF3EA' },
-  { label: 'Ingredients', href: '/ingredients', accent: '#41622D', bg: '#EEF3EA' },
+  { label: 'Recipes', href: '/recipes', bg: '#C58930' },
+  { label: 'How-To', href: '/how-to', bg: '#201D20' },
+  { label: 'Ingredients', href: '/ingredients', bg: '#41622D' },
 ]
 
 export default function HomePage() {
@@ -74,9 +74,10 @@ export default function HomePage() {
                 backgroundColor: section.bg,
                 cursor: 'pointer',
                 transition: 'filter 0.15s ease',
+                textAlign: 'center',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.filter = 'brightness(0.95)'
+                (e.currentTarget as HTMLDivElement).style.filter = 'brightness(0.9)'
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLDivElement).style.filter = 'none'
@@ -87,7 +88,7 @@ export default function HomePage() {
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: '1.375rem',
                   fontWeight: 700,
-                  color: section.accent,
+                  color: '#FCFFEB',
                   margin: 0,
                 }}
               >
