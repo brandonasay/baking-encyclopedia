@@ -4,9 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const sections = [
-  { label: 'Recipes', href: '/recipes', color: '#C58930' },
-  { label: 'How-To', href: '/how-to', color: '#201D20' },
-  { label: 'Ingredients', href: '/ingredients', color: '#41622D' },
+  { label: 'Recipes', href: '/recipes', bg: '#C58930' },
+  { label: 'How-To', href: '/how-to', bg: '#201D20' },
+  { label: 'Ingredients', href: '/ingredients', bg: '#41622D' },
 ]
 
 export default function HomePage() {
@@ -71,17 +71,16 @@ export default function HomePage() {
               style={{
                 padding: '2.25rem 2rem',
                 borderRadius: '16px',
-                backgroundColor: 'var(--color-bg)',
-                border: '2px solid #EBD2AD',
+                backgroundColor: section.bg,
                 cursor: 'pointer',
-                transition: 'opacity 0.15s ease',
+                transition: 'filter 0.15s ease',
                 textAlign: 'center',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.opacity = '0.75'
+                (e.currentTarget as HTMLDivElement).style.filter = 'brightness(0.9)'
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.opacity = '1'
+                (e.currentTarget as HTMLDivElement).style.filter = 'none'
               }}
             >
               <p
@@ -89,7 +88,7 @@ export default function HomePage() {
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: '1.375rem',
                   fontWeight: 700,
-                  color: section.color,
+                  color: '#FCFFEB',
                   margin: 0,
                 }}
               >
