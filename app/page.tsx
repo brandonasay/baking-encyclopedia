@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 
 const sections = [
   {
@@ -50,18 +51,17 @@ export default function HomePage() {
         >
           Baking Encyclopedia
         </h1>
-        <p
-          style={{
-            fontSize: '0.8125rem',
-            fontWeight: 600,
-            color: 'var(--color-muted)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            margin: 0,
-          }}
-        >
-          By Homebaked
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--color-muted)', fontWeight: 500 }}>by</span>
+          <Image
+            src="/homebaked-logo.png"
+            alt="Homebaked"
+            width={120}
+            height={36}
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
       </div>
 
       <div
