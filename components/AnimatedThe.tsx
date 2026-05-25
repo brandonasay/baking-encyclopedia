@@ -20,20 +20,10 @@ export default function AnimatedThe() {
     path.style.stroke = '#201D20'
     path.style.strokeWidth = '0.8'
 
-    // Phase 1: draw the stroke over 1.8s
     requestAnimationFrame(() => {
-      path.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1)'
+      path.style.transition = 'stroke-dashoffset 5s cubic-bezier(0.4, 0, 0.2, 1)'
       path.style.strokeDashoffset = '0'
     })
-
-    // Phase 2: fill in, fade out stroke
-    const timer = setTimeout(() => {
-      path.style.transition = 'fill 0.4s ease, stroke 0.4s ease'
-      path.style.fill = '#201D20'
-      path.style.stroke = 'none'
-    }, 1900)
-
-    return () => clearTimeout(timer)
   }, [])
 
   return (
