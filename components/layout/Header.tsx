@@ -96,9 +96,10 @@ export default function Header() {
               Baking Encyclopedia
             </Link>
 
-            {/* Center: current section */}
+            {/* Center: current section (hidden on mobile) */}
             {sectionLabel && (
               <span
+                className="hidden md:block"
                 style={{
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: '1rem',
