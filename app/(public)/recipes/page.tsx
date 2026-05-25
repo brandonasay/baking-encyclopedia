@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
-import type { RecipeDifficulty, RecipeCategory, Recipe } from '@/lib/database.types'
+import type { Recipe } from '@/lib/database.types'
 
 export const revalidate = 3600
 
@@ -16,11 +16,6 @@ export const metadata: Metadata = {
 const PAGE_SIZE = 24
 
 type SearchParams = Promise<{
-  category?: string
-  difficulty?: string
-  tag?: string | string[]
-  gf?: string
-  hp?: string
   q?: string
   page?: string
 }>
@@ -32,12 +27,6 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
   const page = Math.max(1, parseInt(params.page ?? '1', 10))
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
-
-  // Fetch categories for filter bar
-  const { data: categories } = await supabase
-    .from('recipe_categories')
-    .select('id, slug, name, description, image_url, sort_order, created_at')
-    .order('sort_order')
 
   // Build recipe query
   let query = supabase
@@ -64,51 +53,13 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
       .filter((r) => r.content_type === 'recipe')
       .map((r) => r.id)
     if (searchResultIds.length === 0) {
-      // No results — short-circuit
       return (
-        <RecipesPageShell
-          categories={categories ?? []}
-          activeCategory={params.category}
-          activeDifficulty={params.difficulty}
-          activeTags={normalizeTags(params.tag)}
-        >
+        <RecipesPageShell>
           <EmptyState query={params.q} />
         </RecipesPageShell>
       )
     }
     query = query.in('id', searchResultIds)
-  }
-
-  // Category filter
-  if (params.category) {
-    const { data: cat } = await supabase
-      .from('recipe_categories')
-      .select('id')
-      .eq('slug', params.category)
-      .single()
-    const catTyped = cat as { id: string } | null
-    if (catTyped) {
-      query = query.eq('category_id', catTyped.id)
-    }
-  }
-
-  // Difficulty filter
-  if (params.difficulty) {
-    query = query.eq('difficulty', params.difficulty as RecipeDifficulty)
-  }
-
-  // Tag filter
-  const tags = normalizeTags(params.tag)
-  if (tags.length > 0) {
-    query = query.overlaps('tags', tags)
-  }
-
-  // Diet filters
-  if (params.gf === '1') {
-    query = query.eq('has_gluten_free', true)
-  }
-  if (params.hp === '1') {
-    query = query.eq('has_high_protein', true)
   }
 
   const { data: recipesData, count } = await query
@@ -119,12 +70,7 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
   const hasMore = to < totalCount - 1
 
   return (
-    <RecipesPageShell
-      categories={categories ?? []}
-      activeCategory={params.category}
-      activeDifficulty={params.difficulty}
-      activeTags={tags}
-    >
+    <RecipesPageShell>
       {/* Result header */}
       <div className="flex items-baseline justify-between mb-6">
         <p className="text-sm text-[#6D5E6D]">
@@ -170,23 +116,9 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function normalizeTags(tag?: string | string[]): string[] {
-  if (!tag) return []
-  return (Array.isArray(tag) ? tag : [tag]).filter(Boolean)
-}
-
-function buildPageUrl(
-  params: Awaited<SearchParams>,
-  nextPage: number
-): string {
+function buildPageUrl(params: Awaited<SearchParams>, nextPage: number): string {
   const qs = new URLSearchParams()
-  if (params.category) qs.set('category', params.category)
-  if (params.difficulty) qs.set('difficulty', params.difficulty)
   if (params.q) qs.set('q', params.q)
-  if (params.gf) qs.set('gf', params.gf)
-  if (params.hp) qs.set('hp', params.hp)
-  const tags = normalizeTags(params.tag)
-  tags.forEach((t) => qs.append('tag', t))
   qs.set('page', String(nextPage))
   return `/recipes?${qs.toString()}`
 }
@@ -220,19 +152,7 @@ function EmptyState({ query }: { query?: string }) {
   )
 }
 
-function RecipesPageShell({
-  categories,
-  activeCategory,
-  activeDifficulty,
-  activeTags,
-  children,
-}: {
-  categories: RecipeCategory[]
-  activeCategory?: string
-  activeDifficulty?: string
-  activeTags: string[]
-  children: React.ReactNode
-}) {
+function RecipesPageShell({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-screen bg-[#FCFFEB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -246,15 +166,10 @@ function RecipesPageShell({
           </h1>
         </div>
 
-        {/* Filters */}
-        <div className="mb-8 p-5 bg-white rounded-2xl border border-[#EBD2AD]">
+        {/* Search */}
+        <div className="mb-8">
           <Suspense>
-            <RecipeFilters
-              categories={categories}
-              activeCategory={activeCategory}
-              activeDifficulty={activeDifficulty}
-              activeTags={activeTags}
-            />
+            <RecipeFilters />
           </Suspense>
         </div>
 
