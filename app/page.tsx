@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import AnimatedThe from '@/components/AnimatedThe'
 
 const sections = [
   { label: 'Recipes', href: '/recipes', bg: '#C58930' },
@@ -23,6 +24,7 @@ export default function HomePage() {
       }}
     >
       <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+        <AnimatedThe />
         <h1
           style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
