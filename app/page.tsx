@@ -8,21 +8,18 @@ const sections = [
     href: '/recipes',
     description: 'Trusted recipes for every skill level',
     accent: '#C58930',
-    bg: '#F5EAC8',
   },
   {
     label: 'How-To',
     href: '/how-to',
     description: 'Techniques and guides to bake better',
     accent: '#41622D',
-    bg: '#EEF3EA',
   },
   {
     label: 'Ingredients',
     href: '/ingredients',
     description: 'Understand what every ingredient does',
     accent: '#41622D',
-    bg: '#EEF3EA',
   },
 ]
 
@@ -30,7 +27,7 @@ export default function HomePage() {
   return (
     <div
       style={{
-        minHeight: 'calc(100vh - 64px)',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -43,35 +40,37 @@ export default function HomePage() {
         <h1
           style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
-            fontSize: 'clamp(2.25rem, 5vw, 3.5rem)',
+            fontSize: 'clamp(2.5rem, 6vw, 4rem)',
             fontWeight: 700,
             color: 'var(--color-text)',
-            margin: '0 0 1rem',
+            margin: '0 0 0.625rem',
             letterSpacing: '-0.02em',
             lineHeight: 1.1,
           }}
         >
-          The Baking Encyclopedia
+          Baking Encyclopedia
         </h1>
         <p
           style={{
-            fontSize: '1.0625rem',
+            fontSize: '0.8125rem',
+            fontWeight: 600,
             color: 'var(--color-muted)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
             margin: 0,
-            lineHeight: 1.6,
           }}
         >
-          Your complete reference for recipes, ingredients, and techniques.
+          By Homebaked
         </p>
       </div>
 
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '1.25rem',
           width: '100%',
-          maxWidth: '800px',
+          maxWidth: '760px',
         }}
       >
         {sections.map((section) => (
@@ -102,8 +101,8 @@ export default function HomePage() {
             >
               <div
                 style={{
-                  width: '40px',
-                  height: '4px',
+                  width: '36px',
+                  height: '3px',
                   borderRadius: '2px',
                   backgroundColor: section.accent,
                   marginBottom: '1.25rem',
@@ -122,7 +121,7 @@ export default function HomePage() {
               </p>
               <p
                 style={{
-                  fontSize: '0.9rem',
+                  fontSize: '0.875rem',
                   color: 'var(--color-muted)',
                   margin: 0,
                   lineHeight: 1.5,
