@@ -51,6 +51,17 @@ export default function HomePage() {
         >
           Baking Encyclopedia
         </h1>
+        <p
+          style={{
+            fontSize: '1rem',
+            color: 'var(--color-muted)',
+            margin: '1rem 0 1.5rem',
+            lineHeight: 1.6,
+            maxWidth: '480px',
+          }}
+        >
+          Zero ads, zero life stories. The world&apos;s most complete source of recipes, how-to pages, and ingredients.
+        </p>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--color-muted)', fontWeight: 500 }}>by</span>
           <Image
