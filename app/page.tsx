@@ -55,24 +55,13 @@ export default function HomePage() {
           style={{
             fontSize: '1rem',
             color: 'var(--color-muted)',
-            margin: '1rem 0 1.5rem',
+            margin: '1rem 0 0',
             lineHeight: 1.6,
             maxWidth: '480px',
           }}
         >
-          Zero ads, zero life stories. The world&apos;s most complete source of recipes, how-to pages, and ingredients.
+          The world&apos;s most complete resource for home bakers.
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--color-muted)', fontWeight: 500 }}>by</span>
-          <Image
-            src="/homebaked-logo.png"
-            alt="Homebaked"
-            width={120}
-            height={36}
-            style={{ objectFit: 'contain' }}
-            priority
-          />
-        </div>
       </div>
 
       <div
@@ -143,6 +132,25 @@ export default function HomePage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.625rem',
+          marginTop: '4rem',
+        }}
+      >
+        <span style={{ fontSize: '0.8125rem', color: 'var(--color-muted)' }}>From the creators of</span>
+        <Image
+          src="/homebaked-logo.png"
+          alt="Homebaked"
+          width={110}
+          height={33}
+          style={{ objectFit: 'contain' }}
+          priority
+        />
       </div>
     </div>
   )
