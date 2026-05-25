@@ -3,21 +3,29 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
-import { Search, Menu, X, ChevronDown, BookOpen } from 'lucide-react'
+import { ChevronDown, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
-const navLinks = [
-  { label: 'Recipes', href: '/recipes' },
-  { label: 'Ingredients', href: '/ingredients' },
-  { label: 'How-To', href: '/how-to' },
-]
+const sectionLabels: Record<string, string> = {
+  '/recipes': 'Recipes',
+  '/ingredients': 'Ingredients',
+  '/how-to': 'How-To',
+  '/search': 'Search',
+  '/account': 'Account',
+}
+
+function getSectionLabel(pathname: string): string {
+  for (const [prefix, label] of Object.entries(sectionLabels)) {
+    if (pathname === prefix || pathname.startsWith(prefix + '/')) return label
+  }
+  return ''
+}
 
 export default function Header() {
   const router = useRouter()
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [user, setUser] = useState<User | null>(null)
@@ -48,17 +56,13 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  useEffect(() => {
-    setMobileOpen(false)
-  }, [pathname])
-
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     setUserMenuOpen(false)
     router.refresh()
   }
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
+  const sectionLabel = getSectionLabel(pathname)
 
   return (
     <>
@@ -74,109 +78,41 @@ export default function Header() {
         }}
       >
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', height: '64px', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', height: '64px' }}>
+
+            {/* Left: site name */}
             <Link
               href="/"
               style={{
                 textDecoration: 'none',
+                fontFamily: 'var(--font-playfair), Georgia, serif',
+                fontSize: '1.125rem',
+                fontWeight: 700,
+                color: 'var(--color-text)',
+                letterSpacing: '-0.01em',
                 whiteSpace: 'nowrap',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1px',
               }}
             >
+              Baking Encyclopedia
+            </Link>
+
+            {/* Center: current section */}
+            {sectionLabel && (
               <span
                 style={{
                   fontFamily: 'var(--font-playfair), Georgia, serif',
-                  fontSize: '1.25rem',
-                  fontWeight: 700,
-                  color: 'var(--color-text)',
-                  letterSpacing: '-0.01em',
-                  lineHeight: 1.1,
-                }}
-              >
-                Baking Encyclopedia
-              </span>
-              <span
-                style={{
-                  fontSize: '0.625rem',
+                  fontSize: '1rem',
                   fontWeight: 600,
                   color: 'var(--color-muted)',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  fontVariant: 'small-caps',
-                  lineHeight: 1,
+                  letterSpacing: '0.01em',
                 }}
               >
-                by Homebaked
+                {sectionLabel}
               </span>
-            </Link>
+            )}
 
-            <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flex: 1 }} className="hidden md:flex">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  style={{
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    padding: '0.375rem 0.75rem',
-                    borderRadius: '6px',
-                    textDecoration: 'none',
-                    color: isActive(link.href) ? 'var(--color-amber)' : 'var(--color-muted)',
-                    backgroundColor: isActive(link.href) ? 'var(--color-amber-light)' : 'transparent',
-                    transition: 'all 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive(link.href)) {
-                      e.currentTarget.style.color = 'var(--color-text)'
-                      e.currentTarget.style.backgroundColor = '#F5F9DC'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive(link.href)) {
-                      e.currentTarget.style.color = 'var(--color-muted)'
-                      e.currentTarget.style.backgroundColor = 'transparent'
-                    }
-                  }}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Link
-                href="/search"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.375rem',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                  padding: '0.375rem 0.75rem',
-                  borderRadius: '6px',
-                  textDecoration: 'none',
-                  color: isActive('/search') ? 'var(--color-amber)' : 'var(--color-muted)',
-                  backgroundColor: isActive('/search') ? 'var(--color-amber-light)' : 'transparent',
-                  transition: 'all 0.15s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive('/search')) {
-                    e.currentTarget.style.color = 'var(--color-text)'
-                    e.currentTarget.style.backgroundColor = '#F5F9DC'
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive('/search')) {
-                    e.currentTarget.style.color = 'var(--color-muted)'
-                    e.currentTarget.style.backgroundColor = 'transparent'
-                  }
-                }}
-              >
-                <Search size={15} />
-                Search
-              </Link>
-            </nav>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: 'auto' }}>
+            {/* Right: auth */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               {user ? (
                 <div ref={userMenuRef} style={{ position: 'relative' }}>
                   <button
@@ -193,7 +129,6 @@ export default function Header() {
                       fontSize: '0.875rem',
                       fontWeight: 500,
                       cursor: 'pointer',
-                      transition: 'background-color 0.15s ease',
                     }}
                   >
                     <div
@@ -251,7 +186,6 @@ export default function Header() {
                             fontSize: '0.875rem',
                             color: 'var(--color-text)',
                             textDecoration: 'none',
-                            transition: 'background-color 0.1s ease',
                           }}
                           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-bg)' }}
                           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
@@ -272,7 +206,6 @@ export default function Header() {
                             background: 'none',
                             border: 'none',
                             cursor: 'pointer',
-                            transition: 'background-color 0.1s ease',
                           }}
                           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF2F2' }}
                           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
@@ -289,75 +222,22 @@ export default function Header() {
                   style={{
                     padding: '0.5rem 1.25rem',
                     borderRadius: '8px',
-                    backgroundColor: 'var(--color-amber)',
-                    color: '#fff',
+                    backgroundColor: 'transparent',
+                    color: 'var(--color-text)',
                     fontSize: '0.875rem',
-                    fontWeight: 600,
-                    border: 'none',
+                    fontWeight: 500,
+                    border: '1px solid var(--color-border)',
                     cursor: 'pointer',
-                    transition: 'background-color 0.15s ease',
-                    letterSpacing: '0.01em',
+                    transition: 'border-color 0.15s ease',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#a87225' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-amber)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-text)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)' }}
                 >
                   Sign In
                 </button>
               )}
-
-              <button
-                className="flex md:hidden"
-                onClick={() => setMobileOpen(!mobileOpen)}
-                style={{
-                  padding: '0.5rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--color-border)',
-                  backgroundColor: 'transparent',
-                  color: 'var(--color-text)',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                aria-label="Toggle menu"
-              >
-                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
             </div>
           </div>
-
-          {mobileOpen && (
-            <div
-              style={{
-                borderTop: '1px solid var(--color-border)',
-                paddingTop: '0.75rem',
-                paddingBottom: '1rem',
-              }}
-              className="md:hidden"
-            >
-              {[...navLinks, { label: 'Search', href: '/search' }].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.625rem 0.5rem',
-                    borderRadius: '6px',
-                    textDecoration: 'none',
-                    fontSize: '0.9375rem',
-                    fontWeight: 500,
-                    color: isActive(link.href) ? 'var(--color-amber)' : 'var(--color-text)',
-                    backgroundColor: isActive(link.href) ? 'var(--color-amber-light)' : 'transparent',
-                  }}
-                >
-                  {link.label === 'Search' && <Search size={16} />}
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          )}
         </div>
       </header>
 
@@ -380,17 +260,12 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () 
     e.preventDefault()
     setLoading(true)
     setError('')
-
     const { error } = mode === 'signin'
       ? await supabase.auth.signInWithPassword({ email, password })
       : await supabase.auth.signUp({ email, password })
-
     setLoading(false)
-    if (error) {
-      setError(error.message)
-    } else {
-      onSuccess()
-    }
+    if (error) setError(error.message)
+    else onSuccess()
   }
 
   const handleGoogle = async () => {
@@ -434,10 +309,7 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () 
               {mode === 'signin' ? 'Sign in to your account' : 'Join the baking community'}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            style={{ padding: '0.375rem', borderRadius: '6px', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--color-muted)' }}
-          >
+          <button onClick={onClose} style={{ padding: '0.375rem', borderRadius: '6px', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--color-muted)' }}>
             <X size={20} />
           </button>
         </div>
@@ -459,7 +331,6 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () 
             fontWeight: 500,
             cursor: 'pointer',
             marginBottom: '1.25rem',
-            transition: 'background-color 0.15s ease',
           }}
           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-bg)' }}
           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-surface)' }}
@@ -481,55 +352,29 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () 
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text)', marginBottom: '0.375rem' }}>
-              Email
-            </label>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text)', marginBottom: '0.375rem' }}>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@example.com"
-              style={{
-                width: '100%',
-                padding: '0.625rem 0.875rem',
-                borderRadius: '8px',
-                border: '1px solid var(--color-border)',
-                backgroundColor: 'var(--color-bg)',
-                color: 'var(--color-text)',
-                fontSize: '0.9375rem',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
+              style={{ width: '100%', padding: '0.625rem 0.875rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', fontSize: '0.9375rem', outline: 'none', boxSizing: 'border-box' }}
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text)', marginBottom: '0.375rem' }}>
-              Password
-            </label>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text)', marginBottom: '0.375rem' }}>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              style={{
-                width: '100%',
-                padding: '0.625rem 0.875rem',
-                borderRadius: '8px',
-                border: '1px solid var(--color-border)',
-                backgroundColor: 'var(--color-bg)',
-                color: 'var(--color-text)',
-                fontSize: '0.9375rem',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
+              style={{ width: '100%', padding: '0.625rem 0.875rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', fontSize: '0.9375rem', outline: 'none', boxSizing: 'border-box' }}
             />
           </div>
 
-          {error && (
-            <p style={{ fontSize: '0.8125rem', color: '#DC2626', margin: 0 }}>{error}</p>
-          )}
+          {error && <p style={{ fontSize: '0.8125rem', color: '#DC2626', margin: 0 }}>{error}</p>}
 
           <button
             type="submit"
@@ -545,7 +390,6 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () 
               border: 'none',
               cursor: loading ? 'not-allowed' : 'pointer',
               marginTop: '0.25rem',
-              transition: 'background-color 0.15s ease',
             }}
           >
             {loading ? 'Loading…' : mode === 'signin' ? 'Sign In' : 'Create Account'}
