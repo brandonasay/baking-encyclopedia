@@ -60,6 +60,8 @@ export default function HomePage() {
             maxWidth: '480px',
           }}
         >
+          Zero ads, zero clutter, free forever.
+          <br /><br />
           The world&apos;s most complete resource for home bakers.
         </p>
       </div>
