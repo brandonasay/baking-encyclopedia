@@ -58,6 +58,7 @@ export default function HomePage() {
             margin: '1rem 0 0',
             lineHeight: 1.6,
             maxWidth: '480px',
+            textAlign: 'center',
           }}
         >
           Zero ads, zero clutter, free forever.
@@ -144,12 +145,12 @@ export default function HomePage() {
           marginTop: '4rem',
         }}
       >
-        <span style={{ fontSize: '0.8125rem', color: 'var(--color-muted)' }}>From the creators of</span>
+        <span style={{ fontSize: '1.125rem', color: 'var(--color-muted)' }}>From the creators of</span>
         <Image
           src="/homebaked-logo.png"
           alt="Homebaked"
-          width={110}
-          height={33}
+          width={160}
+          height={48}
           style={{ objectFit: 'contain' }}
           priority
         />
