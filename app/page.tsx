@@ -140,20 +140,23 @@ export default function HomePage() {
       <div
         style={{
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.625rem',
+          gap: '0.75rem',
           marginTop: '4rem',
         }}
       >
-        <span style={{ fontSize: '1.125rem', color: 'var(--color-muted)' }}>From the creators of</span>
-        <Image
-          src="/homebaked-logo.png"
-          alt="Homebaked"
-          width={160}
-          height={48}
-          style={{ objectFit: 'contain' }}
-          priority
-        />
+        <span style={{ fontSize: '1rem', color: 'var(--color-muted)' }}>From the creators of</span>
+        <a href="https://homebakedapp.com/" target="_blank" rel="noopener noreferrer">
+          <Image
+            src="/homebaked-logo.png"
+            alt="Homebaked"
+            width={160}
+            height={48}
+            style={{ objectFit: 'contain', display: 'block' }}
+            priority
+          />
+        </a>
       </div>
     </div>
   )
