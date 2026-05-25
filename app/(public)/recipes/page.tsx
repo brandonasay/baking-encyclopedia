@@ -15,7 +15,35 @@ export const metadata: Metadata = {
 
 const PAGE_SIZE = 24
 
-type SearchParams = Promise<{ q?: string; page?: string }>
+const HOLIDAYS: { label: string; tag: string }[] = [
+  { label: 'New Year\'s', tag: 'new-years' },
+  { label: 'Valentine\'s Day', tag: 'valentines-day' },
+  { label: 'St. Patrick\'s Day', tag: 'st-patricks-day' },
+  { label: 'Easter', tag: 'easter' },
+  { label: 'Passover', tag: 'passover' },
+  { label: 'Cinco de Mayo', tag: 'cinco-de-mayo' },
+  { label: 'Mother\'s Day', tag: 'mothers-day' },
+  { label: 'Father\'s Day', tag: 'fathers-day' },
+  { label: '4th of July', tag: '4th-of-july' },
+  { label: 'Rosh Hashanah & Yom Kippur', tag: 'rosh-hashanah-yom-kippur' },
+  { label: 'Halloween', tag: 'halloween' },
+  { label: 'Día de los Muertos', tag: 'dia-de-los-muertos' },
+  { label: 'Thanksgiving', tag: 'thanksgiving' },
+  { label: 'Hanukkah', tag: 'hanukkah' },
+  { label: 'Christmas', tag: 'christmas' },
+  { label: 'Kwanzaa', tag: 'kwanzaa' },
+  { label: 'Eid al-Fitr', tag: 'eid-al-fitr' },
+  { label: 'Diwali', tag: 'diwali' },
+]
+
+const SEASONS: { label: string; tag: string }[] = [
+  { label: 'Spring', tag: 'spring' },
+  { label: 'Summer', tag: 'summer' },
+  { label: 'Fall', tag: 'fall' },
+  { label: 'Winter', tag: 'winter' },
+]
+
+type SearchParams = Promise<{ q?: string; occasion?: string; page?: string }>
 
 export default async function RecipesPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams
@@ -29,8 +57,8 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
   const categories = (categoriesData ?? []) as RecipeCategory[]
   const subcategories = (subcategoriesData ?? []) as RecipeSubcategory[]
 
-  // No search query — show category browse
-  if (!params.q) {
+  // Browse view — no search or occasion filter
+  if (!params.q && !params.occasion) {
     return (
       <PageShell>
         <CategoryBrowser categories={categories} subcategories={subcategories} />
@@ -38,11 +66,58 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
     )
   }
 
-  // Search query — show results
   const page = Math.max(1, parseInt(params.page ?? '1', 10))
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
 
+  // ── Occasion/holiday filter ──────────────────────────────────────────────
+  if (params.occasion) {
+    const occasionLabel =
+      [...HOLIDAYS, ...SEASONS].find((h) => h.tag === params.occasion)?.label ?? params.occasion
+
+    const { data: recipesData, count } = await supabase
+      .from('recipes')
+      .select('id, slug, title, headline, image_url, difficulty, total_time_minutes, tags, has_gluten_free, has_high_protein, category_id, recipe_categories(slug)', { count: 'exact' })
+      .eq('published', true)
+      .contains('occasion_tags', [params.occasion])
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .range(from, to)
+
+    type RecipeCardFields = Pick<Recipe, 'id' | 'slug' | 'title' | 'headline' | 'image_url' | 'difficulty' | 'total_time_minutes' | 'tags' | 'has_gluten_free' | 'has_high_protein'> & { recipe_categories?: { slug: string } | null }
+    const recipes = (recipesData ?? []) as unknown as RecipeCardFields[]
+    const totalCount = count ?? 0
+    const hasMore = to < totalCount - 1
+
+    return (
+      <PageShell>
+        <p className="text-sm text-[#6D5E6D] mb-6">
+          {totalCount} recipe{totalCount !== 1 ? 's' : ''} for{' '}
+          <span className="font-medium text-[#201D20]">{occasionLabel}</span>
+        </p>
+        {recipes.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {recipes.map((recipe) => (
+                <RecipeCard key={recipe.id} recipe={recipe} categorySlug={(recipe as any).recipe_categories?.slug} />
+              ))}
+            </div>
+            {hasMore && (
+              <div className="mt-12 flex justify-center">
+                <a href={`/recipes?occasion=${params.occasion}&page=${page + 1}`} className="px-6 py-3 rounded-xl bg-[#C58930] text-white font-medium hover:bg-[#A87225] transition-colors">
+                  Load more
+                </a>
+              </div>
+            )}
+          </>
+        ) : (
+          <EmptyState />
+        )}
+      </PageShell>
+    )
+  }
+
+  // ── Text search ──────────────────────────────────────────────────────────
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: searchResults } = await (supabase as any).rpc('search_all', {
     query: params.q,
@@ -79,7 +154,6 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
         {totalCount} result{totalCount !== 1 ? 's' : ''} for{' '}
         <span className="font-medium text-[#201D20]">&ldquo;{params.q}&rdquo;</span>
       </p>
-
       {recipes.length > 0 ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -89,10 +163,7 @@ export default async function RecipesPage({ searchParams }: { searchParams: Sear
           </div>
           {hasMore && (
             <div className="mt-12 flex justify-center">
-              <a
-                href={`/recipes?q=${encodeURIComponent(params.q)}&page=${page + 1}`}
-                className="px-6 py-3 rounded-xl bg-[#C58930] text-white font-medium hover:bg-[#A87225] transition-colors"
-              >
+              <a href={`/recipes?q=${encodeURIComponent(params.q!)}&page=${page + 1}`} className="px-6 py-3 rounded-xl bg-[#C58930] text-white font-medium hover:bg-[#A87225] transition-colors">
                 Load more
               </a>
             </div>
@@ -120,10 +191,7 @@ function CategoryBrowser({ categories, subcategories }: { categories: RecipeCate
         const subs = subsByCategory[cat.id] ?? []
         return (
           <div key={cat.id}>
-            <Link
-              href={`/recipes/${cat.slug}`}
-              className="group inline-flex items-baseline gap-2 mb-5"
-            >
+            <Link href={`/recipes/${cat.slug}`} className="group inline-flex items-baseline gap-2 mb-5">
               <h2
                 className="text-2xl font-bold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150"
                 style={{ fontFamily: 'var(--font-playfair)' }}
@@ -135,30 +203,21 @@ function CategoryBrowser({ categories, subcategories }: { categories: RecipeCate
               </span>
             </Link>
 
-            {subs.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {subs.map((sub) => (
-                  <Link
-                    key={sub.id}
-                    href={`/recipes/${cat.slug}?sub=${sub.slug}`}
-                    className="group block rounded-xl border border-[#EBD2AD] bg-white px-5 py-4 hover:border-[#C58930] hover:shadow-sm hover:shadow-[#C58930]/10 transition-all duration-150"
-                  >
-                    <p
-                      className="font-semibold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150 leading-snug"
-                      style={{ fontFamily: 'var(--font-playfair)' }}
-                    >
-                      {sub.name}
-                    </p>
-                    {sub.description && (
-                      <p className="mt-1 text-xs text-[#6D5E6D] line-clamp-2 leading-relaxed">
-                        {sub.description}
-                      </p>
-                    )}
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {subs.length > 0 ? subs.map((sub) => (
+                <Link
+                  key={sub.id}
+                  href={`/recipes/${cat.slug}?sub=${sub.slug}`}
+                  className="group block rounded-xl border border-[#EBD2AD] bg-white px-5 py-4 hover:border-[#C58930] hover:shadow-sm hover:shadow-[#C58930]/10 transition-all duration-150"
+                >
+                  <p className="font-semibold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150 leading-snug" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    {sub.name}
+                  </p>
+                  {sub.description && (
+                    <p className="mt-1 text-xs text-[#6D5E6D] line-clamp-2 leading-relaxed">{sub.description}</p>
+                  )}
+                </Link>
+              )) : (
                 <Link
                   href={`/recipes/${cat.slug}`}
                   className="group block rounded-xl border border-[#EBD2AD] bg-white px-5 py-4 hover:border-[#C58930] hover:shadow-sm transition-all duration-150"
@@ -167,11 +226,51 @@ function CategoryBrowser({ categories, subcategories }: { categories: RecipeCate
                     All {cat.name}
                   </p>
                 </Link>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )
       })}
+
+      {/* Seasonal & Holiday */}
+      <div>
+        <h2
+          className="text-2xl font-bold text-[#201D20] mb-2"
+          style={{ fontFamily: 'var(--font-playfair)' }}
+        >
+          Seasonal & Holiday
+        </h2>
+
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-[#6D5E6D] mb-3 mt-5">By Season</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+          {SEASONS.map((s) => (
+            <Link
+              key={s.tag}
+              href={`/recipes?occasion=${s.tag}`}
+              className="group block rounded-xl border border-[#EBD2AD] bg-white px-5 py-4 hover:border-[#C58930] hover:shadow-sm hover:shadow-[#C58930]/10 transition-all duration-150"
+            >
+              <p className="font-semibold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150" style={{ fontFamily: 'var(--font-playfair)' }}>
+                {s.label}
+              </p>
+            </Link>
+          ))}
+        </div>
+
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-[#6D5E6D] mb-3">Holidays</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {HOLIDAYS.map((h) => (
+            <Link
+              key={h.tag}
+              href={`/recipes?occasion=${h.tag}`}
+              className="group block rounded-xl border border-[#EBD2AD] bg-white px-5 py-4 hover:border-[#C58930] hover:shadow-sm hover:shadow-[#C58930]/10 transition-all duration-150"
+            >
+              <p className="font-semibold text-[#201D20] group-hover:text-[#C58930] transition-colors duration-150" style={{ fontFamily: 'var(--font-playfair)' }}>
+                {h.label}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
