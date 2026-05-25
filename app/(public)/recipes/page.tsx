@@ -237,16 +237,13 @@ function RecipesPageShell({
     <main className="min-h-screen bg-[#FCFFEB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Page header */}
-        <div className="mb-10">
+        <div className="mb-8">
           <h1
-            className="text-4xl sm:text-5xl font-bold text-[#201D20] mb-3"
+            className="text-3xl sm:text-4xl font-bold text-[#201D20] mb-6"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
-            Recipes
+            Search for a recipe or browse by category
           </h1>
-          <p className="text-lg text-[#6D5E6D]">
-            From simple weeknight bakes to show-stopping celebration cakes.
-          </p>
         </div>
 
         {/* Filters */}
