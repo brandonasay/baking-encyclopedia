@@ -72,7 +72,7 @@ export default function HomePage() {
                 padding: '2.25rem 2rem',
                 borderRadius: '16px',
                 backgroundColor: 'var(--color-bg)',
-                border: `2px solid ${section.color}`,
+                border: '2px solid #EBD2AD',
                 cursor: 'pointer',
                 transition: 'opacity 0.15s ease',
                 textAlign: 'center',
