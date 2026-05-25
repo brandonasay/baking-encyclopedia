@@ -55,7 +55,7 @@ export default function HomePage() {
           style={{
             fontSize: '1rem',
             color: 'var(--color-muted)',
-            margin: '1rem 0 0',
+            margin: '1rem auto 0',
             lineHeight: 1.6,
             maxWidth: '480px',
             textAlign: 'center',
