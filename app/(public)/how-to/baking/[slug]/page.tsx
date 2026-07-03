@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Clock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import HowToCard from '@/components/howto/HowToCard'
@@ -110,29 +108,6 @@ export default async function BakingArticlePage({ params }: Props) {
           <div className="absolute inset-0 bg-gradient-to-br from-[#C58930]/50 to-[#201D20]" />
 
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-            {/* Breadcrumb */}
-            <nav className="mb-6 flex items-center gap-2 text-sm text-white/60">
-              <Link href="/how-to" className="hover:text-white transition-colors">
-                How-To
-              </Link>
-              <span>/</span>
-              <Link href="/how-to/baking" className="hover:text-white transition-colors">
-                Baking
-              </Link>
-            </nav>
-
-            <div className="flex items-center gap-3 mb-5">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#C58930]/80 text-white">
-                Baking
-              </span>
-
-              {article.read_time_minutes != null && (
-                <span className="flex items-center gap-1.5 text-sm text-white/70">
-                  <Clock className="w-4 h-4" aria-hidden="true" />
-                  {article.read_time_minutes} min read
-                </span>
-              )}
-            </div>
 
             <h1
               className="text-4xl md:text-5xl text-white leading-tight mb-4"
