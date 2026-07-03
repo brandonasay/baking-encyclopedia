@@ -14,6 +14,18 @@ export default function BlockRenderer({ blocks }: { blocks: ContentBlock[] }) {
   return (
     <div className="space-y-6">
       {blocks.map((block) => {
+        if (block.type === 'heading') {
+          return (
+            <h2
+              key={block.id}
+              className="text-2xl text-[#201D20] mt-10 mb-2 first:mt-0"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
+              {block.content}
+            </h2>
+          )
+        }
+
         if (block.type === 'text') {
           return (
             <p key={block.id} className="text-[#201D20] leading-relaxed text-base whitespace-pre-wrap">

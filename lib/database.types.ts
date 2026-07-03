@@ -26,11 +26,12 @@ export interface HowToStep {
   description: string
 }
 
+export type HeadingBlock = { type: 'heading'; id: string; content: string }
 export type TextBlock = { type: 'text'; id: string; content: string }
 export type ImageBlock = { type: 'image'; id: string; url: string; alt: string }
 export type NumberedListBlock = { type: 'numbered_list'; id: string; items: string[] }
 export type BulletedListBlock = { type: 'bulleted_list'; id: string; items: string[] }
-export type ContentBlock = TextBlock | ImageBlock | NumberedListBlock | BulletedListBlock
+export type ContentBlock = HeadingBlock | TextBlock | ImageBlock | NumberedListBlock | BulletedListBlock
 
 export interface CommonSubstitute {
   name: string

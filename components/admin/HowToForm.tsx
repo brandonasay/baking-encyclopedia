@@ -55,6 +55,17 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
 
 // ─── Block editors ───────────────────────────────────────────────────────────
 
+function HeadingBlockEditor({ block, onChange }: { block: ContentBlock & { type: 'heading' }; onChange: (b: ContentBlock) => void }) {
+  return (
+    <input
+      className={`${inputCls} text-lg font-semibold`}
+      placeholder="Section heading"
+      value={block.content}
+      onChange={(e) => onChange({ ...block, content: e.target.value })}
+    />
+  )
+}
+
 function TextBlockEditor({ block, onChange }: { block: ContentBlock & { type: 'text' }; onChange: (b: ContentBlock) => void }) {
   return (
     <textarea
@@ -207,6 +218,7 @@ function ListBlockEditor({
 // ─── Block wrapper ────────────────────────────────────────────────────────────
 
 const BLOCK_LABELS: Record<ContentBlock['type'], string> = {
+  heading: 'Heading',
   text: 'Text',
   image: 'Image',
   numbered_list: 'Numbered List',
@@ -273,6 +285,7 @@ function BlockWrapper({
 
       {/* Block content */}
       <div className="p-4">
+        {block.type === 'heading' && <HeadingBlockEditor block={block} onChange={onChange} />}
         {block.type === 'text' && <TextBlockEditor block={block} onChange={onChange} />}
         {block.type === 'image' && <ImageBlockEditor block={block} onChange={onChange} />}
         {(block.type === 'numbered_list' || block.type === 'bulleted_list') && (
@@ -318,7 +331,8 @@ export default function HowToForm({ article }: HowToFormProps) {
   function addBlock(type: ContentBlock['type']) {
     const base = { id: newId() }
     let block: ContentBlock
-    if (type === 'text') block = { ...base, type, content: '' }
+    if (type === 'heading') block = { ...base, type, content: '' }
+    else if (type === 'text') block = { ...base, type, content: '' }
     else if (type === 'image') block = { ...base, type, url: '', alt: '' }
     else block = { ...base, type: type as 'numbered_list' | 'bulleted_list', items: [''] }
     setBlocks((prev) => [...prev, block])
@@ -477,7 +491,7 @@ export default function HowToForm({ article }: HowToFormProps) {
         {/* Add block toolbar */}
         <div className="flex flex-wrap gap-2 pt-2">
           <span className="text-xs text-[#6D5E6D] self-center mr-1">Add block:</span>
-          {(['text', 'image', 'numbered_list', 'bulleted_list'] as ContentBlock['type'][]).map((type) => (
+          {(['heading', 'text', 'image', 'numbered_list', 'bulleted_list'] as ContentBlock['type'][]).map((type) => (
             <button
               key={type}
               type="button"
