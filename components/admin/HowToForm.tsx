@@ -315,6 +315,12 @@ export default function HowToForm({ article }: HowToFormProps) {
   const [published, setPublished] = useState(article?.published ?? false)
   const [blocks, setBlocks] = useState<ContentBlock[]>(() => parseBlocks(article?.body ?? null))
 
+  const [imageUrl, setImageUrl] = useState(article?.image_url ?? '')
+  const [imageAlt, setImageAlt] = useState(article?.image_alt ?? '')
+  const [thumbnailUploading, setThumbnailUploading] = useState(false)
+  const [thumbnailError, setThumbnailError] = useState<string | null>(null)
+  const thumbnailRef = useRef<HTMLInputElement>(null)
+
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
@@ -368,6 +374,8 @@ export default function HowToForm({ article }: HowToFormProps) {
       published,
       body: JSON.stringify(blocks),
       steps: [],
+      image_url: imageUrl || null,
+      image_alt: imageAlt || null,
     }
 
     try {
@@ -447,6 +455,75 @@ export default function HowToForm({ article }: HowToFormProps) {
             placeholder="Short description shown in cards and under the title"
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-[#201D20] mb-1">Thumbnail</label>
+          {imageUrl ? (
+            <div className="space-y-2">
+              <div className="relative w-full aspect-[4/3] max-w-xs rounded-lg overflow-hidden border border-[#EBD2AD]">
+                <Image src={imageUrl} alt={imageAlt || ''} fill className="object-cover" sizes="320px" />
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  className={`${inputCls} flex-1`}
+                  placeholder="Alt text"
+                  value={imageAlt}
+                  onChange={(e) => setImageAlt(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => { setImageUrl(''); setImageAlt('') }}
+                  className="text-xs text-red-500 hover:text-red-700 whitespace-nowrap"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div
+                className="border-2 border-dashed border-[#EBD2AD] rounded-lg p-6 text-center cursor-pointer hover:border-[#C58930] transition-colors"
+                onClick={() => thumbnailRef.current?.click()}
+              >
+                {thumbnailUploading ? (
+                  <p className="text-sm text-[#6D5E6D]">Uploading…</p>
+                ) : (
+                  <>
+                    <p className="text-sm text-[#6D5E6D]">Click to upload thumbnail</p>
+                    <p className="text-xs text-[#6D5E6D] mt-1">JPEG, PNG, or WebP · max 5MB</p>
+                  </>
+                )}
+                <input
+                  ref={thumbnailRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    setThumbnailUploading(true)
+                    setThumbnailError(null)
+                    try {
+                      const fd = new FormData()
+                      fd.append('file', file)
+                      fd.append('bucket', 'howto-images')
+                      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+                      const json = await res.json() as { url?: string; error?: string }
+                      if (!res.ok) throw new Error(json.error ?? 'Upload failed')
+                      setImageUrl(json.url!)
+                    } catch (err) {
+                      setThumbnailError(err instanceof Error ? err.message : 'Upload failed')
+                    } finally {
+                      setThumbnailUploading(false)
+                      if (thumbnailRef.current) thumbnailRef.current.value = ''
+                    }
+                  }}
+                />
+              </div>
+              {thumbnailError && <p className="text-xs text-red-600">{thumbnailError}</p>}
+            </div>
+          )}
+        </div>
+
         <div className="flex items-end gap-4 flex-wrap">
           <div className="flex-1 min-w-[160px]">
             <label className="block text-sm font-medium text-[#201D20] mb-1">Section</label>
