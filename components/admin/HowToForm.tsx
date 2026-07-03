@@ -108,9 +108,14 @@ function ImageBlockEditor({ block, onChange }: { block: ContentBlock & { type: '
     <div className="space-y-3">
       {block.url ? (
         <div className="space-y-3">
-          <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden border border-[#EBD2AD]">
-            <Image src={block.url} alt={block.alt || ''} fill className="object-cover" sizes="600px" />
-          </div>
+          <Image
+            src={block.url}
+            alt={block.alt || ''}
+            width={0}
+            height={0}
+            sizes="600px"
+            className="w-full h-auto rounded-lg border border-[#EBD2AD]"
+          />
           <button
             type="button"
             onClick={() => onChange({ ...block, url: '' })}

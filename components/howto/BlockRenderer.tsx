@@ -37,15 +37,14 @@ export default function BlockRenderer({ blocks }: { blocks: ContentBlock[] }) {
         if (block.type === 'image') {
           return (
             <figure key={block.id} className="my-2">
-              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-[#EBD2AD]">
-                <Image
-                  src={block.url}
-                  alt={block.alt || ''}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 720px"
-                />
-              </div>
+              <Image
+                src={block.url}
+                alt={block.alt || ''}
+                width={0}
+                height={0}
+                sizes="(max-width: 768px) 100vw, 720px"
+                className="w-full h-auto rounded-xl border border-[#EBD2AD]"
+              />
               {block.alt && (
                 <figcaption className="mt-2 text-xs text-center text-[#6D5E6D]">{block.alt}</figcaption>
               )}
