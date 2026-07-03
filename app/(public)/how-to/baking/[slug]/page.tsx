@@ -6,6 +6,7 @@ import { Clock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import HowToCard from '@/components/howto/HowToCard'
+import BlockRenderer, { parseBlocks } from '@/components/howto/BlockRenderer'
 import type { HowToArticle, Recipe } from '@/lib/database.types'
 
 export const revalidate = 3600
@@ -87,30 +88,15 @@ export default async function BakingArticlePage({ params }: Props) {
   const relatedRecipes = relatedRecipesRes.data ?? []
   const relatedArticles = relatedArticlesRes.data ?? []
 
-  const hasSteps = article.steps && article.steps.length > 0
+  const blocks = parseBlocks(article.body)
 
-  const jsonLd = hasSteps
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'HowTo',
-        name: article.title,
-        description: article.headline ?? article.seo_description ?? undefined,
-        image: article.image_url ?? undefined,
-        totalTime: article.read_time_minutes ? `PT${article.read_time_minutes}M` : undefined,
-        step: article.steps.map((step) => ({
-          '@type': 'HowToStep',
-          position: step.step_number,
-          name: step.title,
-          text: step.description,
-        })),
-      }
-    : {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: article.title,
-        description: article.headline ?? undefined,
-        image: article.image_url ?? undefined,
-      }
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.headline ?? undefined,
+    image: article.image_url ?? undefined,
+  }
 
   return (
     <>
@@ -178,52 +164,9 @@ export default async function BakingArticlePage({ params }: Props) {
 
         {/* Article body */}
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Steps */}
-          {hasSteps && (
+          {blocks && blocks.length > 0 && (
             <section className="mb-12">
-              <h2
-                className="text-2xl text-[#201D20] mb-6"
-                style={{ fontFamily: 'var(--font-playfair)' }}
-              >
-                Steps
-              </h2>
-              <ol className="space-y-5">
-                {article.steps.map((step) => (
-                  <li
-                    key={step.step_number}
-                    className="flex gap-5 bg-white rounded-xl border border-[#EBD2AD] p-5"
-                  >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#F5EAC8] flex items-center justify-center">
-                      <span
-                        className="text-[#C58930] font-semibold text-sm"
-                        style={{ fontFamily: 'var(--font-playfair)' }}
-                      >
-                        {step.step_number}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3
-                        className="text-base font-semibold text-[#201D20] mb-1.5"
-                        style={{ fontFamily: 'var(--font-playfair)' }}
-                      >
-                        {step.title}
-                      </h3>
-                      <p className="text-sm text-[#6D5E6D] leading-relaxed">{step.description}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )}
-
-          {/* Body text */}
-          {article.body && (
-            <section className="mb-12">
-              <div className="prose">
-                {article.body.split('\n\n').map((para, i) => (
-                  <p key={i}>{para}</p>
-                ))}
-              </div>
+              <BlockRenderer blocks={blocks} />
             </section>
           )}
 

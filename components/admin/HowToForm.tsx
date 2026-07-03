@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import type { HowToArticle, HowToStep, HowtoSection } from '@/lib/database.types'
+import Image from 'next/image'
+import type { HowToArticle, HowtoSection, ContentBlock } from '@/lib/database.types'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -15,35 +16,29 @@ function slugify(str: string) {
     .replace(/-+/g, '-')
 }
 
-function arrayToCSV(arr: string[]) {
-  return arr.join(', ')
+function newId() {
+  return crypto.randomUUID()
 }
 
-function csvToArray(str: string): string[] {
-  return str.split(',').map((s) => s.trim()).filter(Boolean)
+function parseBlocks(body: string | null): ContentBlock[] {
+  if (!body) return []
+  try {
+    const parsed = JSON.parse(body)
+    if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.type) return parsed as ContentBlock[]
+  } catch {}
+  return []
 }
 
-function emptyStep(stepNumber: number): HowToStep {
-  return { step_number: stepNumber, title: '', description: '' }
-}
-
-// ─── Sub-components ─────────────────────────────────────────────────────────
-
-function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
-  return (
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-[#201D20] mb-1">
-      {children}
-    </label>
-  )
-}
+// ─── Shared styles ───────────────────────────────────────────────────────────
 
 const inputCls = 'w-full px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] placeholder-[#6D5E6D] focus:outline-none focus:ring-2 focus:ring-[#C58930] focus:border-transparent transition'
-const textareaCls = `${inputCls} resize-y min-h-[100px]`
 const selectCls = `${inputCls} cursor-pointer`
+
+// ─── Toggle ──────────────────────────────────────────────────────────────────
 
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
-    <label className="flex items-center gap-2.5 cursor-pointer select-none">
+    <label className="flex items-center gap-2 cursor-pointer select-none">
       <button
         type="button"
         role="switch"
@@ -58,14 +53,237 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
   )
 }
 
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm font-semibold text-[#201D20] uppercase tracking-wide mb-4">{children}</h3>
+// ─── Block editors ───────────────────────────────────────────────────────────
+
+function TextBlockEditor({ block, onChange }: { block: ContentBlock & { type: 'text' }; onChange: (b: ContentBlock) => void }) {
+  return (
+    <textarea
+      className={`${inputCls} resize-none min-h-[100px]`}
+      placeholder="Write some text..."
+      value={block.content}
+      rows={4}
+      onChange={(e) => onChange({ ...block, content: e.target.value })}
+    />
+  )
 }
 
-const TABS = ['Basic', 'Steps', 'Body', 'Meta', 'Related', 'SEO', 'Image'] as const
-type Tab = (typeof TABS)[number]
+function ImageBlockEditor({ block, onChange }: { block: ContentBlock & { type: 'image' }; onChange: (b: ContentBlock) => void }) {
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
 
-// ─── Main component ─────────────────────────────────────────────────────────
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    setUploadError(null)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('bucket', 'howto-images')
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const json = await res.json() as { url?: string; error?: string }
+      if (!res.ok) throw new Error(json.error ?? 'Upload failed')
+      onChange({ ...block, url: json.url! })
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setUploading(false)
+      if (fileRef.current) fileRef.current.value = ''
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      {block.url ? (
+        <div className="space-y-3">
+          <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden border border-[#EBD2AD]">
+            <Image src={block.url} alt={block.alt || ''} fill className="object-cover" sizes="600px" />
+          </div>
+          <button
+            type="button"
+            onClick={() => onChange({ ...block, url: '' })}
+            className="text-xs text-red-500 hover:text-red-700"
+          >
+            Remove image
+          </button>
+        </div>
+      ) : (
+        <div
+          className="border-2 border-dashed border-[#EBD2AD] rounded-lg p-8 text-center cursor-pointer hover:border-[#C58930] transition-colors"
+          onClick={() => fileRef.current?.click()}
+        >
+          {uploading ? (
+            <p className="text-sm text-[#6D5E6D]">Uploading…</p>
+          ) : (
+            <>
+              <p className="text-sm text-[#6D5E6D]">Click to upload an image</p>
+              <p className="text-xs text-[#6D5E6D] mt-1">JPEG, PNG, or WebP · max 5MB</p>
+            </>
+          )}
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="hidden"
+            onChange={handleFile}
+          />
+        </div>
+      )}
+      {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
+      <input
+        className={inputCls}
+        placeholder="Alt text (describes the image)"
+        value={block.alt}
+        onChange={(e) => onChange({ ...block, alt: e.target.value })}
+      />
+    </div>
+  )
+}
+
+function ListBlockEditor({
+  block,
+  onChange,
+}: {
+  block: ContentBlock & { type: 'numbered_list' | 'bulleted_list' }
+  onChange: (b: ContentBlock) => void
+}) {
+  function updateItem(i: number, val: string) {
+    const items = [...block.items]
+    items[i] = val
+    onChange({ ...block, items })
+  }
+  function removeItem(i: number) {
+    onChange({ ...block, items: block.items.filter((_, idx) => idx !== i) })
+  }
+  function addItem() {
+    onChange({ ...block, items: [...block.items, ''] })
+  }
+
+  const Bullet = block.type === 'numbered_list'
+    ? ({ i }: { i: number }) => (
+        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F5EAC8] flex items-center justify-center text-xs font-semibold text-[#C58930] mt-2">
+          {i + 1}
+        </span>
+      )
+    : () => <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#C58930] mt-3.5" />
+
+  return (
+    <div className="space-y-2">
+      {block.items.map((item, i) => (
+        <div key={i} className="flex items-start gap-2">
+          <Bullet i={i} />
+          <input
+            className={`${inputCls} flex-1`}
+            placeholder={`Item ${i + 1}`}
+            value={item}
+            onChange={(e) => updateItem(i, e.target.value)}
+          />
+          <button
+            type="button"
+            onClick={() => removeItem(i)}
+            className="mt-1.5 p-1.5 text-[#6D5E6D] hover:text-red-500 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addItem}
+        className="flex items-center gap-1.5 text-sm text-[#C58930] font-medium hover:underline mt-1"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Add item
+      </button>
+    </div>
+  )
+}
+
+// ─── Block wrapper ────────────────────────────────────────────────────────────
+
+const BLOCK_LABELS: Record<ContentBlock['type'], string> = {
+  text: 'Text',
+  image: 'Image',
+  numbered_list: 'Numbered List',
+  bulleted_list: 'Bulleted List',
+}
+
+function BlockWrapper({
+  block,
+  index,
+  total,
+  onChange,
+  onMove,
+  onRemove,
+}: {
+  block: ContentBlock
+  index: number
+  total: number
+  onChange: (b: ContentBlock) => void
+  onMove: (i: number, dir: -1 | 1) => void
+  onRemove: (i: number) => void
+}) {
+  return (
+    <div className="bg-white rounded-xl border border-[#EBD2AD] overflow-hidden">
+      {/* Block header */}
+      <div className="flex items-center justify-between px-4 py-2 bg-[#FCFFEB] border-b border-[#EBD2AD]">
+        <span className="text-xs font-semibold text-[#6D5E6D] uppercase tracking-wide">
+          {BLOCK_LABELS[block.type]}
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            disabled={index === 0}
+            onClick={() => onMove(index, -1)}
+            className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30 transition-colors"
+            title="Move up"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            disabled={index === total - 1}
+            onClick={() => onMove(index, 1)}
+            className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30 transition-colors"
+            title="Move down"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => onRemove(index)}
+            className="p-1 text-[#6D5E6D] hover:text-red-500 transition-colors"
+            title="Remove block"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Block content */}
+      <div className="p-4">
+        {block.type === 'text' && <TextBlockEditor block={block} onChange={onChange} />}
+        {block.type === 'image' && <ImageBlockEditor block={block} onChange={onChange} />}
+        {(block.type === 'numbered_list' || block.type === 'bulleted_list') && (
+          <ListBlockEditor block={block} onChange={onChange} />
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Main form ───────────────────────────────────────────────────────────────
 
 interface HowToFormProps {
   article?: HowToArticle
@@ -75,7 +293,6 @@ export default function HowToForm({ article }: HowToFormProps) {
   const router = useRouter()
   const isEdit = !!article
 
-  // Basic
   const [title, setTitle] = useState(article?.title ?? '')
   const [slug, setSlug] = useState(article?.slug ?? '')
   const [slugManual, setSlugManual] = useState(isEdit)
@@ -83,63 +300,46 @@ export default function HowToForm({ article }: HowToFormProps) {
   const [section, setSection] = useState<HowtoSection>(article?.section ?? 'baking')
   const [featured, setFeatured] = useState(article?.featured ?? false)
   const [published, setPublished] = useState(article?.published ?? false)
+  const [blocks, setBlocks] = useState<ContentBlock[]>(() => parseBlocks(article?.body ?? null))
 
-  // Steps
-  const [steps, setSteps] = useState<HowToStep[]>(
-    article?.steps?.length ? article.steps : [emptyStep(1)]
-  )
-
-  // Body
-  const [body, setBody] = useState(article?.body ?? '')
-
-  // Meta
-  const [readTime, setReadTime] = useState(String(article?.read_time_minutes ?? ''))
-  const [tags, setTags] = useState(arrayToCSV(article?.tags ?? []))
-
-  // Related
-  const [relatedRecipeIds, setRelatedRecipeIds] = useState(arrayToCSV(article?.related_recipe_ids ?? []))
-  const [relatedArticleIds, setRelatedArticleIds] = useState(arrayToCSV(article?.related_article_ids ?? []))
-  const [relatedIngredientIds, setRelatedIngredientIds] = useState(arrayToCSV(article?.related_ingredient_ids ?? []))
-
-  // SEO
-  const [seoTitle, setSeoTitle] = useState(article?.seo_title ?? '')
-  const [seoDescription, setSeoDescription] = useState(article?.seo_description ?? '')
-
-  // Image
-  const [imageUrl, setImageUrl] = useState(article?.image_url ?? '')
-  const [imageAlt, setImageAlt] = useState(article?.image_alt ?? '')
-
-  // UI
-  const [activeTab, setActiveTab] = useState<Tab>('Basic')
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+
+  const showToast = useCallback((type: 'success' | 'error', message: string) => {
+    setToast({ type, message })
+    setTimeout(() => setToast(null), 4000)
+  }, [])
 
   function handleTitleChange(val: string) {
     setTitle(val)
     if (!slugManual) setSlug(slugify(val))
   }
 
-  function updateStep(i: number, field: keyof HowToStep, value: string | number) {
-    setSteps((prev) => prev.map((s, idx) => (idx === i ? { ...s, [field]: value } : s)))
+  function addBlock(type: ContentBlock['type']) {
+    const base = { id: newId() }
+    let block: ContentBlock
+    if (type === 'text') block = { ...base, type, content: '' }
+    else if (type === 'image') block = { ...base, type, url: '', alt: '' }
+    else block = { ...base, type: type as 'numbered_list' | 'bulleted_list', items: [''] }
+    setBlocks((prev) => [...prev, block])
   }
-  function removeStep(i: number) {
-    setSteps((prev) =>
-      prev.filter((_, idx) => idx !== i).map((s, idx) => ({ ...s, step_number: idx + 1 }))
-    )
+
+  function updateBlock(updated: ContentBlock) {
+    setBlocks((prev) => prev.map((b) => (b.id === updated.id ? updated : b)))
   }
-  function moveStep(i: number, dir: -1 | 1) {
-    setSteps((prev) => {
+
+  function moveBlock(i: number, dir: -1 | 1) {
+    setBlocks((prev) => {
       const next = [...prev]
       const j = i + dir
       ;[next[i], next[j]] = [next[j], next[i]]
-      return next.map((s, idx) => ({ ...s, step_number: idx + 1 }))
+      return next
     })
   }
 
-  const showToast = useCallback((type: 'success' | 'error', message: string) => {
-    setToast({ type, message })
-    setTimeout(() => setToast(null), 4000)
-  }, [])
+  function removeBlock(i: number) {
+    setBlocks((prev) => prev.filter((_, idx) => idx !== i))
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -152,17 +352,8 @@ export default function HowToForm({ article }: HowToFormProps) {
       section,
       featured,
       published,
-      steps: steps.filter((s) => s.title.trim() || s.description.trim()),
-      body: body || null,
-      read_time_minutes: readTime ? Number(readTime) : null,
-      tags: csvToArray(tags),
-      related_recipe_ids: csvToArray(relatedRecipeIds),
-      related_article_ids: csvToArray(relatedArticleIds),
-      related_ingredient_ids: csvToArray(relatedIngredientIds),
-      seo_title: seoTitle || null,
-      seo_description: seoDescription || null,
-      image_url: imageUrl || null,
-      image_alt: imageAlt || null,
+      body: JSON.stringify(blocks),
+      steps: [],
     }
 
     try {
@@ -179,9 +370,7 @@ export default function HowToForm({ article }: HowToFormProps) {
       }
       const data = (await res.json()) as { id?: string }
       showToast('success', isEdit ? 'Article updated!' : 'Article created!')
-      if (!isEdit && data.id) {
-        router.push(`/admin/how-tos/${data.id}`)
-      }
+      if (!isEdit && data.id) router.push(`/admin/how-tos/${data.id}`)
     } catch (err) {
       showToast('error', err instanceof Error ? err.message : 'Something went wrong')
     } finally {
@@ -190,16 +379,18 @@ export default function HowToForm({ article }: HowToFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6">
+    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6 pb-16">
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-[#201D20]">{isEdit ? `Edit: ${article.title}` : 'New How-To Article'}</h1>
+        <h1 className="text-2xl font-bold text-[#201D20]">
+          {isEdit ? 'Edit Article' : 'New How-To Article'}
+        </h1>
         <button
           type="submit"
           disabled={saving}
           className="px-5 py-2.5 bg-[#C58930] text-white rounded-lg font-medium text-sm hover:bg-[#A87225] disabled:opacity-60 transition-colors"
         >
-          {saving ? 'Saving…' : isEdit ? 'Update Article' : 'Create Article'}
+          {saving ? 'Saving…' : isEdit ? 'Update' : 'Create'}
         </button>
       </div>
 
@@ -210,199 +401,99 @@ export default function HowToForm({ article }: HowToFormProps) {
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto pb-1">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
-            className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeTab === tab ? 'bg-[#C58930] text-white' : 'bg-white border border-[#EBD2AD] text-[#6D5E6D] hover:text-[#201D20]'}`}
-          >
-            {tab}
-          </button>
+      {/* Article fields */}
+      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6 space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-[#201D20] mb-1">Title *</label>
+          <input
+            className={inputCls}
+            value={title}
+            onChange={(e) => handleTitleChange(e.target.value)}
+            placeholder="Article title"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[#201D20] mb-1">Slug *</label>
+          <input
+            className={inputCls}
+            value={slug}
+            onChange={(e) => { setSlugManual(true); setSlug(e.target.value) }}
+            placeholder="url-friendly-slug"
+            required
+          />
+          <p className="text-xs text-[#6D5E6D] mt-1">Auto-generated from title. Edit to override.</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[#201D20] mb-1">Headline</label>
+          <input
+            className={inputCls}
+            value={headline}
+            onChange={(e) => setHeadline(e.target.value)}
+            placeholder="Short description shown in cards and under the title"
+          />
+        </div>
+        <div className="flex items-end gap-4 flex-wrap">
+          <div className="flex-1 min-w-[160px]">
+            <label className="block text-sm font-medium text-[#201D20] mb-1">Section</label>
+            <select
+              className={selectCls}
+              value={section}
+              onChange={(e) => setSection(e.target.value as HowtoSection)}
+            >
+              <option value="baking">The Baking Side</option>
+              <option value="microbakery">The Business Side</option>
+            </select>
+          </div>
+          <div className="flex gap-5 pb-2">
+            <Toggle checked={featured} onChange={setFeatured} label="Featured" />
+            <Toggle checked={published} onChange={setPublished} label="Published" />
+          </div>
+        </div>
+      </div>
+
+      {/* Blocks */}
+      <div className="space-y-3">
+        <h2 className="text-sm font-semibold text-[#201D20] uppercase tracking-wide">Content</h2>
+
+        {blocks.length === 0 && (
+          <div className="rounded-xl border-2 border-dashed border-[#EBD2AD] py-12 text-center text-[#6D5E6D] text-sm">
+            No content yet — add a block below.
+          </div>
+        )}
+
+        {blocks.map((block, i) => (
+          <BlockWrapper
+            key={block.id}
+            block={block}
+            index={i}
+            total={blocks.length}
+            onChange={updateBlock}
+            onMove={moveBlock}
+            onRemove={removeBlock}
+          />
         ))}
+
+        {/* Add block toolbar */}
+        <div className="flex flex-wrap gap-2 pt-2">
+          <span className="text-xs text-[#6D5E6D] self-center mr-1">Add block:</span>
+          {(['text', 'image', 'numbered_list', 'bulleted_list'] as ContentBlock['type'][]).map((type) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => addBlock(type)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm border border-[#EBD2AD] bg-white text-[#201D20] hover:border-[#C58930] hover:text-[#C58930] transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              {BLOCK_LABELS[type]}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6 space-y-5">
-
-        {/* Basic */}
-        {activeTab === 'Basic' && (
-          <>
-            <SectionHeading>Basic Info</SectionHeading>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="title">Title *</Label>
-                <input id="title" className={inputCls} value={title} onChange={(e) => handleTitleChange(e.target.value)} required />
-              </div>
-              <div>
-                <Label htmlFor="slug">Slug *</Label>
-                <input id="slug" className={inputCls} value={slug} onChange={(e) => { setSlugManual(true); setSlug(e.target.value) }} required />
-                <p className="text-xs text-[#6D5E6D] mt-1">Auto-generated from title. Edit to override.</p>
-              </div>
-              <div>
-                <Label htmlFor="headline">Headline</Label>
-                <input id="headline" className={inputCls} value={headline} onChange={(e) => setHeadline(e.target.value)} placeholder="Short description shown in cards" />
-              </div>
-              <div>
-                <Label htmlFor="section">Section</Label>
-                <select id="section" className={selectCls} value={section} onChange={(e) => setSection(e.target.value as HowtoSection)}>
-                  <option value="baking">Baking</option>
-                  <option value="microbakery">Microbakery</option>
-                </select>
-              </div>
-              <div className="flex gap-6">
-                <Toggle checked={featured} onChange={setFeatured} label="Featured" />
-                <Toggle checked={published} onChange={setPublished} label="Published" />
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Steps */}
-        {activeTab === 'Steps' && (
-          <>
-            <SectionHeading>Steps</SectionHeading>
-            <div className="space-y-3">
-              {steps.map((step, i) => (
-                <div key={i} className="bg-[#FCFFEB] rounded-lg border border-[#EBD2AD] p-3 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-[#C58930] w-5 text-center">{i + 1}</span>
-                    <input
-                      className={inputCls + ' flex-1'}
-                      placeholder="Step title"
-                      value={step.title}
-                      onChange={(e) => updateStep(i, 'title', e.target.value)}
-                    />
-                    <div className="flex gap-1">
-                      <button type="button" disabled={i === 0} onClick={() => moveStep(i, -1)} className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
-                      </button>
-                      <button type="button" disabled={i === steps.length - 1} onClick={() => moveStep(i, 1)} className="p-1 text-[#6D5E6D] hover:text-[#201D20] disabled:opacity-30">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                      </button>
-                      <button type="button" onClick={() => removeStep(i)} className="p-1 text-red-400 hover:text-red-600">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                      </button>
-                    </div>
-                  </div>
-                  <textarea
-                    className={textareaCls + ' ml-7'}
-                    placeholder="Step description..."
-                    value={step.description}
-                    onChange={(e) => updateStep(i, 'description', e.target.value)}
-                  />
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => setSteps((prev) => [...prev, emptyStep(prev.length + 1)])}
-                className="inline-flex items-center gap-1.5 text-sm text-[#C58930] font-medium hover:underline"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                Add step
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* Body */}
-        {activeTab === 'Body' && (
-          <>
-            <SectionHeading>Body Content</SectionHeading>
-            <p className="text-xs text-[#6D5E6D] -mt-3 mb-3">Supports Markdown</p>
-            <textarea
-              className={`${inputCls} resize-y min-h-[400px] font-mono text-xs`}
-              placeholder="Full article body in Markdown..."
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-            />
-          </>
-        )}
-
-        {/* Meta */}
-        {activeTab === 'Meta' && (
-          <>
-            <SectionHeading>Meta</SectionHeading>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="readTime">Read Time (minutes)</Label>
-                <input id="readTime" className={inputCls} type="number" min="1" value={readTime} onChange={(e) => setReadTime(e.target.value)} />
-              </div>
-              <div>
-                <Label htmlFor="tags">Tags</Label>
-                <input id="tags" className={inputCls} value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Comma-separated, e.g. bread, sourdough, fermentation" />
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Related */}
-        {activeTab === 'Related' && (
-          <>
-            <SectionHeading>Related Content</SectionHeading>
-            <p className="text-xs text-[#6D5E6D] -mt-3 mb-4">Comma-separated UUIDs</p>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="relRecipes">Related Recipe IDs</Label>
-                <input id="relRecipes" className={inputCls} value={relatedRecipeIds} onChange={(e) => setRelatedRecipeIds(e.target.value)} placeholder="uuid1, uuid2, ..." />
-              </div>
-              <div>
-                <Label htmlFor="relArticles">Related Article IDs</Label>
-                <input id="relArticles" className={inputCls} value={relatedArticleIds} onChange={(e) => setRelatedArticleIds(e.target.value)} placeholder="uuid1, uuid2, ..." />
-              </div>
-              <div>
-                <Label htmlFor="relIngredients">Related Ingredient IDs</Label>
-                <input id="relIngredients" className={inputCls} value={relatedIngredientIds} onChange={(e) => setRelatedIngredientIds(e.target.value)} placeholder="uuid1, uuid2, ..." />
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* SEO */}
-        {activeTab === 'SEO' && (
-          <>
-            <SectionHeading>SEO</SectionHeading>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="seoTitle">SEO Title</Label>
-                <input id="seoTitle" className={inputCls} value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="Overrides title in <head>" />
-                <p className="text-xs text-[#6D5E6D] mt-1">{seoTitle.length}/60 characters</p>
-              </div>
-              <div>
-                <Label htmlFor="seoDesc">SEO Description</Label>
-                <textarea id="seoDesc" className={textareaCls} value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="Meta description..." />
-                <p className="text-xs text-[#6D5E6D] mt-1">{seoDescription.length}/160 characters</p>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Image */}
-        {activeTab === 'Image' && (
-          <>
-            <SectionHeading>Image</SectionHeading>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="imageUrl">Image URL</Label>
-                <input id="imageUrl" className={inputCls} value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
-              </div>
-              <div>
-                <Label htmlFor="imageAlt">Image Alt Text</Label>
-                <input id="imageAlt" className={inputCls} value={imageAlt} onChange={(e) => setImageAlt(e.target.value)} placeholder="Describe the image for accessibility" />
-              </div>
-              {imageUrl && (
-                <div className="mt-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imageUrl} alt={imageAlt || 'Preview'} className="max-h-64 rounded-lg border border-[#EBD2AD] object-cover" />
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-
-      <div className="flex justify-end pb-8">
+      <div className="flex justify-end">
         <button
           type="submit"
           disabled={saving}
