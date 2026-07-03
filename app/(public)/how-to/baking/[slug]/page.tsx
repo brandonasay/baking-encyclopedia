@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Clock } from 'lucide-react'
@@ -108,21 +107,7 @@ export default async function BakingArticlePage({ params }: Props) {
       <div className="min-h-screen bg-[#FCFFEB]">
         {/* Hero */}
         <div className="relative bg-[#201D20] text-white overflow-hidden">
-          <div className="absolute inset-0">
-            {article.image_url ? (
-              <Image
-                src={article.image_url}
-                alt={article.image_alt ?? article.title}
-                fill
-                className="object-cover opacity-25"
-                priority
-                sizes="100vw"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#C58930]/50 to-[#201D20]" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#201D20] via-[#201D20]/50 to-transparent" />
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#C58930]/50 to-[#201D20]" />
 
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
             {/* Breadcrumb */}
