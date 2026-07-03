@@ -78,7 +78,7 @@ export default function Header() {
         }}
       >
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', height: '64px' }}>
+          <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '64px' }}>
 
             {/* Left: site name */}
             <Link
@@ -96,16 +96,20 @@ export default function Header() {
               Baking Encyclopedia
             </Link>
 
-            {/* Center: current section (hidden on mobile) */}
+            {/* Center: current section (hidden on mobile, absolutely centered on desktop) */}
             {sectionLabel && (
               <span
                 className="hidden md:block"
                 style={{
+                  position: 'absolute',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: '1rem',
                   fontWeight: 600,
                   color: 'var(--color-muted)',
                   letterSpacing: '0.01em',
+                  pointerEvents: 'none',
                 }}
               >
                 {sectionLabel}
