@@ -160,23 +160,30 @@ export default async function RecipeDetailPage({ params }: Props) {
                   {recipe.base_yield ?? `${recipe.base_servings} servings`}
                 </span>
               )}
-              {recipe.has_gluten_free && (
-                <Link
-                  href={`/recipes/${category}/${slug}/gluten-free`}
-                  className="px-2 py-0.5 rounded bg-[#2D4520]/60 text-[#B5C9A8] text-xs font-medium hover:bg-[#2D4520]/80 transition-colors"
-                >
-                  View Gluten-Free version →
-                </Link>
-              )}
-              {recipe.has_high_protein && (
-                <Link
-                  href={`/recipes/${category}/${slug}/high-protein`}
-                  className="px-2 py-0.5 rounded bg-blue-800/60 text-blue-200 text-xs font-medium hover:bg-blue-800/80 transition-colors"
-                >
-                  View High-Protein version →
-                </Link>
-              )}
             </div>
+
+            {(recipe.has_gluten_free || recipe.has_high_protein) && (
+              <div className="flex flex-wrap gap-3 mt-6">
+                {recipe.has_gluten_free && (
+                  <Link
+                    href={`/recipes/${category}/${slug}/gluten-free`}
+                    className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-[#201D20] text-sm font-medium hover:bg-[#FCFFEB] transition-colors duration-150"
+                  >
+                    View Gluten-Free Version
+                    <span className="transition-transform duration-150 group-hover:translate-x-1">→</span>
+                  </Link>
+                )}
+                {recipe.has_high_protein && (
+                  <Link
+                    href={`/recipes/${category}/${slug}/high-protein`}
+                    className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-[#201D20] text-sm font-medium hover:bg-[#FCFFEB] transition-colors duration-150"
+                  >
+                    View High-Protein Version
+                    <span className="transition-transform duration-150 group-hover:translate-x-1">→</span>
+                  </Link>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
