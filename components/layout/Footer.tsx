@@ -16,13 +16,6 @@ const learnLinks = [
   { label: 'Substitutions', href: '/how-to?tag=substitutions' },
 ]
 
-const accountLinks = [
-  { label: 'Sign In', href: '/?signin=1' },
-  { label: 'My Account', href: '/account' },
-  { label: 'Saved Recipes', href: '/account/saved' },
-  { label: 'Grocery List', href: '/account/grocery-list' },
-]
-
 export default function Footer() {
   return (
     <footer
@@ -73,7 +66,14 @@ export default function Footer() {
 
           <FooterColumn title="Recipes" links={recipeCategories} className="hidden md:block" />
           <FooterColumn title="Learn" links={learnLinks} className="hidden md:block" />
-          <FooterColumn title="Account" links={accountLinks} />
+          <div>
+            <Link
+              href="/?signin=1"
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-[#C58930] hover:bg-[#a87225] text-white font-medium text-sm transition-colors duration-150"
+            >
+              Sign In
+            </Link>
+          </div>
         </div>
 
         <div
