@@ -31,9 +31,7 @@ export default function Footer() {
       }}
     >
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '3.5rem 1.5rem 2rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '3rem', marginBottom: '3rem' }}
-          className="grid-cols-1 md:grid-cols-4"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr] gap-8 md:gap-12 mb-12 text-center md:text-left">
           <div>
             <p
               style={{
@@ -49,25 +47,24 @@ export default function Footer() {
             <p style={{ fontSize: '0.9375rem', color: 'var(--color-muted)', margin: '0 0 1.25rem', lineHeight: 1.6 }}>
               The complete reference for bakers.
             </p>
-            <p style={{ fontSize: '0.8125rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.7 }}>
+            <p
+              className="hidden md:block"
+              style={{ fontSize: '0.8125rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.7 }}
+            >
               Trusted recipes, techniques, and ingredient guides — written for bakers at every level.
             </p>
           </div>
 
-          <FooterColumn title="Recipes" links={recipeCategories} />
-          <FooterColumn title="Learn" links={learnLinks} />
+          <FooterColumn title="Recipes" links={recipeCategories} className="hidden md:block" />
+          <FooterColumn title="Learn" links={learnLinks} className="hidden md:block" />
           <FooterColumn title="Account" links={accountLinks} />
         </div>
 
         <div
+          className="flex flex-col md:flex-row items-center md:justify-between gap-3"
           style={{
             borderTop: '1px solid var(--color-border)',
             paddingTop: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '0.75rem',
           }}
         >
           <p style={{ fontSize: '0.8125rem', color: 'var(--color-muted)', margin: 0 }}>
@@ -101,9 +98,17 @@ export default function Footer() {
   )
 }
 
-function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+function FooterColumn({
+  title,
+  links,
+  className,
+}: {
+  title: string
+  links: { label: string; href: string }[]
+  className?: string
+}) {
   return (
-    <div>
+    <div className={className}>
       <p
         style={{
           fontSize: '0.6875rem',
