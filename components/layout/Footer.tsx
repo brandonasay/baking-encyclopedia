@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 const recipeCategories = [
   { label: 'All Recipes', href: '/recipes' },
@@ -53,6 +54,24 @@ export default function Footer() {
             >
               Trusted recipes, techniques, and ingredient guides — written for bakers at every level.
             </p>
+
+            <div
+              className="flex flex-col items-center md:items-start"
+              style={{ gap: '0.5rem', marginTop: '1.5rem' }}
+            >
+              <span style={{ fontSize: '0.8125rem', color: 'var(--color-muted)' }}>
+                From the creators of
+              </span>
+              <a href="https://homebakedapp.com/" target="_blank" rel="noopener noreferrer">
+                <Image
+                  src="/homebaked-logo.png"
+                  alt="Homebaked"
+                  width={140}
+                  height={42}
+                  style={{ objectFit: 'contain', display: 'block' }}
+                />
+              </a>
+            </div>
           </div>
 
           <FooterColumn title="Recipes" links={recipeCategories} className="hidden md:block" />
