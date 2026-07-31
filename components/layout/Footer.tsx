@@ -45,9 +45,6 @@ export default function Footer() {
             >
               Baking Encyclopedia
             </p>
-            <p style={{ fontSize: '0.9375rem', color: 'var(--color-muted)', margin: '0 0 1.25rem', lineHeight: 1.6 }}>
-              The complete reference for bakers.
-            </p>
             <p
               className="hidden md:block"
               style={{ fontSize: '0.8125rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.7 }}
