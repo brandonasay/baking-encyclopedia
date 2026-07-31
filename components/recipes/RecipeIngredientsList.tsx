@@ -1,12 +1,14 @@
 import type { RecipeIngredient } from '@/lib/database.types'
-import { scaleQuantity } from '@/lib/quantity'
+import { formatGrams, scaleQuantity, type UnitSystem } from '@/lib/quantity'
 
 export function IngredientsList({
   ingredients,
   scale = 1,
+  unitSystem = 'us',
 }: {
   ingredients: RecipeIngredient[]
   scale?: number
+  unitSystem?: UnitSystem
 }) {
   // Group by group_label
   const groups: { label: string | null; items: RecipeIngredient[] }[] = []
@@ -38,7 +40,9 @@ export function IngredientsList({
                 />
                 <span>
                   <span className="font-medium text-[#201D20]">
-                    {scaleQuantity(ing.quantity, scale)} {ing.unit}
+                    {unitSystem === 'metric' && ing.quantity_grams != null
+                      ? `${formatGrams(ing.quantity_grams * scale)} g`
+                      : `${scaleQuantity(ing.quantity, scale)} ${ing.unit}`.trim()}
                   </span>{' '}
                   <span className="text-[#201D20]">{ing.ingredient_name}</span>
                   {ing.notes && <span className="text-[#6D5E6D]">, {ing.notes}</span>}

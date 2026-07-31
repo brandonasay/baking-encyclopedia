@@ -39,6 +39,16 @@ export const SCALE_OPTIONS: { label: string; value: number }[] = [
   { label: '3×', value: 3 },
 ]
 
+export type UnitSystem = 'us' | 'metric'
+
+// Rounds a scaled gram amount to a sensible display precision — whole grams
+// under 100g, nearest 5g above that (matches how gram quantities are
+// typically written on packaging and in recipes).
+export function formatGrams(grams: number): string {
+  const rounded = grams < 100 ? Math.round(grams) : Math.round(grams / 5) * 5
+  return String(rounded)
+}
+
 const NUMERIC_QUANTITY = /^\d+(\.\d+)?$|^\d+\/\d+$|^\d+\s+\d+\/\d+$/
 
 // Scales a raw ingredient quantity string. Non-numeric quantities (e.g.
