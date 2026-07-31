@@ -7,6 +7,7 @@ const sections = [
   { label: 'Recipes', href: '/recipes', bg: '#C58930' },
   { label: 'How-To', href: '/how-to', bg: '#201D20' },
   { label: 'Ingredients', href: '/ingredients', bg: '#41622D' },
+  { label: 'Baker Tools', href: '/baker-tools', bg: '#A64B2A' },
 ]
 
 export default function HomePage() {
@@ -55,10 +56,10 @@ export default function HomePage() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '1.25rem',
           width: '100%',
-          maxWidth: '760px',
+          maxWidth: '520px',
         }}
       >
         {sections.map((section) => (
