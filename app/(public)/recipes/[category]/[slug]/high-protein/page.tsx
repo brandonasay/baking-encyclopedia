@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!data) return {}
 
-  const title = `High-Protein ${data.seo_title ?? data.title}`
+  const title = `${data.seo_title ?? data.title}, High Protein`
   return {
     title,
     openGraph: {
@@ -75,7 +75,7 @@ export default async function HighProteinVariantPage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Recipe',
-    name: `High-Protein ${recipe.title}`,
+    name: `${recipe.title}, High Protein`,
     description: recipe.high_protein_notes ?? recipe.headline ?? undefined,
     image: recipe.image_url ?? undefined,
     totalTime: `PT${recipe.total_time_minutes}M`,
@@ -151,7 +151,7 @@ export default async function HighProteinVariantPage({ params }: Props) {
               className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
-              High-Protein {recipe.title}
+              {recipe.title}, High Protein
             </h1>
 
             {recipe.headline && (

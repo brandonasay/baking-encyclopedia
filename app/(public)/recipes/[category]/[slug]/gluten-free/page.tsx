@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!data) return {}
 
-  const title = `Gluten-Free ${data.seo_title ?? data.title}`
+  const title = `${data.seo_title ?? data.title}, Gluten Free`
   return {
     title,
     openGraph: {
@@ -75,7 +75,7 @@ export default async function GlutenFreeVariantPage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Recipe',
-    name: `Gluten-Free ${recipe.title}`,
+    name: `${recipe.title}, Gluten Free`,
     description: recipe.gluten_free_notes ?? recipe.headline ?? undefined,
     image: recipe.image_url ?? undefined,
     totalTime: `PT${recipe.total_time_minutes}M`,
@@ -152,7 +152,7 @@ export default async function GlutenFreeVariantPage({ params }: Props) {
               className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
-              Gluten-Free {recipe.title}
+              {recipe.title}, Gluten Free
             </h1>
 
             {recipe.headline && (

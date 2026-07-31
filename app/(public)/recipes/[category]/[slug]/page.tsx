@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Clock, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import RecipeVariantToggle from '@/components/recipes/RecipeVariantToggle'
 import { IngredientsCard } from '@/components/recipes/IngredientsCard'
 import { InstructionsSection } from '@/components/recipes/RecipeInstructionsSection'
 import type { Recipe, RecipeCategory } from '@/lib/database.types'
@@ -63,8 +62,6 @@ export default async function RecipeDetailPage({ params }: Props) {
   }
 
   const recipe = recipeData
-
-  const hasVariants = recipe.has_gluten_free || recipe.has_high_protein
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -164,14 +161,20 @@ export default async function RecipeDetailPage({ params }: Props) {
                 </span>
               )}
               {recipe.has_gluten_free && (
-                <span className="px-2 py-0.5 rounded bg-[#2D4520]/60 text-[#B5C9A8] text-xs font-medium">
-                  GF available
-                </span>
+                <Link
+                  href={`/recipes/${category}/${slug}/gluten-free`}
+                  className="px-2 py-0.5 rounded bg-[#2D4520]/60 text-[#B5C9A8] text-xs font-medium hover:bg-[#2D4520]/80 transition-colors"
+                >
+                  View Gluten-Free version →
+                </Link>
               )}
               {recipe.has_high_protein && (
-                <span className="px-2 py-0.5 rounded bg-blue-800/60 text-blue-200 text-xs font-medium">
-                  HP available
-                </span>
+                <Link
+                  href={`/recipes/${category}/${slug}/high-protein`}
+                  className="px-2 py-0.5 rounded bg-blue-800/60 text-blue-200 text-xs font-medium hover:bg-blue-800/80 transition-colors"
+                >
+                  View High-Protein version →
+                </Link>
               )}
             </div>
           </div>
@@ -193,37 +196,17 @@ export default async function RecipeDetailPage({ params }: Props) {
 
             {/* Main column */}
             <div className="flex-1 min-w-0 space-y-12">
-              {/* Variant toggle (shows mobile ingredients + instructions with variant tabs) */}
-              {hasVariants ? (
-                <RecipeVariantToggle
-                  hasGlutenFree={recipe.has_gluten_free}
-                  hasHighProtein={recipe.has_high_protein}
-                  glutenFreeNotes={recipe.gluten_free_notes ?? undefined}
-                  highProteinNotes={recipe.high_protein_notes ?? undefined}
-                  baseIngredients={recipe.ingredients}
-                  baseInstructions={recipe.instructions}
+              {/* Mobile-only ingredients */}
+              <div className="lg:hidden">
+                <IngredientsCard
+                  ingredients={recipe.ingredients}
                   baseYield={recipe.base_yield}
                   baseServings={recipe.base_servings}
-                  glutenFreeIngredients={recipe.gluten_free_ingredients ?? undefined}
-                  glutenFreeInstructions={recipe.gluten_free_instructions ?? undefined}
-                  highProteinIngredients={recipe.high_protein_ingredients ?? undefined}
-                  highProteinInstructions={recipe.high_protein_instructions ?? undefined}
                 />
-              ) : (
-                <>
-                  {/* Mobile-only ingredients */}
-                  <div className="lg:hidden">
-                    <IngredientsCard
-                      ingredients={recipe.ingredients}
-                      baseYield={recipe.base_yield}
-                      baseServings={recipe.base_servings}
-                    />
-                  </div>
+              </div>
 
-                  {/* Instructions */}
-                  <InstructionsSection instructions={recipe.instructions} />
-                </>
-              )}
+              {/* Instructions */}
+              <InstructionsSection instructions={recipe.instructions} />
 
               {/* Tips */}
               {recipe.tips && recipe.tips.length > 0 && (
