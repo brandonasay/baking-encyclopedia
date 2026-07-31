@@ -1,26 +1,31 @@
 import type { RecipeIngredient } from '@/lib/database.types'
-import { formatGrams, scaleQuantity, type UnitSystem } from '@/lib/quantity'
+import { formatIngredientQuantity, type UnitSystem } from '@/lib/quantity'
 
 export function IngredientsList({
   ingredients,
   scale = 1,
   unitSystem = 'us',
+  checked,
+  onToggle,
 }: {
   ingredients: RecipeIngredient[]
   scale?: number
   unitSystem?: UnitSystem
+  checked: Set<number>
+  onToggle: (index: number) => void
 }) {
-  // Group by group_label
-  const groups: { label: string | null; items: RecipeIngredient[] }[] = []
-  for (const ing of ingredients) {
+  // Group by group_label, keeping each item's index into the original
+  // (flat, unscaled) array so checked state stays stable across grouping.
+  const groups: { label: string | null; items: { ing: RecipeIngredient; index: number }[] }[] = []
+  ingredients.forEach((ing, index) => {
     const label = ing.group_label ?? null
     const existing = groups.find((g) => g.label === label)
     if (existing) {
-      existing.items.push(ing)
+      existing.items.push({ ing, index })
     } else {
-      groups.push({ label, items: [ing] })
+      groups.push({ label, items: [{ ing, index }] })
     }
-  }
+  })
 
   return (
     <div className="space-y-5">
@@ -32,23 +37,39 @@ export function IngredientsList({
             </h3>
           )}
           <ul className="space-y-2.5">
-            {group.items.map((ing, i) => (
-              <li key={i} className="flex items-baseline gap-2 text-sm">
-                <span
-                  className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#C58930] mt-1.5"
-                  aria-hidden="true"
-                />
-                <span>
-                  <span className="font-medium text-[#201D20]">
-                    {unitSystem === 'metric' && ing.quantity_grams != null
-                      ? `${formatGrams(ing.quantity_grams * scale)} g`
-                      : `${scaleQuantity(ing.quantity, scale)} ${ing.unit}`.trim()}
-                  </span>{' '}
-                  <span className="text-[#201D20]">{ing.ingredient_name}</span>
-                  {ing.notes && <span className="text-[#6D5E6D]">, {ing.notes}</span>}
-                </span>
-              </li>
-            ))}
+            {group.items.map(({ ing, index }) => {
+              const isChecked = checked.has(index)
+              return (
+                <li key={index} className="flex items-start gap-2.5 text-sm">
+                  <input
+                    type="checkbox"
+                    id={`ingredient-${index}`}
+                    checked={isChecked}
+                    onChange={() => onToggle(index)}
+                    className="mt-0.5 w-4 h-4 shrink-0 accent-[#C58930] cursor-pointer"
+                  />
+                  <label
+                    htmlFor={`ingredient-${index}`}
+                    className={`cursor-pointer ${isChecked ? 'text-[#B8AEB0] line-through' : ''}`}
+                  >
+                    {isChecked ? (
+                      <span>
+                        {formatIngredientQuantity(ing, scale, unitSystem)} {ing.ingredient_name}
+                        {ing.notes && `, ${ing.notes}`}
+                      </span>
+                    ) : (
+                      <span>
+                        <span className="font-medium text-[#201D20]">
+                          {formatIngredientQuantity(ing, scale, unitSystem)}
+                        </span>{' '}
+                        <span className="text-[#201D20]">{ing.ingredient_name}</span>
+                        {ing.notes && <span className="text-[#6D5E6D]">, {ing.notes}</span>}
+                      </span>
+                    )}
+                  </label>
+                </li>
+              )
+            })}
           </ul>
         </div>
       ))}

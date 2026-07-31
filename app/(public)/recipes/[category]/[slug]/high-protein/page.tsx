@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { Clock, ChefHat, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { IngredientsList } from '@/components/recipes/RecipeIngredientsList'
+import { IngredientsCard } from '@/components/recipes/IngredientsCard'
 import { InstructionsSection } from '@/components/recipes/RecipeInstructionsSection'
 import type { Recipe, RecipeCategory } from '@/lib/database.types'
 
@@ -196,36 +196,26 @@ export default async function HighProteinVariantPage({ params }: Props) {
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar: ingredients (desktop) */}
             <aside className="hidden lg:block lg:w-72 shrink-0">
-              <div className="sticky top-6 bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
-                <div className="px-5 py-4 bg-blue-50 border-b border-[#EBD2AD]">
-                  <h2
-                    className="text-lg font-bold text-[#201D20]"
-                    style={{ fontFamily: 'var(--font-playfair)' }}
-                  >
-                    Ingredients
-                  </h2>
-                </div>
-                <div className="px-5 py-5">
-                  <IngredientsList ingredients={ingredients} />
-                </div>
+              <div className="sticky top-6">
+                <IngredientsCard
+                  ingredients={ingredients}
+                  baseYield={recipe.base_yield}
+                  baseServings={recipe.base_servings}
+                  headerClassName="bg-blue-50"
+                />
               </div>
             </aside>
 
             {/* Main column */}
             <div className="flex-1 min-w-0 space-y-12">
               {/* Mobile ingredients */}
-              <div className="lg:hidden bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
-                <div className="px-5 py-4 bg-blue-50 border-b border-[#EBD2AD]">
-                  <h2
-                    className="text-lg font-bold text-[#201D20]"
-                    style={{ fontFamily: 'var(--font-playfair)' }}
-                  >
-                    Ingredients
-                  </h2>
-                </div>
-                <div className="px-5 py-5">
-                  <IngredientsList ingredients={ingredients} />
-                </div>
+              <div className="lg:hidden">
+                <IngredientsCard
+                  ingredients={ingredients}
+                  baseYield={recipe.base_yield}
+                  baseServings={recipe.base_servings}
+                  headerClassName="bg-blue-50"
+                />
               </div>
 
               <InstructionsSection instructions={instructions} />

@@ -1,6 +1,8 @@
 // Recipe quantity parsing, formatting, and scaling shared by the grocery
 // list (per-item scale factors) and the public recipe page (serving scaler).
 
+import type { RecipeIngredient } from './database.types'
+
 export function parseFraction(str: string): number {
   const s = str.trim()
   // Mixed number: "1 1/2"
@@ -57,6 +59,26 @@ export function scaleQuantity(quantity: string, scale: number): string {
   const trimmed = quantity.trim()
   if (!trimmed || scale === 1 || !NUMERIC_QUANTITY.test(trimmed)) return quantity
   return formatQuantity(parseFraction(trimmed) * scale)
+}
+
+// Formats an ingredient's quantity + unit for the current scale/unit system.
+export function formatIngredientQuantity(
+  ing: Pick<RecipeIngredient, 'quantity' | 'unit' | 'quantity_grams'>,
+  scale: number,
+  unitSystem: UnitSystem
+): string {
+  if (unitSystem === 'metric' && ing.quantity_grams != null) {
+    return `${formatGrams(ing.quantity_grams * scale)} g`
+  }
+  return `${scaleQuantity(ing.quantity, scale)} ${ing.unit}`.trim()
+}
+
+// Full display line for an ingredient (quantity + name + notes), shared by
+// the ingredients list and the "copy missing ingredients" text.
+export function formatIngredientLine(ing: RecipeIngredient, scale: number, unitSystem: UnitSystem): string {
+  const qty = formatIngredientQuantity(ing, scale, unitSystem)
+  const base = `${qty} ${ing.ingredient_name}`.trim()
+  return ing.notes ? `${base}, ${ing.notes}` : base
 }
 
 // Scales the leading number in a free-text yield string (e.g. "12 muffins"),
