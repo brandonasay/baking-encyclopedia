@@ -110,25 +110,6 @@ export default async function HighProteinVariantPage({ params }: Props) {
           </div>
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-            {/* Breadcrumb */}
-            <nav className="mb-6 flex items-center gap-2 text-sm text-white/60">
-              <Link href="/recipes" className="hover:text-white transition-colors">Recipes</Link>
-              {recipe.recipe_categories && (
-                <>
-                  <span>/</span>
-                  <Link href={`/recipes/${recipe.recipe_categories.slug}`} className="hover:text-white transition-colors">
-                    {recipe.recipe_categories.name}
-                  </Link>
-                </>
-              )}
-              <span>/</span>
-              <Link href={`/recipes/${category}/${slug}`} className="hover:text-white transition-colors">
-                {recipe.title}
-              </Link>
-              <span>/</span>
-              <span className="text-white/80">High-Protein</span>
-            </nav>
-
             <h1
               className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4"
               style={{ fontFamily: 'var(--font-playfair)' }}
