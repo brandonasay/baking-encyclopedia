@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
-import { Clock, ChefHat, Users } from 'lucide-react'
+import { Clock, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { IngredientsCard } from '@/components/recipes/IngredientsCard'
 import { InstructionsSection } from '@/components/recipes/RecipeInstructionsSection'
@@ -37,12 +37,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const difficultyConfig = {
-  beginner: { label: 'Beginner', className: 'bg-[#EEF3EA] text-[#41622D]' },
-  intermediate: { label: 'Intermediate', className: 'bg-amber-100 text-amber-800' },
-  advanced: { label: 'Advanced', className: 'bg-red-100 text-red-800' },
-}
-
 export default async function HighProteinVariantPage({ params }: Props) {
   const { category, slug } = await params
   const supabase = await createClient()
@@ -68,7 +62,6 @@ export default async function HighProteinVariantPage({ params }: Props) {
   }
 
   const recipe = recipeData
-  const difficulty = difficultyConfig[recipe.difficulty]
   const ingredients = recipe.high_protein_ingredients ?? recipe.ingredients
   const instructions = recipe.high_protein_instructions ?? recipe.instructions
 
@@ -135,17 +128,6 @@ export default async function HighProteinVariantPage({ params }: Props) {
               <span>/</span>
               <span className="text-white/80">High-Protein</span>
             </nav>
-
-            {/* Variant badge */}
-            <div className="mb-4 flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                High-Protein Variant
-              </span>
-              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${difficulty.className}`}>
-                <ChefHat className="w-3.5 h-3.5" aria-hidden="true" />
-                {difficulty.label}
-              </span>
-            </div>
 
             <h1
               className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4"
@@ -239,20 +221,6 @@ export default async function HighProteinVariantPage({ params }: Props) {
                     ))}
                   </ul>
                 </section>
-              )}
-
-              {/* Tags */}
-              {recipe.tags && recipe.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {recipe.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 rounded-full text-sm text-[#6D5E6D] bg-white border border-[#EBD2AD]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
               )}
             </div>
           </div>

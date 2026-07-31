@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Clock, ChefHat } from 'lucide-react'
+import { Clock } from 'lucide-react'
 import type { Recipe } from '@/lib/database.types'
 
 type RecipeCardProps = {
@@ -11,34 +11,14 @@ type RecipeCardProps = {
     | 'title'
     | 'headline'
     | 'image_url'
-    | 'difficulty'
     | 'total_time_minutes'
-    | 'tags'
     | 'has_gluten_free'
     | 'has_high_protein'
   >
   categorySlug?: string
 }
 
-const difficultyConfig = {
-  beginner: {
-    label: 'Beginner',
-    className: 'bg-[#EEF3EA] text-[#41622D]',
-  },
-  intermediate: {
-    label: 'Intermediate',
-    className: 'bg-amber-100 text-amber-800',
-  },
-  advanced: {
-    label: 'Advanced',
-    className: 'bg-red-100 text-red-800',
-  },
-}
-
 export default function RecipeCard({ recipe, categorySlug }: RecipeCardProps) {
-  const difficulty = difficultyConfig[recipe.difficulty]
-  const visibleTags = recipe.tags?.slice(0, 2) ?? []
-
   return (
     <Link
       href={categorySlug ? `/recipes/${categorySlug}/${recipe.slug}` : `/recipes/${recipe.slug}`}
@@ -63,16 +43,6 @@ export default function RecipeCard({ recipe, categorySlug }: RecipeCardProps) {
               </span>
             </div>
           )}
-
-          {/* Difficulty badge overlay */}
-          <div className="absolute top-3 left-3">
-            <span
-              className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${difficulty.className}`}
-            >
-              <ChefHat className="w-3 h-3" aria-hidden="true" />
-              {difficulty.label}
-            </span>
-          </div>
         </div>
 
         {/* Content */}
@@ -114,20 +84,6 @@ export default function RecipeCard({ recipe, categorySlug }: RecipeCardProps) {
               )}
             </div>
           </div>
-
-          {/* Tags */}
-          {visibleTags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {visibleTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-0.5 rounded-full text-xs text-[#6D5E6D] bg-[#FCFFEB] border border-[#EBD2AD]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
       </article>
     </Link>
