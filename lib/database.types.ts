@@ -20,6 +20,11 @@ export interface RecipeInstruction {
   body: string
 }
 
+export interface RecipeFaq {
+  question: string
+  answer: string
+}
+
 export interface HowToStep {
   step_number: number
   title: string
@@ -197,6 +202,7 @@ export interface Database {
           tips: string[]
           equipment: string[]
           storage_instructions: string | null
+          faqs: RecipeFaq[]
           image_url: string | null
           image_alt: string | null
           tags: string[]
@@ -236,6 +242,7 @@ export interface Database {
           tips?: string[]
           equipment?: string[]
           storage_instructions?: string | null
+          faqs?: RecipeFaq[]
           image_url?: string | null
           image_alt?: string | null
           tags?: string[]

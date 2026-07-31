@@ -6,6 +6,7 @@ import { Clock, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { IngredientsCard } from '@/components/recipes/IngredientsCard'
 import { InstructionsSection } from '@/components/recipes/RecipeInstructionsSection'
+import { RecipeFaqSection } from '@/components/recipes/RecipeFaqSection'
 import type { Recipe, RecipeCategory } from '@/lib/database.types'
 
 export const revalidate = 3600
@@ -84,12 +85,28 @@ export default async function GlutenFreeVariantPage({ params }: Props) {
     })),
   }
 
+  const faqJsonLd = recipe.faqs && recipe.faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: recipe.faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  } : null
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       <div className="min-h-screen bg-[#FCFFEB]">
         {/* Hero */}
@@ -203,6 +220,11 @@ export default async function GlutenFreeVariantPage({ params }: Props) {
                     ))}
                   </ul>
                 </section>
+              )}
+
+              {/* FAQ */}
+              {recipe.faqs && recipe.faqs.length > 0 && (
+                <RecipeFaqSection faqs={recipe.faqs} />
               )}
             </div>
           </div>
