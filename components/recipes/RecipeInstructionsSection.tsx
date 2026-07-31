@@ -20,7 +20,7 @@ export function InstructionsSection({ instructions }: { instructions: RecipeInst
               {step.step_number}
             </div>
             <div className="flex-1 pt-1">
-              {step.title && (
+              {step.title && step.title.trim().toLowerCase() !== step.body.trim().toLowerCase() && (
                 <h3 className="font-semibold text-[#201D20] mb-1.5">{step.title}</h3>
               )}
               <p className="text-[#201D20] leading-relaxed">{step.body}</p>

@@ -1,6 +1,13 @@
 import type { RecipeIngredient } from '@/lib/database.types'
+import { scaleQuantity } from '@/lib/quantity'
 
-export function IngredientsList({ ingredients }: { ingredients: RecipeIngredient[] }) {
+export function IngredientsList({
+  ingredients,
+  scale = 1,
+}: {
+  ingredients: RecipeIngredient[]
+  scale?: number
+}) {
   // Group by group_label
   const groups: { label: string | null; items: RecipeIngredient[] }[] = []
   for (const ing of ingredients) {
@@ -31,7 +38,7 @@ export function IngredientsList({ ingredients }: { ingredients: RecipeIngredient
                 />
                 <span>
                   <span className="font-medium text-[#201D20]">
-                    {ing.quantity} {ing.unit}
+                    {scaleQuantity(ing.quantity, scale)} {ing.unit}
                   </span>{' '}
                   <span className="text-[#201D20]">{ing.ingredient_name}</span>
                   {ing.notes && <span className="text-[#6D5E6D]">, {ing.notes}</span>}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import type { RecipeIngredient, RecipeInstruction } from '@/lib/database.types'
-import { IngredientsList } from '@/components/recipes/RecipeIngredientsList'
+import { IngredientsCard } from '@/components/recipes/IngredientsCard'
 import { InstructionsSection } from '@/components/recipes/RecipeInstructionsSection'
 
 type Variant = 'standard' | 'gluten-free' | 'high-protein'
@@ -14,6 +14,8 @@ type RecipeVariantToggleProps = {
   highProteinNotes?: string
   baseIngredients: RecipeIngredient[]
   baseInstructions: RecipeInstruction[]
+  baseYield?: string | null
+  baseServings?: number | null
   glutenFreeIngredients?: RecipeIngredient[]
   glutenFreeInstructions?: RecipeInstruction[]
   highProteinIngredients?: RecipeIngredient[]
@@ -27,6 +29,8 @@ export default function RecipeVariantToggle({
   highProteinNotes,
   baseIngredients,
   baseInstructions,
+  baseYield,
+  baseServings,
   glutenFreeIngredients,
   glutenFreeInstructions,
   highProteinIngredients,
@@ -90,18 +94,12 @@ export default function RecipeVariantToggle({
       )}
 
       {/* Ingredients (shown inline on mobile) */}
-      <div className="lg:hidden bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
-        <div className="px-5 py-4 bg-[#F5EAC8] border-b border-[#EBD2AD]">
-          <h2
-            className="text-lg font-bold text-[#201D20]"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
-            Ingredients
-          </h2>
-        </div>
-        <div className="px-5 py-5">
-          <IngredientsList ingredients={activeIngredients} />
-        </div>
+      <div className="lg:hidden">
+        <IngredientsCard
+          ingredients={activeIngredients}
+          baseYield={baseYield}
+          baseServings={baseServings}
+        />
       </div>
 
       {/* Instructions */}

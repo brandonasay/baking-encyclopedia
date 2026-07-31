@@ -5,50 +5,7 @@ import Link from 'next/link'
 import { Printer, Trash2, CheckCheck, X, ChevronDown } from 'lucide-react'
 import type { GroceryListFull, GroceryListItem } from './page'
 import type { RecipeIngredient } from '@/lib/database.types'
-
-// ---------------------------------------------------------------------------
-// Fraction / quantity parsing
-// ---------------------------------------------------------------------------
-function parseFraction(str: string): number {
-  const s = str.trim()
-  // Mixed number: "1 1/2"
-  const mixed = s.match(/^(\d+)\s+(\d+)\/(\d+)$/)
-  if (mixed) return parseInt(mixed[1]) + parseInt(mixed[2]) / parseInt(mixed[3])
-  // Simple fraction: "1/2"
-  const frac = s.match(/^(\d+)\/(\d+)$/)
-  if (frac) return parseInt(frac[1]) / parseInt(frac[2])
-  const n = parseFloat(s)
-  return isNaN(n) ? 0 : n
-}
-
-function formatQuantity(num: number): string {
-  if (num === 0) return '0'
-  // Common fractions
-  const fracs: [number, string][] = [
-    [0.125, '⅛'], [0.25, '¼'], [0.333, '⅓'], [0.5, '½'],
-    [0.667, '⅔'], [0.75, '¾'],
-  ]
-  const whole = Math.floor(num)
-  const frac = num - whole
-  if (frac < 0.01) return String(whole)
-  for (const [val, sym] of fracs) {
-    if (Math.abs(frac - val) < 0.04) {
-      return whole > 0 ? `${whole} ${sym}` : sym
-    }
-  }
-  // Fallback to decimal with 1–2 sig figs
-  return num % 1 === 0 ? String(num) : num.toFixed(2).replace(/\.?0+$/, '')
-}
-
-// ---------------------------------------------------------------------------
-// Scale factor options
-// ---------------------------------------------------------------------------
-const SCALE_OPTIONS: { label: string; value: number }[] = [
-  { label: '½×', value: 0.5 },
-  { label: '1×', value: 1 },
-  { label: '2×', value: 2 },
-  { label: '3×', value: 3 },
-]
+import { parseFraction, formatQuantity, SCALE_OPTIONS } from '@/lib/quantity'
 
 // ---------------------------------------------------------------------------
 // Types

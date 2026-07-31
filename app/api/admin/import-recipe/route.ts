@@ -55,7 +55,8 @@ function mapJsonLd(ld: Record<string, unknown>) {
   const instructions: RecipeInstruction[] = []
   let step = 1
   const addStep = (title: string | undefined, body: string) => {
-    instructions.push({ step_number: step++, title: title || undefined, body })
+    const distinctTitle = title && title.trim().toLowerCase() !== body.trim().toLowerCase() ? title : undefined
+    instructions.push({ step_number: step++, title: distinctTitle, body })
   }
   for (const item of rawInstructions) {
     if (typeof item === 'string') { addStep(undefined, item); continue }

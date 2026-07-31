@@ -5,7 +5,8 @@ import { notFound } from 'next/navigation'
 import { Clock, ChefHat, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import RecipeVariantToggle from '@/components/recipes/RecipeVariantToggle'
-import { IngredientsList } from '@/components/recipes/RecipeIngredientsList'
+import { IngredientsCard } from '@/components/recipes/IngredientsCard'
+import { InstructionsSection } from '@/components/recipes/RecipeInstructionsSection'
 import type { Recipe, RecipeCategory } from '@/lib/database.types'
 
 export const revalidate = 3600
@@ -198,18 +199,12 @@ export default async function RecipeDetailPage({ params }: Props) {
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar: ingredients (desktop) */}
             <aside className="hidden lg:block lg:w-72 shrink-0">
-              <div className="sticky top-6 bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
-                <div className="px-5 py-4 bg-[#F5EAC8] border-b border-[#EBD2AD]">
-                  <h2
-                    className="text-lg font-bold text-[#201D20]"
-                    style={{ fontFamily: 'var(--font-playfair)' }}
-                  >
-                    Ingredients
-                  </h2>
-                </div>
-                <div className="px-5 py-5">
-                  <IngredientsList ingredients={recipe.ingredients} />
-                </div>
+              <div className="sticky top-6">
+                <IngredientsCard
+                  ingredients={recipe.ingredients}
+                  baseYield={recipe.base_yield}
+                  baseServings={recipe.base_servings}
+                />
               </div>
             </aside>
 
@@ -224,6 +219,8 @@ export default async function RecipeDetailPage({ params }: Props) {
                   highProteinNotes={recipe.high_protein_notes ?? undefined}
                   baseIngredients={recipe.ingredients}
                   baseInstructions={recipe.instructions}
+                  baseYield={recipe.base_yield}
+                  baseServings={recipe.base_servings}
                   glutenFreeIngredients={recipe.gluten_free_ingredients ?? undefined}
                   glutenFreeInstructions={recipe.gluten_free_instructions ?? undefined}
                   highProteinIngredients={recipe.high_protein_ingredients ?? undefined}
@@ -232,48 +229,16 @@ export default async function RecipeDetailPage({ params }: Props) {
               ) : (
                 <>
                   {/* Mobile-only ingredients */}
-                  <div className="lg:hidden bg-white rounded-2xl border border-[#EBD2AD] overflow-hidden">
-                    <div className="px-5 py-4 bg-[#F5EAC8] border-b border-[#EBD2AD]">
-                      <h2
-                        className="text-lg font-bold text-[#201D20]"
-                        style={{ fontFamily: 'var(--font-playfair)' }}
-                      >
-                        Ingredients
-                      </h2>
-                    </div>
-                    <div className="px-5 py-5">
-                      <IngredientsList ingredients={recipe.ingredients} />
-                    </div>
+                  <div className="lg:hidden">
+                    <IngredientsCard
+                      ingredients={recipe.ingredients}
+                      baseYield={recipe.base_yield}
+                      baseServings={recipe.base_servings}
+                    />
                   </div>
 
                   {/* Instructions */}
-                  <section aria-labelledby="instructions-heading">
-                    <h2
-                      id="instructions-heading"
-                      className="text-2xl font-bold text-[#201D20] mb-6"
-                      style={{ fontFamily: 'var(--font-playfair)' }}
-                    >
-                      Instructions
-                    </h2>
-                    <ol className="space-y-8">
-                      {recipe.instructions.map((step) => (
-                        <li key={step.step_number} className="flex gap-5">
-                          <div
-                            className="flex-shrink-0 w-9 h-9 rounded-full bg-[#C58930] text-white font-bold text-sm flex items-center justify-center mt-0.5"
-                            aria-label={`Step ${step.step_number}`}
-                          >
-                            {step.step_number}
-                          </div>
-                          <div className="flex-1 pt-1">
-                            {step.title && (
-                              <h3 className="font-semibold text-[#201D20] mb-1.5">{step.title}</h3>
-                            )}
-                            <p className="text-[#201D20] leading-relaxed">{step.body}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                  </section>
+                  <InstructionsSection instructions={recipe.instructions} />
                 </>
               )}
 
