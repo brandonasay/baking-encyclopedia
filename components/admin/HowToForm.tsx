@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import type { HowToArticle, HowtoSection, ContentBlock } from '@/lib/database.types'
+import type { GeneratedHowToData } from './HowToGenerator'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -27,6 +28,17 @@ function parseBlocks(body: string | null): ContentBlock[] {
     if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.type) return parsed as ContentBlock[]
   } catch {}
   return []
+}
+
+function arrayToCSV(arr: string[]) {
+  return arr.join(', ')
+}
+
+function csvToArray(str: string): string[] {
+  return str
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
 }
 
 // ─── Shared styles ───────────────────────────────────────────────────────────
@@ -106,6 +118,11 @@ function ImageBlockEditor({ block, onChange }: { block: ContentBlock & { type: '
 
   return (
     <div className="space-y-3">
+      {block.description && (
+        <p className="text-xs text-[#A87225] bg-[#FBF3DC] border border-[#EBD2AD] rounded-lg px-3 py-2">
+          <span className="font-semibold">Shot brief:</span> {block.description}
+        </p>
+      )}
       {block.url ? (
         <div className="space-y-3">
           <Image
@@ -305,20 +322,28 @@ function BlockWrapper({
 
 interface HowToFormProps {
   article?: HowToArticle
+  initialValues?: GeneratedHowToData
 }
 
-export default function HowToForm({ article }: HowToFormProps) {
+export default function HowToForm({ article, initialValues }: HowToFormProps) {
   const router = useRouter()
   const isEdit = !!article
+  const iv = initialValues
 
-  const [title, setTitle] = useState(article?.title ?? '')
-  const [slug, setSlug] = useState(article?.slug ?? '')
+  const [title, setTitle] = useState(article?.title ?? iv?.title ?? '')
+  const [slug, setSlug] = useState(article?.slug ?? (iv?.title ? slugify(iv.title) : ''))
   const [slugManual, setSlugManual] = useState(isEdit)
-  const [headline, setHeadline] = useState(article?.headline ?? '')
+  const [headline, setHeadline] = useState(article?.headline ?? iv?.headline ?? '')
   const [section, setSection] = useState<HowtoSection>(article?.section ?? 'baking')
   const [featured, setFeatured] = useState(article?.featured ?? false)
   const [published, setPublished] = useState(article?.published ?? false)
-  const [blocks, setBlocks] = useState<ContentBlock[]>(() => parseBlocks(article?.body ?? null))
+  const [blocks, setBlocks] = useState<ContentBlock[]>(() =>
+    article ? parseBlocks(article.body) : (iv?.blocks ?? [])
+  )
+
+  const [tags, setTags] = useState(arrayToCSV(article?.tags ?? iv?.tags ?? []))
+  const [seoTitle, setSeoTitle] = useState(article?.seo_title ?? iv?.seo_title ?? '')
+  const [seoDescription, setSeoDescription] = useState(article?.seo_description ?? iv?.seo_description ?? '')
 
   const [imageUrl, setImageUrl] = useState(article?.image_url ?? '')
   const [imageAlt, setImageAlt] = useState(article?.image_alt ?? '')
@@ -379,6 +404,9 @@ export default function HowToForm({ article }: HowToFormProps) {
       published,
       body: JSON.stringify(blocks),
       steps: [],
+      tags: csvToArray(tags),
+      seo_title: seoTitle || null,
+      seo_description: seoDescription || null,
       image_url: imageUrl || null,
       image_alt: imageAlt || null,
     }
@@ -545,6 +573,41 @@ export default function HowToForm({ article }: HowToFormProps) {
             <Toggle checked={featured} onChange={setFeatured} label="Featured" />
             <Toggle checked={published} onChange={setPublished} label="Published" />
           </div>
+        </div>
+      </div>
+
+      {/* Tags & SEO */}
+      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6 space-y-4">
+        <h2 className="text-sm font-semibold text-[#201D20] uppercase tracking-wide">Tags & SEO</h2>
+        <div>
+          <label className="block text-sm font-medium text-[#201D20] mb-1">Tags</label>
+          <input
+            className={inputCls}
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            placeholder="e.g. laminated dough, croissant, technique"
+          />
+          <p className="text-xs text-[#6D5E6D] mt-1">Comma-separated</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[#201D20] mb-1">SEO Title</label>
+          <input
+            className={inputCls}
+            value={seoTitle}
+            onChange={(e) => setSeoTitle(e.target.value)}
+            placeholder="Overrides title in <head>"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[#201D20] mb-1">SEO Description</label>
+          <textarea
+            className={`${inputCls} resize-none min-h-[80px]`}
+            rows={3}
+            value={seoDescription}
+            onChange={(e) => setSeoDescription(e.target.value)}
+            placeholder="Meta description..."
+          />
+          <p className="text-xs text-[#6D5E6D] mt-1">{seoDescription.length}/160 characters</p>
         </div>
       </div>
 

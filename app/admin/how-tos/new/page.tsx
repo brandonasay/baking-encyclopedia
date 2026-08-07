@@ -1,7 +1,7 @@
-import HowToForm from '@/components/admin/HowToForm'
+import NewHowToPage from './NewHowToPage'
 
 export const metadata = { title: 'New How-To' }
 
-export default function NewHowToPage() {
-  return <HowToForm />
+export default function Page() {
+  return <NewHowToPage />
 }

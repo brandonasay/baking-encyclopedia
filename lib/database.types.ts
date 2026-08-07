@@ -33,7 +33,7 @@ export interface HowToStep {
 
 export type HeadingBlock = { type: 'heading'; id: string; content: string }
 export type TextBlock = { type: 'text'; id: string; content: string }
-export type ImageBlock = { type: 'image'; id: string; url: string; alt: string }
+export type ImageBlock = { type: 'image'; id: string; url: string; alt: string; description?: string }
 export type NumberedListBlock = { type: 'numbered_list'; id: string; items: string[] }
 export type BulletedListBlock = { type: 'bulleted_list'; id: string; items: string[] }
 export type ContentBlock = HeadingBlock | TextBlock | ImageBlock | NumberedListBlock | BulletedListBlock
