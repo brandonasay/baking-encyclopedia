@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { supabaseAdmin } from '@/lib/supabase/admin'
-import type { AdminCounts, Recipe, HowToArticle } from '@/lib/database.types'
+import type { AdminCounts, Recipe, HowToArticle, PageViewStats, PageViewTopPath } from '@/lib/database.types'
 
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Dashboard' }
 
 export default async function AdminDashboardPage() {
-  const [countsResult, recentRecipesResult, recentHowTosResult] = await Promise.all([
+  const [countsResult, recentRecipesResult, recentHowTosResult, viewStatsResult, topPathsResult] = await Promise.all([
     supabaseAdmin.from('admin_content_counts').select('*').single(),
     supabaseAdmin
       .from('recipes')
@@ -18,11 +18,15 @@ export default async function AdminDashboardPage() {
       .select('id, title, slug, published, created_at, section')
       .order('created_at', { ascending: false })
       .limit(5),
+    supabaseAdmin.from('page_view_stats').select('*').single(),
+    supabaseAdmin.from('page_view_top_paths').select('*').limit(8),
   ])
 
   const counts = countsResult.data as AdminCounts | null
   const recentRecipes = (recentRecipesResult.data ?? []) as Pick<Recipe, 'id' | 'title' | 'slug' | 'published' | 'created_at' | 'difficulty'>[]
   const recentHowTos = (recentHowTosResult.data ?? []) as Pick<HowToArticle, 'id' | 'title' | 'slug' | 'published' | 'created_at' | 'section'>[]
+  const viewStats = viewStatsResult.data as PageViewStats | null
+  const topPaths = (topPathsResult.data ?? []) as PageViewTopPath[]
 
   const statCards = [
     { label: 'Published Recipes', value: counts?.published_recipes ?? 0, href: '/admin/recipes', color: 'text-[#4E7435]' },
@@ -31,6 +35,13 @@ export default async function AdminDashboardPage() {
     { label: 'Published Ingredients', value: counts?.published_ingredients ?? 0, href: '/admin/ingredients', color: 'text-[#4E7435]' },
     { label: 'Total Users', value: counts?.total_users ?? 0, href: '#', color: 'text-[#201D20]' },
     { label: 'Newsletter Subscribers', value: counts?.mailing_list_subscribers ?? 0, href: '#', color: 'text-[#201D20]' },
+  ]
+
+  const trafficCards = [
+    { label: 'Views Today', value: viewStats?.views_today ?? 0 },
+    { label: 'Views (7 Days)', value: viewStats?.views_7d ?? 0 },
+    { label: 'Views (30 Days)', value: viewStats?.views_30d ?? 0 },
+    { label: 'Total Views', value: viewStats?.views_total ?? 0 },
   ]
 
   return (
@@ -52,6 +63,19 @@ export default async function AdminDashboardPage() {
             <p className={`text-3xl font-bold mt-1 ${card.color}`}>{card.value.toLocaleString()}</p>
           </Link>
         ))}
+      </div>
+
+      {/* Traffic */}
+      <div>
+        <h2 className="text-sm font-semibold text-[#201D20] uppercase tracking-wide mb-3">Traffic</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {trafficCards.map((card) => (
+            <div key={card.label} className="bg-white rounded-xl border border-[#EBD2AD] p-5">
+              <p className="text-xs font-medium text-[#6D5E6D] uppercase tracking-wide">{card.label}</p>
+              <p className="text-3xl font-bold mt-1 text-[#201D20]">{card.value.toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Quick actions */}
@@ -143,6 +167,23 @@ export default async function AdminDashboardPage() {
             </ul>
           )}
         </div>
+      </div>
+
+      {/* Top pages */}
+      <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
+        <h2 className="text-base font-semibold text-[#201D20] mb-4">Top Pages (30 Days)</h2>
+        {topPaths.length === 0 ? (
+          <p className="text-sm text-[#6D5E6D]">No traffic data yet.</p>
+        ) : (
+          <ul className="space-y-2">
+            {topPaths.map((row) => (
+              <li key={row.path} className="flex items-center justify-between gap-2 py-2 border-b border-[#EBD2AD] last:border-0">
+                <span className="text-sm text-[#201D20] font-mono truncate">{row.path}</span>
+                <span className="shrink-0 text-sm text-[#6D5E6D]">{row.views.toLocaleString()} views</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )

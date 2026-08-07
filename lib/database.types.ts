@@ -312,6 +312,16 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['howto_articles']['Insert']>
         Relationships: []
       }
+      page_views: {
+        Row: {
+          id: number
+          path: string
+          created_at: string
+        }
+        Insert: { path: string }
+        Update: Record<string, never>
+        Relationships: []
+      }
       saved_recipes: {
         Row: {
           id: string
@@ -399,6 +409,22 @@ export interface Database {
         }
         Relationships: []
       }
+      page_view_stats: {
+        Row: {
+          views_today: number
+          views_7d: number
+          views_30d: number
+          views_total: number
+        }
+        Relationships: []
+      }
+      page_view_top_paths: {
+        Row: {
+          path: string
+          views: number
+        }
+        Relationships: []
+      }
       recipes_by_tag: {
         Row: {
           tag: string
@@ -477,3 +503,5 @@ export type GroceryListItem = Database['public']['Tables']['grocery_list_items']
 export type GroceryListCheck = Database['public']['Tables']['grocery_list_checks']['Row']
 export type SearchResult = Database['public']['Functions']['search_all']['Returns'][number]
 export type AdminCounts = Database['public']['Views']['admin_content_counts']['Row']
+export type PageViewStats = Database['public']['Views']['page_view_stats']['Row']
+export type PageViewTopPath = Database['public']['Views']['page_view_top_paths']['Row']
