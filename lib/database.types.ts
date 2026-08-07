@@ -425,6 +425,13 @@ export interface Database {
         }
         Relationships: []
       }
+      page_view_monthly: {
+        Row: {
+          month: string
+          views: number
+        }
+        Relationships: []
+      }
       recipes_by_tag: {
         Row: {
           tag: string
@@ -505,3 +512,4 @@ export type SearchResult = Database['public']['Functions']['search_all']['Return
 export type AdminCounts = Database['public']['Views']['admin_content_counts']['Row']
 export type PageViewStats = Database['public']['Views']['page_view_stats']['Row']
 export type PageViewTopPath = Database['public']['Views']['page_view_top_paths']['Row']
+export type PageViewMonthly = Database['public']['Views']['page_view_monthly']['Row']

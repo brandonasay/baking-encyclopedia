@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { supabaseAdmin } from '@/lib/supabase/admin'
-import type { AdminCounts, Recipe, HowToArticle, PageViewStats, PageViewTopPath } from '@/lib/database.types'
+import type { AdminCounts, Recipe, HowToArticle, PageViewStats, PageViewTopPath, PageViewMonthly } from '@/lib/database.types'
+import MonthlyTrafficChart from '@/components/admin/MonthlyTrafficChart'
 
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Dashboard' }
 
 export default async function AdminDashboardPage() {
-  const [countsResult, recentRecipesResult, recentHowTosResult, viewStatsResult, topPathsResult] = await Promise.all([
+  const [countsResult, recentRecipesResult, recentHowTosResult, viewStatsResult, topPathsResult, monthlyResult] = await Promise.all([
     supabaseAdmin.from('admin_content_counts').select('*').single(),
     supabaseAdmin
       .from('recipes')
@@ -20,6 +21,7 @@ export default async function AdminDashboardPage() {
       .limit(5),
     supabaseAdmin.from('page_view_stats').select('*').single(),
     supabaseAdmin.from('page_view_top_paths').select('*').limit(8),
+    supabaseAdmin.from('page_view_monthly').select('*').order('month', { ascending: false }).limit(12),
   ])
 
   const counts = countsResult.data as AdminCounts | null
@@ -27,6 +29,7 @@ export default async function AdminDashboardPage() {
   const recentHowTos = (recentHowTosResult.data ?? []) as Pick<HowToArticle, 'id' | 'title' | 'slug' | 'published' | 'created_at' | 'section'>[]
   const viewStats = viewStatsResult.data as PageViewStats | null
   const topPaths = (topPathsResult.data ?? []) as PageViewTopPath[]
+  const monthlyViews = ((monthlyResult.data ?? []) as PageViewMonthly[]).slice().reverse()
 
   const statCards = [
     { label: 'Published Recipes', value: counts?.published_recipes ?? 0, href: '/admin/recipes', color: 'text-[#4E7435]' },
@@ -75,6 +78,10 @@ export default async function AdminDashboardPage() {
               <p className="text-3xl font-bold mt-1 text-[#201D20]">{card.value.toLocaleString()}</p>
             </div>
           ))}
+        </div>
+        <div className="bg-white rounded-xl border border-[#EBD2AD] p-6 mt-4">
+          <h3 className="text-sm font-semibold text-[#201D20] mb-4">Views by Month</h3>
+          <MonthlyTrafficChart data={monthlyViews} />
         </div>
       </div>
 
