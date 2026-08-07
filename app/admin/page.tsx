@@ -178,7 +178,10 @@ export default async function AdminDashboardPage() {
 
       {/* Top pages */}
       <div className="bg-white rounded-xl border border-[#EBD2AD] p-6">
-        <h2 className="text-base font-semibold text-[#201D20] mb-4">Top Pages (30 Days)</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-semibold text-[#201D20]">Top Pages (30 Days)</h2>
+          <Link href="/admin/traffic" className="text-xs text-[#C58930] hover:underline">View all pages</Link>
+        </div>
         {topPaths.length === 0 ? (
           <p className="text-sm text-[#6D5E6D]">No traffic data yet.</p>
         ) : (

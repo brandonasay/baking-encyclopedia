@@ -61,6 +61,17 @@ const navItems = [
       </svg>
     ),
   },
+  {
+    href: '/admin/traffic',
+    label: 'Traffic',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <rect x="3.75" y="12" width="3.5" height="8.25" rx="1" />
+        <rect x="10.25" y="7.5" width="3.5" height="12.75" rx="1" />
+        <rect x="16.75" y="3.75" width="3.5" height="16.5" rx="1" />
+      </svg>
+    ),
+  },
 ]
 
 export default function AdminSidebar() {

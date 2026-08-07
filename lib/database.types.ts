@@ -432,6 +432,16 @@ export interface Database {
         }
         Relationships: []
       }
+      page_view_paths: {
+        Row: {
+          path: string
+          views_today: number
+          views_7d: number
+          views_30d: number
+          views_total: number
+        }
+        Relationships: []
+      }
       recipes_by_tag: {
         Row: {
           tag: string
@@ -513,3 +523,4 @@ export type AdminCounts = Database['public']['Views']['admin_content_counts']['R
 export type PageViewStats = Database['public']['Views']['page_view_stats']['Row']
 export type PageViewTopPath = Database['public']['Views']['page_view_top_paths']['Row']
 export type PageViewMonthly = Database['public']['Views']['page_view_monthly']['Row']
+export type PageViewPath = Database['public']['Views']['page_view_paths']['Row']
