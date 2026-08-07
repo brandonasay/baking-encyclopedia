@@ -2,7 +2,6 @@ import { randomUUID } from 'node:crypto'
 import { createClient } from '@/lib/supabase/server'
 import Anthropic from '@anthropic-ai/sdk'
 import type { ContentBlock } from '@/lib/database.types'
-import { searchStockImage } from '@/lib/pexels'
 
 const anthropic = new Anthropic()
 
@@ -247,28 +246,7 @@ export async function POST(request: Request) {
       throw new Error('Could not parse a draft from the model response')
     }
 
-    const imageBlocks = parsed.blocks.filter(
-      (b): b is GeneratedBlock & { type: 'image'; description: string } => b.type === 'image' && !!b.description
-    )
-    const stockPhotos = await Promise.all(imageBlocks.map((b) => searchStockImage(b.description)))
-    let missedImages = 0
-    imageBlocks.forEach((block, i) => {
-      const found = stockPhotos[i]
-      if (found) {
-        block.url = found.url
-        block.alt = found.alt
-      } else {
-        missedImages++
-      }
-    })
-
-    const warning = !process.env.PEXELS_API_KEY
-      ? 'Stock photo search is not configured (missing PEXELS_API_KEY) — image blocks were left blank.'
-      : missedImages > 0
-        ? `Couldn't find a stock photo for ${missedImages} image block${missedImages > 1 ? 's' : ''} — left blank for manual upload.`
-        : undefined
-
-    return Response.json({ data: parsed, warning })
+    return Response.json({ data: parsed })
   } catch (err) {
     return Response.json({ error: `Generation failed: ${(err as Error).message}` }, { status: 500 })
   }

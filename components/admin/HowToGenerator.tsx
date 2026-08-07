@@ -24,7 +24,6 @@ export default function HowToGenerator({ onGenerate }: Props) {
   const [type, setType] = useState<ArticleType>('auto')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
-  const [hasWarning, setHasWarning] = useState(false)
 
   async function handleGenerate() {
     if (!topic.trim()) return
@@ -44,8 +43,7 @@ export default function HowToGenerator({ onGenerate }: Props) {
         return
       }
       setStatus('success')
-      setHasWarning(!!json.warning)
-      setMessage(json.warning ? `Draft generated. ${json.warning}` : 'Draft generated — review everything before publishing.')
+      setMessage('Draft generated — review everything before publishing.')
       onGenerate(json.data)
     } catch {
       setStatus('error')
@@ -93,12 +91,8 @@ export default function HowToGenerator({ onGenerate }: Props) {
       </div>
 
       {status === 'success' && (
-        <p className={`mt-2.5 flex items-center gap-1.5 text-xs ${hasWarning ? 'text-[#A87225]' : 'text-green-700'}`}>
-          {hasWarning ? (
-            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-          ) : (
-            <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
-          )}
+        <p className="mt-2.5 flex items-center gap-1.5 text-xs text-green-700">
+          <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
           {message}
         </p>
       )}
