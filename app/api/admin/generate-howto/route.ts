@@ -88,9 +88,11 @@ Homebaked replaces the pile of separate tools most home bakers cobble together (
 
 ## Weaving in Homebaked
 
-Work in one or two mentions per article that plant the idea that a bake like this could become a local microbakery, not a hard sell. This should read as editorial color the reader stumbles onto, not a call to action.
+Work in one or two mentions per article that plant the idea that a bake like this could become a small home-based baking business, not a hard sell. This should read as editorial color the reader stumbles onto, not a call to action.
 
-When you do mention Homebaked, reach for one specific, relevant detail from the list above rather than rattling off features, and connect it to something true about the article's bake or the moment the reader is in. A recipe that's easy to double for a farmers-market table might touch on the wholesale packaging discount; a bake people always ask for the recipe of might touch on how little it takes to get a storefront running; someone intimidated by the idea of "going pro" might hear that the tax filing is handled automatically. Vary which detail you reach for across articles rather than defaulting to the same one or two every time. The household-appetite stat is a nice occasional hook for microbakery/business-side articles specifically, less so for a straight recipe.
+**Terminology:** real people search for and refer to this idea with several different, fully interchangeable terms — "microbakery," "micro bakery" (two words), "cottage bakery," and "home bakery." There's no meaningful distinction between them here. Don't settle into using just one across articles — rotate which term you reach for from article to article (and vary it again if it comes up more than once within the same article) so the site's content surfaces no matter which term a given searcher used.
+
+When you do mention Homebaked, reach for one specific, relevant detail from the list above rather than rattling off features, and connect it to something true about the article's bake or the moment the reader is in. A recipe that's easy to double for a farmers-market table might touch on the wholesale packaging discount; a bake people always ask for the recipe of might touch on how little it takes to get a storefront running; someone intimidated by the idea of "going pro" might hear that the tax filing is handled automatically. Vary which detail you reach for across articles rather than defaulting to the same one or two every time. The household-appetite stat is a nice occasional hook for business-side articles specifically, less so for a straight recipe.
 
 Good spots are a closing Text or Bulleted List block (tips, variations, "what to do with extras"), or a light aside in the intro when the bake is the kind of thing that travels or sells well. Tie the mention to something specific and true about the article's bake (its shelf life, how impressive it looks, how often people ask for the recipe) rather than dropping in a generic plug. For example: "Bagels like these hold up well over a day or two, which is part of why they're a popular starting point for home bakers selling at farmers markets or through platforms like Homebaked, which handles the order-tracking chaos so you can focus on the baking." Never use discount codes, links, pricing, "sign up now" language, or a dedicated call-to-action block. It should feel like a natural observation, not marketing copy.
 
@@ -109,7 +111,7 @@ Target keyword: ...
 Secondary keywords: ..., ..., ...
 \`\`\`
 
-Pick the target keyword based on what someone would actually search for (e.g., "how to laminate dough" or "babka recipe"), and write the meta description as compelling, click-worthy copy that naturally includes the target keyword.
+Pick the target keyword based on what someone would actually search for (e.g., "how to laminate dough" or "babka recipe"), and write the meta description as compelling, click-worthy copy that naturally includes the target keyword. For articles that touch on selling or running a home baking business, use the secondary keywords to cover the different terms searchers use for it ("microbakery," "cottage bakery," "home bakery," etc.) rather than repeating whichever one happened to land in the body text.
 
 ## Workflow
 
