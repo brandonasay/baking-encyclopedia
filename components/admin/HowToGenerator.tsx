@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Sparkles, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
-import type { ContentBlock } from '@/lib/database.types'
+import type { ContentBlock, HowtoSection } from '@/lib/database.types'
 
 export type GeneratedHowToData = {
   title?: string
@@ -11,9 +11,10 @@ export type GeneratedHowToData = {
   tags?: string[]
   seo_title?: string
   seo_description?: string
+  section?: HowtoSection
 }
 
-type ArticleType = 'auto' | 'recipe' | 'technique'
+type SectionChoice = 'baking' | 'business'
 
 type Props = {
   onGenerate: (data: GeneratedHowToData) => void
@@ -21,7 +22,7 @@ type Props = {
 
 export default function HowToGenerator({ onGenerate }: Props) {
   const [topic, setTopic] = useState('')
-  const [type, setType] = useState<ArticleType>('auto')
+  const [section, setSection] = useState<SectionChoice>('baking')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
 
@@ -34,7 +35,7 @@ export default function HowToGenerator({ onGenerate }: Props) {
       const res = await fetch('/api/admin/generate-howto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic: topic.trim(), type }),
+        body: JSON.stringify({ topic: topic.trim(), section }),
       })
       const json = await res.json()
       if (!res.ok) {
@@ -70,14 +71,13 @@ export default function HowToGenerator({ onGenerate }: Props) {
           disabled={status === 'loading'}
         />
         <select
-          value={type}
-          onChange={(e) => setType(e.target.value as ArticleType)}
+          value={section}
+          onChange={(e) => setSection(e.target.value as SectionChoice)}
           disabled={status === 'loading'}
           className="px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] focus:outline-none focus:ring-2 focus:ring-[#C58930] focus:border-transparent cursor-pointer"
         >
-          <option value="auto">Let AI decide</option>
-          <option value="recipe">Recipe</option>
-          <option value="technique">Technique guide</option>
+          <option value="baking">Baking</option>
+          <option value="business">Business</option>
         </select>
         <button
           type="button"

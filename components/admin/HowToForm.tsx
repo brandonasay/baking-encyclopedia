@@ -334,7 +334,7 @@ export default function HowToForm({ article, initialValues }: HowToFormProps) {
   const [slug, setSlug] = useState(article?.slug ?? (iv?.title ? slugify(iv.title) : ''))
   const [slugManual, setSlugManual] = useState(isEdit)
   const [headline, setHeadline] = useState(article?.headline ?? iv?.headline ?? '')
-  const [section, setSection] = useState<HowtoSection>(article?.section ?? 'baking')
+  const [section, setSection] = useState<HowtoSection>(article?.section ?? iv?.section ?? 'baking')
   const [featured, setFeatured] = useState(article?.featured ?? false)
   const [published, setPublished] = useState(article?.published ?? false)
   const [blocks, setBlocks] = useState<ContentBlock[]>(() =>

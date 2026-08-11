@@ -125,7 +125,7 @@ Pick the target keyword based on what someone would actually search for (e.g., "
 
 This invocation is a single, non-interactive generation — there is no opportunity to ask a follow-up question. The caller will tell you in the user message whether to write a Recipe, a Technique/how-to guide, or to decide for yourself. When deciding for yourself, use the topic to judge: a specific named dish or bake is a Recipe, a skill/process/concept is a Technique guide. Never respond with a clarifying question; always produce the full tagged draft.`
 
-type HowToGenType = 'recipe' | 'technique' | 'auto'
+type SectionChoice = 'baking' | 'business'
 
 interface GeneratedBlock {
   id: string
@@ -229,15 +229,14 @@ export async function POST(request: Request) {
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
   if (profile?.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { topic, type } = (await request.json()) as { topic?: string; type?: HowToGenType }
+  const { topic, section } = (await request.json()) as { topic?: string; section?: SectionChoice }
   if (!topic || !topic.trim()) return Response.json({ error: 'topic is required' }, { status: 400 })
 
-  const typeInstruction =
-    type === 'recipe'
-      ? 'Write this as a Recipe.'
-      : type === 'technique'
-        ? 'Write this as a Technique/how-to guide.'
-        : "Decide whether this is a Recipe or a Technique guide based on the topic below, and proceed without asking."
+  const dbSection: 'baking' | 'microbakery' = section === 'business' ? 'microbakery' : 'baking'
+  const structureInstruction =
+    section === 'business'
+      ? 'This is Business-side content (running a home baking business or microbakery, not a specific bake) — write it as a Technique/how-to guide, never as a Recipe.'
+      : "This is Baking-side content. Decide whether this is a Recipe or a Technique guide based on the topic below, and proceed without asking."
 
   try {
     const message = await anthropic.messages.create({
@@ -247,7 +246,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: 'user',
-          content: `Topic: ${topic.trim()}\n\n${typeInstruction}`,
+          content: `Topic: ${topic.trim()}\n\n${structureInstruction}`,
         },
       ],
     })
@@ -264,7 +263,7 @@ export async function POST(request: Request) {
       throw new Error('Could not parse a draft from the model response')
     }
 
-    return Response.json({ data: parsed })
+    return Response.json({ data: { ...parsed, section: dbSection } })
   } catch (err) {
     return Response.json({ error: `Generation failed: ${(err as Error).message}` }, { status: 500 })
   }
