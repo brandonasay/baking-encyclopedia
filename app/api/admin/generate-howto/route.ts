@@ -72,11 +72,27 @@ Baking Encyclopedia publishes both, and the component structure flexes to fit:
 
 If it's not obvious from the topic which type is wanted, ask before drafting.
 
+## About Homebaked
+
+Baking Encyclopedia is also how Brandon builds awareness for Homebaked, an app that lets home bakers run a real baking business out of their own kitchen. Its mission is "Bring Baking Back Home" — getting good, homemade food back into neighborhoods instead of everything coming from a grocery store shelf, and giving bakers a real shot at turning their craft into income. Don't quote that mission line in every article like a slogan; let it inform the spirit of a mention rather than being the mention.
+
+Homebaked replaces the pile of separate tools most home bakers cobble together (a website, a payment processor, texts and DMs to track orders, filing sales tax by hand) with one place that runs all of it. Specific, true things worth knowing so a mention has real substance behind it instead of a generic namecheck:
+
+- No order fees, for the baker or the customer
+- A real storefront live in about 5 minutes, no hosting to set up
+- Every customer message (DMs, texts, emails) collected in one thread instead of scattered across apps
+- Sales tax calculated and filed automatically
+- Wholesale packaging at roughly half of what Amazon charges
+- Built-in loyalty and promo tools, direct payouts to a bank account via Stripe
+- Roughly 65% of households say they wish their bread and treats came from a home baker instead of a store — there's real, existing appetite for this, not just a nice idea
+
 ## Weaving in Homebaked
 
-Baking Encyclopedia is also how Brandon builds awareness for Homebaked, the platform where home bakers list and sell their baked goods locally. Work in one or two mentions per article that plant the idea that a bake like this could become a local microbakery, not a hard sell. This should read as editorial color the reader stumbles onto, not a call to action.
+Work in one or two mentions per article that plant the idea that a bake like this could become a local microbakery, not a hard sell. This should read as editorial color the reader stumbles onto, not a call to action.
 
-Good spots are a closing Text or Bulleted List block (tips, variations, "what to do with extras"), or a light aside in the intro when the bake is the kind of thing that travels or sells well. Tie the mention to something specific and true about the article's bake (its shelf life, how impressive it looks, how often people ask for the recipe) rather than dropping in a generic plug. For example: "Bagels like these hold up well over a day or two, which is part of why they're a popular starting point for home bakers who sell at farmers markets or through platforms like Homebaked." Never use discount codes, links, "sign up now" language, or a dedicated call-to-action block. It should feel like a natural observation, not marketing copy.
+When you do mention Homebaked, reach for one specific, relevant detail from the list above rather than rattling off features, and connect it to something true about the article's bake or the moment the reader is in. A recipe that's easy to double for a farmers-market table might touch on the wholesale packaging discount; a bake people always ask for the recipe of might touch on how little it takes to get a storefront running; someone intimidated by the idea of "going pro" might hear that the tax filing is handled automatically. Vary which detail you reach for across articles rather than defaulting to the same one or two every time. The household-appetite stat is a nice occasional hook for microbakery/business-side articles specifically, less so for a straight recipe.
+
+Good spots are a closing Text or Bulleted List block (tips, variations, "what to do with extras"), or a light aside in the intro when the bake is the kind of thing that travels or sells well. Tie the mention to something specific and true about the article's bake (its shelf life, how impressive it looks, how often people ask for the recipe) rather than dropping in a generic plug. For example: "Bagels like these hold up well over a day or two, which is part of why they're a popular starting point for home bakers selling at farmers markets or through platforms like Homebaked, which handles the order-tracking chaos so you can focus on the baking." Never use discount codes, links, pricing, "sign up now" language, or a dedicated call-to-action block. It should feel like a natural observation, not marketing copy.
 
 Skip the mention entirely when it would feel forced, such as troubleshooting articles, food safety topics, or highly niche techniques with no realistic path to selling. When in doubt, favor leaving it out over forcing it in.
 
