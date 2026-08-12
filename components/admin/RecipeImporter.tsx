@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Link, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
-import type { RecipeIngredient, RecipeInstruction } from '@/lib/database.types'
+import type { RecipeIngredient, RecipeInstruction, RecipeDifficulty } from '@/lib/database.types'
 
 export type ImportedRecipeData = {
   title?: string
@@ -11,6 +11,7 @@ export type ImportedRecipeData = {
   cook_time_minutes?: number | null
   base_yield?: string
   base_servings?: number | null
+  difficulty?: RecipeDifficulty
   ingredients?: RecipeIngredient[]
   instructions?: RecipeInstruction[]
   tips?: string[]
@@ -18,6 +19,12 @@ export type ImportedRecipeData = {
   storage_instructions?: string
   tags?: string[]
   image_url?: string
+  has_gluten_free?: boolean
+  gluten_free_notes?: string
+  gluten_free_ingredients?: RecipeIngredient[]
+  gluten_free_instructions?: RecipeInstruction[]
+  seo_title?: string
+  seo_description?: string
 }
 
 type Props = {

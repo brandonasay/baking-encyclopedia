@@ -234,12 +234,12 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
 
   // Basic Info
   const [title, setTitle] = useState(recipe?.title ?? iv?.title ?? '')
-  const [slug, setSlug] = useState(recipe?.slug ?? '')
+  const [slug, setSlug] = useState(recipe?.slug ?? (iv?.title ? slugify(iv.title) : ''))
   const [slugManual, setSlugManual] = useState(isEdit)
   const [headline, setHeadline] = useState(recipe?.headline ?? iv?.headline ?? '')
   const [categoryId, setCategoryId] = useState(recipe?.category_id ?? '')
   const [subcategoryId, setSubcategoryId] = useState(recipe?.subcategory_id ?? '')
-  const [difficulty, setDifficulty] = useState<RecipeDifficulty>(recipe?.difficulty ?? 'beginner')
+  const [difficulty, setDifficulty] = useState<RecipeDifficulty>(recipe?.difficulty ?? iv?.difficulty ?? 'beginner')
   const [featured, setFeatured] = useState(recipe?.featured ?? false)
   const [published, setPublished] = useState(recipe?.published ?? false)
 
@@ -269,13 +269,17 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
   const [storageInstructions, setStorageInstructions] = useState(recipe?.storage_instructions ?? iv?.storage_instructions ?? '')
 
   // Variants — Gluten Free
-  const [hasGlutenFree, setHasGlutenFree] = useState(recipe?.has_gluten_free ?? false)
-  const [glutenFreeNotes, setGlutenFreeNotes] = useState(recipe?.gluten_free_notes ?? '')
+  const [hasGlutenFree, setHasGlutenFree] = useState(recipe?.has_gluten_free ?? iv?.has_gluten_free ?? false)
+  const [glutenFreeNotes, setGlutenFreeNotes] = useState(recipe?.gluten_free_notes ?? iv?.gluten_free_notes ?? '')
   const [glutenFreeIngredients, setGlutenFreeIngredients] = useState<RecipeIngredient[]>(
-    recipe?.gluten_free_ingredients ?? [emptyIngredient()]
+    recipe?.gluten_free_ingredients?.length ? recipe.gluten_free_ingredients
+    : iv?.gluten_free_ingredients?.length ? iv.gluten_free_ingredients
+    : [emptyIngredient()]
   )
   const [glutenFreeInstructions, setGlutenFreeInstructions] = useState<RecipeInstruction[]>(
-    recipe?.gluten_free_instructions ?? [emptyInstruction(1)]
+    recipe?.gluten_free_instructions?.length ? recipe.gluten_free_instructions
+    : iv?.gluten_free_instructions?.length ? iv.gluten_free_instructions
+    : [emptyInstruction(1)]
   )
 
   // Variants — High Protein
@@ -303,8 +307,8 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
   const [dietaryTags, setDietaryTags] = useState(arrayToCSV(recipe?.dietary_tags ?? []))
 
   // SEO
-  const [seoTitle, setSeoTitle] = useState(recipe?.seo_title ?? '')
-  const [seoDescription, setSeoDescription] = useState(recipe?.seo_description ?? '')
+  const [seoTitle, setSeoTitle] = useState(recipe?.seo_title ?? iv?.seo_title ?? '')
+  const [seoDescription, setSeoDescription] = useState(recipe?.seo_description ?? iv?.seo_description ?? '')
 
   // Image
   const [imageUrl, setImageUrl] = useState(recipe?.image_url ?? iv?.image_url ?? '')
