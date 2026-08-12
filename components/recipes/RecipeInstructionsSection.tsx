@@ -27,6 +27,30 @@ export function InstructionsSection({ instructions }: { instructions: RecipeInst
             </div>
           </li>
         ))}
+        <li className="flex gap-5">
+          <div
+            className="flex-shrink-0 w-9 h-9 rounded-full bg-[#4E7435] text-white flex items-center justify-center mt-0.5"
+            aria-label="Recipe complete"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+          <div className="flex-1 pt-1">
+            <p className="text-[#201D20] leading-relaxed">
+              You did it! Help us bring baking back home by selling your delicious baked goods on{' '}
+              <a
+                href="https://homebakedapp.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#C58930] font-semibold hover:underline"
+              >
+                Homebaked
+              </a>
+              !
+            </p>
+          </div>
+        </li>
       </ol>
     </section>
   )
