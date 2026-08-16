@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Ingredient, CommonSubstitute } from '@/lib/database.types'
+import type { Ingredient, CommonSubstitute, NutritionInfo } from '@/lib/database.types'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -57,7 +57,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   return <h3 className="text-sm font-semibold text-[#201D20] uppercase tracking-wide mb-4">{children}</h3>
 }
 
-const TABS = ['Basic', 'Content', 'Tips', 'Substitutes', 'Tags', 'SEO', 'Image'] as const
+const TABS = ['Basic', 'Content', 'Tips', 'Nutrition', 'Substitutes', 'Tags', 'SEO', 'Image'] as const
 type Tab = (typeof TABS)[number]
 
 // ─── Main component ─────────────────────────────────────────────────────────
@@ -88,6 +88,14 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
   // Tips
   const [storageTips, setStorageTips] = useState(ingredient?.storage_tips ?? '')
   const [buyingTips, setBuyingTips] = useState(ingredient?.buying_tips ?? '')
+
+  // Nutrition (per 100g)
+  const nutrition = ingredient?.nutrition_per_100g
+  const [calories, setCalories] = useState(String(nutrition?.calories ?? ''))
+  const [proteinG, setProteinG] = useState(String(nutrition?.protein_g ?? ''))
+  const [carbsG, setCarbsG] = useState(String(nutrition?.carbs_g ?? ''))
+  const [fatG, setFatG] = useState(String(nutrition?.fat_g ?? ''))
+  const [fiberG, setFiberG] = useState(String(nutrition?.fiber_g ?? ''))
 
   // Substitutes
   const [substitutes, setSubstitutes] = useState<CommonSubstitute[]>(
@@ -134,6 +142,17 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
     e.preventDefault()
     setSaving(true)
 
+    const nutritionObj: NutritionInfo | null =
+      calories || proteinG || carbsG || fatG || fiberG
+        ? {
+            calories: calories ? Number(calories) : undefined,
+            protein_g: proteinG ? Number(proteinG) : undefined,
+            carbs_g: carbsG ? Number(carbsG) : undefined,
+            fat_g: fatG ? Number(fatG) : undefined,
+            fiber_g: fiberG ? Number(fiberG) : undefined,
+          }
+        : null
+
     const payload = {
       name,
       slug,
@@ -145,6 +164,7 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
       flavor_notes: flavorNotes || null,
       baker_percentage: bakerPercentage || null,
       sourcing_notes: sourcingNotes || null,
+      nutrition_per_100g: nutritionObj,
       storage_tips: storageTips || null,
       buying_tips: buyingTips || null,
       common_substitutes: substitutes.filter((s) => s.name.trim()),
@@ -285,6 +305,27 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
                 <Label htmlFor="buyingTips">Buying Tips</Label>
                 <textarea id="buyingTips" className={textareaCls} value={buyingTips} onChange={(e) => setBuyingTips(e.target.value)} placeholder="What to look for when buying..." />
               </div>
+            </div>
+          </>
+        )}
+
+        {/* Nutrition */}
+        {activeTab === 'Nutrition' && (
+          <>
+            <SectionHeading>Nutrition per 100g</SectionHeading>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {[
+                { label: 'Calories', value: calories, setter: setCalories, id: 'cal' },
+                { label: 'Protein (g)', value: proteinG, setter: setProteinG, id: 'protein' },
+                { label: 'Carbs (g)', value: carbsG, setter: setCarbsG, id: 'carbs' },
+                { label: 'Fat (g)', value: fatG, setter: setFatG, id: 'fat' },
+                { label: 'Fiber (g)', value: fiberG, setter: setFiberG, id: 'fiber' },
+              ].map(({ label, value, setter, id }) => (
+                <div key={id}>
+                  <Label htmlFor={id}>{label}</Label>
+                  <input id={id} className={inputCls} type="number" min="0" step="0.1" value={value} onChange={(e) => setter(e.target.value)} />
+                </div>
+              ))}
             </div>
           </>
         )}

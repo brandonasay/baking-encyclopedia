@@ -66,6 +66,19 @@ export default async function HighProteinVariantPage({ params }: Props) {
   const ingredients = recipe.high_protein_ingredients ?? recipe.ingredients
   const instructions = recipe.high_protein_instructions ?? recipe.instructions
 
+  const ingredientIds = Array.from(
+    new Set(ingredients.map((i) => i.ingredient_id).filter((id): id is string => !!id))
+  )
+  let ingredientLinks: Record<string, string> = {}
+  if (ingredientIds.length > 0) {
+    const { data: linked } = await supabase
+      .from('ingredients')
+      .select('id, slug')
+      .in('id', ingredientIds)
+      .eq('published', true)
+    ingredientLinks = Object.fromEntries((linked ?? []).map((i) => [i.id, i.slug]))
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Recipe',
@@ -182,6 +195,7 @@ export default async function HighProteinVariantPage({ params }: Props) {
                   baseYield={recipe.base_yield}
                   baseServings={recipe.base_servings}
                   headerClassName="bg-blue-50"
+                  ingredientLinks={ingredientLinks}
                 />
               </div>
             </aside>
@@ -195,6 +209,7 @@ export default async function HighProteinVariantPage({ params }: Props) {
                   baseYield={recipe.base_yield}
                   baseServings={recipe.base_servings}
                   headerClassName="bg-blue-50"
+                  ingredientLinks={ingredientLinks}
                 />
               </div>
 

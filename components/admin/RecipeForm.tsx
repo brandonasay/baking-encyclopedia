@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import IngredientPicker from './IngredientPicker'
 import type {
   Recipe,
   RecipeCategory,
@@ -35,7 +36,7 @@ function csvToArray(str: string): string[] {
 }
 
 function emptyIngredient(): RecipeIngredient {
-  return { ingredient_name: '', quantity: '', unit: '', quantity_grams: undefined, notes: '', group_label: '' }
+  return { ingredient_id: undefined, ingredient_name: '', quantity: '', unit: '', quantity_grams: undefined, notes: '', group_label: '' }
 }
 
 function emptyInstruction(stepNumber: number): RecipeInstruction {
@@ -113,6 +114,17 @@ function IngredientRow({
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
+      </div>
+      <div className="ml-7">
+        <IngredientPicker
+          ingredientId={ing.ingredient_id}
+          linkedName={ing.ingredient_name}
+          onLink={(picked) => {
+            onChange(index, 'ingredient_id', picked.id)
+            onChange(index, 'ingredient_name', picked.name)
+          }}
+          onUnlink={() => onChange(index, 'ingredient_id', undefined)}
+        />
       </div>
       <div className="grid grid-cols-3 gap-2 ml-7">
         <input className={inputCls} placeholder="Qty" value={ing.quantity} onChange={(e) => onChange(index, 'quantity', e.target.value)} />

@@ -64,6 +64,19 @@ export default async function RecipeDetailPage({ params }: Props) {
 
   const recipe = recipeData
 
+  const ingredientIds = Array.from(
+    new Set(recipe.ingredients.map((i) => i.ingredient_id).filter((id): id is string => !!id))
+  )
+  let ingredientLinks: Record<string, string> = {}
+  if (ingredientIds.length > 0) {
+    const { data: linked } = await supabase
+      .from('ingredients')
+      .select('id, slug')
+      .in('id', ingredientIds)
+      .eq('published', true)
+    ingredientLinks = Object.fromEntries((linked ?? []).map((i) => [i.id, i.slug]))
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Recipe',
@@ -194,6 +207,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                   ingredients={recipe.ingredients}
                   baseYield={recipe.base_yield}
                   baseServings={recipe.base_servings}
+                  ingredientLinks={ingredientLinks}
                 />
               </div>
             </aside>
@@ -206,6 +220,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                   ingredients={recipe.ingredients}
                   baseYield={recipe.base_yield}
                   baseServings={recipe.base_servings}
+                  ingredientLinks={ingredientLinks}
                 />
               </div>
 

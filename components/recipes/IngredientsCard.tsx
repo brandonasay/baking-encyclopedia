@@ -11,6 +11,7 @@ type IngredientsCardProps = {
   baseYield?: string | null
   baseServings?: number | null
   headerClassName?: string
+  ingredientLinks?: Record<string, string>
 }
 
 const UNIT_OPTIONS: { label: string; value: UnitSystem }[] = [
@@ -23,6 +24,7 @@ export function IngredientsCard({
   baseYield,
   baseServings,
   headerClassName = 'bg-[#F5EAC8]',
+  ingredientLinks = {},
 }: IngredientsCardProps) {
   const [scale, setScale] = useState(1)
   const [unitSystem, setUnitSystem] = useState<UnitSystem>('us')
@@ -116,6 +118,7 @@ export function IngredientsCard({
           unitSystem={unitSystem}
           checked={checked}
           onToggle={toggleChecked}
+          ingredientLinks={ingredientLinks}
         />
         <div className="mt-5 pt-4 border-t border-[#EBD2AD]">
           <button

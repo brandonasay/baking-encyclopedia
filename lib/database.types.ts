@@ -150,6 +150,7 @@ export interface Database {
           flavor_notes: string | null
           baker_percentage: string | null
           sourcing_notes: string | null
+          nutrition_per_100g: NutritionInfo | null
           popular_recipe_ids: string[]
           tags: string[]
           seo_title: string | null
@@ -174,6 +175,7 @@ export interface Database {
           flavor_notes?: string | null
           baker_percentage?: string | null
           sourcing_notes?: string | null
+          nutrition_per_100g?: NutritionInfo | null
           popular_recipe_ids?: string[]
           tags?: string[]
           seo_title?: string | null

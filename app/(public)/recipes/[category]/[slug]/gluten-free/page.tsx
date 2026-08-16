@@ -66,6 +66,19 @@ export default async function GlutenFreeVariantPage({ params }: Props) {
   const ingredients = recipe.gluten_free_ingredients ?? recipe.ingredients
   const instructions = recipe.gluten_free_instructions ?? recipe.instructions
 
+  const ingredientIds = Array.from(
+    new Set(ingredients.map((i) => i.ingredient_id).filter((id): id is string => !!id))
+  )
+  let ingredientLinks: Record<string, string> = {}
+  if (ingredientIds.length > 0) {
+    const { data: linked } = await supabase
+      .from('ingredients')
+      .select('id, slug')
+      .in('id', ingredientIds)
+      .eq('published', true)
+    ingredientLinks = Object.fromEntries((linked ?? []).map((i) => [i.id, i.slug]))
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Recipe',
@@ -183,6 +196,7 @@ export default async function GlutenFreeVariantPage({ params }: Props) {
                   baseYield={recipe.base_yield}
                   baseServings={recipe.base_servings}
                   headerClassName="bg-[#EEF3EA]"
+                  ingredientLinks={ingredientLinks}
                 />
               </div>
             </aside>
@@ -196,6 +210,7 @@ export default async function GlutenFreeVariantPage({ params }: Props) {
                   baseYield={recipe.base_yield}
                   baseServings={recipe.base_servings}
                   headerClassName="bg-[#EEF3EA]"
+                  ingredientLinks={ingredientLinks}
                 />
               </div>
 

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { RecipeIngredient } from '@/lib/database.types'
 import { formatIngredientQuantity, type UnitSystem } from '@/lib/quantity'
 
@@ -7,12 +8,14 @@ export function IngredientsList({
   unitSystem = 'us',
   checked,
   onToggle,
+  ingredientLinks = {},
 }: {
   ingredients: RecipeIngredient[]
   scale?: number
   unitSystem?: UnitSystem
   checked: Set<number>
   onToggle: (index: number) => void
+  ingredientLinks?: Record<string, string>
 }) {
   // Group by group_label, keeping each item's index into the original
   // (flat, unscaled) array so checked state stays stable across grouping.
@@ -39,6 +42,17 @@ export function IngredientsList({
           <ul className="space-y-2.5">
             {group.items.map(({ ing, index }) => {
               const isChecked = checked.has(index)
+              const slug = ing.ingredient_id ? ingredientLinks[ing.ingredient_id] : undefined
+              const nameNode = slug ? (
+                <Link
+                  href={`/ingredients/${slug}`}
+                  className="underline decoration-[#C58930]/40 underline-offset-2 hover:decoration-[#C58930] transition-colors"
+                >
+                  {ing.ingredient_name}
+                </Link>
+              ) : (
+                ing.ingredient_name
+              )
               return (
                 <li key={index} className="flex items-start gap-2.5 text-sm">
                   <input
@@ -54,7 +68,7 @@ export function IngredientsList({
                   >
                     {isChecked ? (
                       <span>
-                        {formatIngredientQuantity(ing, scale, unitSystem)} {ing.ingredient_name}
+                        {formatIngredientQuantity(ing, scale, unitSystem)} {nameNode}
                         {ing.notes && `, ${ing.notes}`}
                       </span>
                     ) : (
@@ -62,7 +76,7 @@ export function IngredientsList({
                         <span className="font-medium text-[#201D20]">
                           {formatIngredientQuantity(ing, scale, unitSystem)}
                         </span>{' '}
-                        <span className="text-[#201D20]">{ing.ingredient_name}</span>
+                        <span className="text-[#201D20]">{nameNode}</span>
                         {ing.notes && <span className="text-[#6D5E6D]">, {ing.notes}</span>}
                       </span>
                     )}
