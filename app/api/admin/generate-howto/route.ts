@@ -3,6 +3,10 @@ import { createClient } from '@/lib/supabase/server'
 import Anthropic from '@anthropic-ai/sdk'
 import type { ContentBlock } from '@/lib/database.types'
 
+// Without this, Vercel's default function timeout (as low as 10s on Hobby)
+// can kill the request before a long article generation finishes.
+export const maxDuration = 60
+
 const anthropic = new Anthropic()
 
 const AGENT_SYSTEM_PROMPT = `# Baking Encyclopedia Article Writer — Agent Instructions

@@ -2,6 +2,11 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import Anthropic from '@anthropic-ai/sdk'
 
+// Web-search research + a full recipe and gluten-free variant can genuinely
+// take a while — without this, Vercel's default function timeout (as low as
+// 10s on Hobby) kills the request before generation finishes.
+export const maxDuration = 60
+
 const anthropic = new Anthropic()
 
 const RECIPE_SYSTEM_PROMPT = `You are a recipe developer for Baking Encyclopedia, a baking reference site. Given the name of a bake, you research it and produce one complete, original recipe as structured JSON.
