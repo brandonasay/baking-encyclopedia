@@ -116,7 +116,12 @@ export async function POST(request: Request) {
       model: 'claude-opus-5',
       max_tokens: 16000,
       system: RECIPE_SYSTEM_PROMPT,
-      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 8 }],
+      // Deployed on Vercel Hobby's 60s function limit — keep effort/search scope
+      // tight enough that generation reliably finishes in time. Effort "medium"
+      // trades some open-ended deliberation for speed; the prompt is detailed
+      // enough that this shouldn't cost gram-math accuracy.
+      output_config: { effort: 'medium' },
+      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
       messages,
     })
 
@@ -129,7 +134,8 @@ export async function POST(request: Request) {
         model: 'claude-opus-5',
         max_tokens: 16000,
         system: RECIPE_SYSTEM_PROMPT,
-        tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 8 }],
+        output_config: { effort: 'medium' },
+        tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
         messages,
       })
       continuations++
