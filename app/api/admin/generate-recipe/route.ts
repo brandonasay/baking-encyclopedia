@@ -40,10 +40,6 @@ For anything not listed, apply your general knowledge of ingredient density cons
 
 \`notes\` is different and almost always empty. It exists only for a short (2-4 word) qualifier that doesn't fit in the name, like "room temperature" or "optional". **Never write a sentence, an explanation, or the reasoning behind an ingredient in \`notes\`** — no "this is what gives the cookies their crisp edges," no substitution advice, no technique tips. That content belongs in \`tips\` or the instructions, not repeated on every ingredient line. If an ingredient doesn't need a qualifier, leave \`notes\` as an empty string.
 
-## Canonical name for ingredient matching
-
-Also provide \`canonical_name\` for every ingredient in both lists: the short, generic, singular-glossary form of the ingredient with prep words and qualifiers stripped — the way it would appear as a standalone encyclopedia entry (e.g. "Unsalted butter, melted and cooled" → "butter"; "Dark brown sugar, packed" → "brown sugar"; "2 large eggs" → "eggs"; "All-purpose flour" → "all-purpose flour"). This field is used only for internal matching against an existing ingredient database and is never shown to a reader — keep it as plain and standardized as possible, and do not invent a name more specific than the ingredient actually is.
-
 ## Gluten-free variant
 
 Generate a complete, original gluten-free variant — a full parallel ingredient list and instruction list with the same gram-conversion rigor and the same short-\`notes\` rule as the base recipe:
@@ -71,7 +67,7 @@ End your response with nothing but a single JSON object matching this exact shap
   "base_yield": string (e.g. "12 muffins"),
   "base_servings": number | null,
   "difficulty": "beginner" | "intermediate" | "advanced",
-  "ingredients": [{ "ingredient_name": string, "canonical_name": string, "quantity": string, "unit": string, "quantity_grams": number, "notes": string, "group_label": string }],
+  "ingredients": [{ "ingredient_name": string, "quantity": string, "unit": string, "quantity_grams": number, "notes": string, "group_label": string }],
   "instructions": [{ "step_number": number, "title": string, "body": string }],
   "tips": string[],
   "equipment": string[],
@@ -79,7 +75,7 @@ End your response with nothing but a single JSON object matching this exact shap
   "tags": string[],
   "has_gluten_free": true,
   "gluten_free_notes": "",
-  "gluten_free_ingredients": [{ "ingredient_name": string, "canonical_name": string, "quantity": string, "unit": string, "quantity_grams": number, "notes": string, "group_label": string }],
+  "gluten_free_ingredients": [{ "ingredient_name": string, "quantity": string, "unit": string, "quantity_grams": number, "notes": string, "group_label": string }],
   "gluten_free_instructions": [{ "step_number": number, "title": string, "body": string }],
   "seo_title": string,
   "seo_description": string,
@@ -151,23 +147,33 @@ export async function POST(request: Request) {
     }
 
     // Best-effort: link generated ingredients to existing ingredients-table
-    // entries by exact canonical-name match. Never blocks generation.
+    // entries by a plain-code whole-word match against ingredient_name — no
+    // extra AI output required, so this adds no generation latency. Never
+    // blocks generation.
     try {
       const { data: allIngredients } = await supabaseAdmin.from('ingredients').select('id, name')
-      const nameMap = new Map<string, { id: string; count: number }>()
-      for (const row of allIngredients ?? []) {
-        const key = row.name.trim().toLowerCase()
-        const existing = nameMap.get(key)
-        nameMap.set(key, existing ? { id: existing.id, count: existing.count + 1 } : { id: row.id, count: 1 })
+      const candidates = (allIngredients ?? []).map((row) => ({ id: row.id, name: row.name.trim().toLowerCase() }))
+
+      const findMatch = (ingredientName: string): string | undefined => {
+        const haystack = ingredientName.toLowerCase()
+        const matches = candidates.filter((c) => {
+          const escaped = c.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          return new RegExp(`\\b${escaped}\\b`).test(haystack)
+        })
+        if (matches.length === 0) return undefined
+        const longestLength = Math.max(...matches.map((m) => m.name.length))
+        const longestMatches = matches.filter((m) => m.name.length === longestLength)
+        // Only link when exactly one candidate is the most specific match —
+        // an ambiguous tie is worse than no link.
+        return longestMatches.length === 1 ? longestMatches[0].id : undefined
       }
 
       const matchList = (list: unknown) => {
         if (!Array.isArray(list)) return
         for (const ing of list as Record<string, unknown>[]) {
-          const canonical = typeof ing.canonical_name === 'string' ? ing.canonical_name.trim().toLowerCase() : ''
-          const match = canonical ? nameMap.get(canonical) : undefined
-          if (match && match.count === 1) ing.ingredient_id = match.id
-          delete ing.canonical_name
+          const name = typeof ing.ingredient_name === 'string' ? ing.ingredient_name : ''
+          const matchId = name ? findMatch(name) : undefined
+          if (matchId) ing.ingredient_id = matchId
         }
       }
 
