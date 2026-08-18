@@ -7,7 +7,12 @@ import Anthropic from '@anthropic-ai/sdk'
 // 10s on Hobby) kills the request before generation finishes.
 export const maxDuration = 60
 
-const anthropic = new Anthropic()
+// The SDK's default timeout is 10 minutes — far longer than Vercel's 60s
+// function limit above. If the connection to Anthropic stalls for any reason,
+// leave this call an explicit, shorter timeout so it fails with a real,
+// catchable error instead of silently hanging until Vercel kills the whole
+// function with no useful error ever surfacing.
+const anthropic = new Anthropic({ timeout: 45 * 1000 })
 
 const RECIPE_SYSTEM_PROMPT = `You are a recipe developer for Baking Encyclopedia, a baking reference site. Given the name of a bake, you research it and produce one complete, original recipe as structured JSON.
 
@@ -103,6 +108,8 @@ export async function POST(request: Request) {
   const { topic } = (await request.json()) as { topic?: string }
   if (!topic || !topic.trim()) return Response.json({ error: 'topic is required' }, { status: 400 })
 
+  console.log(`[generate-recipe] Starting generation for "${topic.trim()}"`)
+
   try {
     let messages: Anthropic.MessageParam[] = [
       { role: 'user', content: `Recipe to research and create: ${topic.trim()}` },
@@ -195,6 +202,7 @@ export async function POST(request: Request) {
 
     return Response.json({ data: parsed })
   } catch (err) {
+    console.log(`[generate-recipe] Failed:`, (err as Error).name, (err as Error).message)
     return Response.json({ error: `Generation failed: ${(err as Error).message}` }, { status: 500 })
   }
 }
