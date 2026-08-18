@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 import Anthropic from '@anthropic-ai/sdk'
 
 // Web-search research + a full recipe and gluten-free variant can genuinely
@@ -97,11 +98,14 @@ function extractRecipeJson(content: Anthropic.ContentBlock[]): unknown {
 }
 
 export async function POST(request: Request) {
+  console.log('[generate-recipe] Handler entered')
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  console.log('[generate-recipe] getUser resolved')
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+  console.log('[generate-recipe] profile lookup resolved')
   if (profile?.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 })
 
   const { topic } = (await request.json()) as { topic?: string }
@@ -114,6 +118,7 @@ export async function POST(request: Request) {
       { role: 'user', content: `Recipe to research and create: ${topic.trim()}` },
     ]
 
+    console.log('[generate-recipe] About to call anthropic.messages.create')
     const genStart = Date.now()
     let message = await anthropic.messages.create({
       model: 'claude-opus-5',
@@ -155,11 +160,49 @@ export async function POST(request: Request) {
       throw new Error('Could not parse a recipe from the model response')
     }
 
-    // TEMPORARILY REMOVED for diagnosis: post-generation ingredient matching
-    // against supabaseAdmin. Generation was reliable before this was added and
-    // has hung consistently since, even though this code runs strictly after
-    // awaiting the Claude response. Isolating it to confirm before redesigning
-    // it as a decoupled step. See conversation/commit history for context.
+    // Best-effort: link generated ingredients to existing ingredients-table
+    // entries by a plain-code whole-word match against ingredient_name — no
+    // extra AI output required, so this adds no generation latency. Never
+    // blocks generation. Hard 5s timeout so a slow/hanging DB call can never
+    // stall the response.
+    const matchStart = Date.now()
+    try {
+      const { data: allIngredients } = await supabaseAdmin
+        .from('ingredients')
+        .select('id, name')
+        .abortSignal(AbortSignal.timeout(5000))
+      const candidates = (allIngredients ?? []).map((row) => ({ id: row.id, name: row.name.trim().toLowerCase() }))
+
+      const findMatch = (ingredientName: string): string | undefined => {
+        const haystack = ingredientName.toLowerCase()
+        const matches = candidates.filter((c) => {
+          const escaped = c.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          return new RegExp(`\\b${escaped}\\b`).test(haystack)
+        })
+        if (matches.length === 0) return undefined
+        const longestLength = Math.max(...matches.map((m) => m.name.length))
+        const longestMatches = matches.filter((m) => m.name.length === longestLength)
+        // Only link when exactly one candidate is the most specific match —
+        // an ambiguous tie is worse than no link.
+        return longestMatches.length === 1 ? longestMatches[0].id : undefined
+      }
+
+      const matchList = (list: unknown) => {
+        if (!Array.isArray(list)) return
+        for (const ing of list as Record<string, unknown>[]) {
+          const name = typeof ing.ingredient_name === 'string' ? ing.ingredient_name : ''
+          const matchId = name ? findMatch(name) : undefined
+          if (matchId) ing.ingredient_id = matchId
+        }
+      }
+
+      matchList(parsed.ingredients)
+      matchList(parsed.gluten_free_ingredients)
+      console.log(`[generate-recipe] Ingredient matching took ${Date.now() - matchStart}ms`)
+    } catch (matchErr) {
+      // Matching is best-effort — never let it block recipe generation.
+      console.log(`[generate-recipe] Ingredient matching failed after ${Date.now() - matchStart}ms:`, (matchErr as Error).message)
+    }
 
     return Response.json({ data: parsed })
   } catch (err) {

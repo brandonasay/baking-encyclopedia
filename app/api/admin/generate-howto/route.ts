@@ -7,7 +7,11 @@ import type { ContentBlock } from '@/lib/database.types'
 // can kill the request before a long article generation finishes.
 export const maxDuration = 60
 
-const anthropic = new Anthropic()
+// The SDK's default timeout is 10 minutes — far longer than Vercel's 60s
+// function limit above. Give the request an explicit, shorter timeout so it
+// fails with a real, catchable error instead of silently hanging until
+// Vercel kills the whole function with no useful error ever surfacing.
+const anthropic = new Anthropic({ timeout: 45 * 1000 })
 
 const AGENT_SYSTEM_PROMPT = `# Baking Encyclopedia Article Writer — Agent Instructions
 
@@ -226,11 +230,14 @@ function parseDraft(raw: string) {
 }
 
 export async function POST(request: Request) {
+  console.log('[generate-howto] Handler entered')
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  console.log('[generate-howto] getUser resolved')
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+  console.log('[generate-howto] profile lookup resolved')
   if (profile?.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 })
 
   const { topic, section } = (await request.json()) as { topic?: string; section?: SectionChoice }
@@ -242,7 +249,11 @@ export async function POST(request: Request) {
       ? 'This is Business-side content (running a home baking business or microbakery, not a specific bake) — write it as a Technique/how-to guide, never as a Recipe.'
       : "This is Baking-side content. Decide whether this is a Recipe or a Technique guide based on the topic below, and proceed without asking."
 
+  console.log(`[generate-howto] Starting generation for "${topic.trim()}"`)
+
   try {
+    console.log('[generate-howto] About to call anthropic.messages.create')
+    const genStart = Date.now()
     const message = await anthropic.messages.create({
       model: 'claude-opus-5',
       max_tokens: 8000,
@@ -254,6 +265,8 @@ export async function POST(request: Request) {
         },
       ],
     })
+
+    console.log(`[generate-howto] Claude generation took ${Date.now() - genStart}ms`)
 
     let text = ''
     for (const block of message.content) {
@@ -269,6 +282,7 @@ export async function POST(request: Request) {
 
     return Response.json({ data: { ...parsed, section: dbSection } })
   } catch (err) {
+    console.log(`[generate-howto] Failed:`, (err as Error).name, (err as Error).message)
     return Response.json({ error: `Generation failed: ${(err as Error).message}` }, { status: 500 })
   }
 }
