@@ -7,11 +7,12 @@ import type { ContentBlock } from '@/lib/database.types'
 // can kill the request before a long article generation finishes.
 export const maxDuration = 60
 
-// The SDK's default timeout is 10 minutes — far longer than Vercel's 60s
-// function limit above. Give the request an explicit, shorter timeout so it
-// fails with a real, catchable error instead of silently hanging until
-// Vercel kills the whole function with no useful error ever surfacing.
-const anthropic = new Anthropic({ timeout: 45 * 1000 })
+// The SDK's own `timeout` option was observed NOT firing in this Vercel/Next.js
+// App Router environment — a request stayed in flight (and billing real usage)
+// well past its configured timeout, hanging until Vercel's hard 60s kill with
+// zero catchable error. We no longer rely on it; the call below gets an
+// explicit AbortController instead, which aborts the underlying fetch directly.
+const anthropic = new Anthropic()
 
 const AGENT_SYSTEM_PROMPT = `# Baking Encyclopedia Article Writer — Agent Instructions
 
@@ -251,20 +252,33 @@ export async function POST(request: Request) {
 
   console.log(`[generate-howto] Starting generation for "${topic.trim()}"`)
 
+  // Hard deadline for generation, well under Vercel's 60s maxDuration. This
+  // AbortController is what actually stops the request — see the note on the
+  // client above.
+  const controller = new AbortController()
+  const abortTimer = setTimeout(() => controller.abort(), 50 * 1000)
+
   try {
-    console.log('[generate-howto] About to call anthropic.messages.create')
+    console.log('[generate-howto] About to call anthropic.messages.stream')
     const genStart = Date.now()
-    const message = await anthropic.messages.create({
-      model: 'claude-opus-5',
-      max_tokens: 8000,
-      system: AGENT_SYSTEM_PROMPT,
-      messages: [
+    // Streaming (not .create()) avoids a class of silent hang on large
+    // max_tokens requests — see comment on the client above.
+    const message = await anthropic.messages
+      .stream(
         {
-          role: 'user',
-          content: `Topic: ${topic.trim()}\n\n${structureInstruction}`,
+          model: 'claude-opus-5',
+          max_tokens: 8000,
+          system: AGENT_SYSTEM_PROMPT,
+          messages: [
+            {
+              role: 'user',
+              content: `Topic: ${topic.trim()}\n\n${structureInstruction}`,
+            },
+          ],
         },
-      ],
-    })
+        { signal: controller.signal }
+      )
+      .finalMessage()
 
     console.log(`[generate-howto] Claude generation took ${Date.now() - genStart}ms`)
 
@@ -284,5 +298,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.log(`[generate-howto] Failed:`, (err as Error).name, (err as Error).message)
     return Response.json({ error: `Generation failed: ${(err as Error).message}` }, { status: 500 })
+  } finally {
+    clearTimeout(abortTimer)
   }
 }

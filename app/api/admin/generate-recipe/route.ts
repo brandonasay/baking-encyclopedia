@@ -7,12 +7,12 @@ import Anthropic from '@anthropic-ai/sdk'
 // 10s on Hobby) kills the request before generation finishes.
 export const maxDuration = 60
 
-// The SDK's default timeout is 10 minutes — far longer than Vercel's 60s
-// function limit above. If the connection to Anthropic stalls for any reason,
-// leave this call an explicit, shorter timeout so it fails with a real,
-// catchable error instead of silently hanging until Vercel kills the whole
-// function with no useful error ever surfacing.
-const anthropic = new Anthropic({ timeout: 45 * 1000 })
+// The SDK's own `timeout` option was observed NOT firing in this Vercel/Next.js
+// App Router environment — a request would still be in flight (and billing real
+// usage) well past its configured timeout, hanging until Vercel's hard 60s kill
+// with zero catchable error. We no longer rely on it; every call below gets an
+// explicit AbortController instead, which aborts the underlying fetch directly.
+const anthropic = new Anthropic()
 
 const RECIPE_SYSTEM_PROMPT = `You are a recipe developer for Baking Encyclopedia, a baking reference site. Given the name of a bake, you research it and produce one complete, original recipe as structured JSON.
 
@@ -113,39 +113,58 @@ export async function POST(request: Request) {
 
   console.log(`[generate-recipe] Starting generation for "${topic.trim()}"`)
 
+  // Hard deadline for the whole generation (initial call + continuations),
+  // well under Vercel's 60s maxDuration so there's room left for ingredient
+  // matching and the response itself. This AbortController is what actually
+  // stops the request — see the note on the client above.
+  const controller = new AbortController()
+  const abortTimer = setTimeout(() => controller.abort(), 50 * 1000)
+
   try {
     let messages: Anthropic.MessageParam[] = [
       { role: 'user', content: `Recipe to research and create: ${topic.trim()}` },
     ]
 
-    console.log('[generate-recipe] About to call anthropic.messages.create')
+    console.log('[generate-recipe] About to call anthropic.messages.stream')
     const genStart = Date.now()
-    let message = await anthropic.messages.create({
-      model: 'claude-opus-5',
-      max_tokens: 16000,
-      system: RECIPE_SYSTEM_PROMPT,
-      // Deployed on Vercel Hobby's 60s function limit — keep effort/search scope
-      // tight enough that generation reliably finishes in time. Effort "medium"
-      // trades some open-ended deliberation for speed; the prompt is detailed
-      // enough that this shouldn't cost gram-math accuracy.
-      output_config: { effort: 'medium' },
-      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
-      messages,
-    })
+    // Streaming (not .create()) avoids a class of silent hang on large
+    // max_tokens + tool-use requests — see comment on the client above.
+    let message = await anthropic.messages
+      .stream(
+        {
+          model: 'claude-opus-5',
+          max_tokens: 16000,
+          system: RECIPE_SYSTEM_PROMPT,
+          // Deployed on Vercel Hobby's 60s function limit — keep effort/search scope
+          // tight enough that generation reliably finishes in time. Effort "medium"
+          // trades some open-ended deliberation for speed; the prompt is detailed
+          // enough that this shouldn't cost gram-math accuracy.
+          output_config: { effort: 'medium' },
+          tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
+          messages,
+        },
+        { signal: controller.signal }
+      )
+      .finalMessage()
 
     // The server-side web search loop caps at 10 iterations; if research is still
     // in progress, resume by re-sending the paused turn (up to 2 continuations).
     let continuations = 0
     while (message.stop_reason === 'pause_turn' && continuations < 2) {
       messages = [...messages, { role: 'assistant', content: message.content }]
-      message = await anthropic.messages.create({
-        model: 'claude-opus-5',
-        max_tokens: 16000,
-        system: RECIPE_SYSTEM_PROMPT,
-        output_config: { effort: 'medium' },
-        tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
-        messages,
-      })
+      message = await anthropic.messages
+        .stream(
+          {
+            model: 'claude-opus-5',
+            max_tokens: 16000,
+            system: RECIPE_SYSTEM_PROMPT,
+            output_config: { effort: 'medium' },
+            tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
+            messages,
+          },
+          { signal: controller.signal }
+        )
+        .finalMessage()
       continuations++
     }
 
@@ -208,5 +227,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.log(`[generate-recipe] Failed:`, (err as Error).name, (err as Error).message)
     return Response.json({ error: `Generation failed: ${(err as Error).message}` }, { status: 500 })
+  } finally {
+    clearTimeout(abortTimer)
   }
 }
