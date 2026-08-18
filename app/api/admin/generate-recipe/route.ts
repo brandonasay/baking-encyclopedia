@@ -3,9 +3,10 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import Anthropic from '@anthropic-ai/sdk'
 
 // Web-search research + a full recipe and gluten-free variant can genuinely
-// take a while — without this, Vercel's default function timeout (as low as
-// 10s on Hobby) kills the request before generation finishes.
-export const maxDuration = 60
+// take 30-90+ seconds depending on how much research the model does. On
+// Vercel Pro, maxDuration can be raised well past that instead of trimming
+// generation quality to fit a tight ceiling.
+export const maxDuration = 180
 
 // The SDK's own `timeout` option was observed NOT firing in this Vercel/Next.js
 // App Router environment — a request would still be in flight (and billing real
@@ -114,11 +115,11 @@ export async function POST(request: Request) {
   console.log(`[generate-recipe] Starting generation for "${topic.trim()}"`)
 
   // Hard deadline for the whole generation (initial call + continuations),
-  // well under Vercel's 60s maxDuration so there's room left for ingredient
+  // well under Vercel's maxDuration so there's room left for ingredient
   // matching and the response itself. This AbortController is what actually
   // stops the request — see the note on the client above.
   const controller = new AbortController()
-  const abortTimer = setTimeout(() => controller.abort(), 50 * 1000)
+  const abortTimer = setTimeout(() => controller.abort(), 170 * 1000)
 
   try {
     let messages: Anthropic.MessageParam[] = [
@@ -135,12 +136,7 @@ export async function POST(request: Request) {
           model: 'claude-opus-5',
           max_tokens: 16000,
           system: RECIPE_SYSTEM_PROMPT,
-          // Deployed on Vercel Hobby's 60s function limit — keep effort/search scope
-          // tight enough that generation reliably finishes in time. Effort "medium"
-          // trades some open-ended deliberation for speed; the prompt is detailed
-          // enough that this shouldn't cost gram-math accuracy.
-          output_config: { effort: 'medium' },
-          tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
+          tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 8 }],
           messages,
         },
         { signal: controller.signal }
@@ -158,8 +154,7 @@ export async function POST(request: Request) {
             model: 'claude-opus-5',
             max_tokens: 16000,
             system: RECIPE_SYSTEM_PROMPT,
-            output_config: { effort: 'medium' },
-            tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
+            tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 8 }],
             messages,
           },
           { signal: controller.signal }

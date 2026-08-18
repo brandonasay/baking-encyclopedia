@@ -3,9 +3,10 @@ import { createClient } from '@/lib/supabase/server'
 import Anthropic from '@anthropic-ai/sdk'
 import type { ContentBlock } from '@/lib/database.types'
 
-// Without this, Vercel's default function timeout (as low as 10s on Hobby)
-// can kill the request before a long article generation finishes.
-export const maxDuration = 60
+// A long article generation can genuinely take a while. On Vercel Pro,
+// maxDuration can be raised well past the old Hobby ceiling instead of
+// trimming generation quality to fit a tight limit.
+export const maxDuration = 180
 
 // The SDK's own `timeout` option was observed NOT firing in this Vercel/Next.js
 // App Router environment — a request stayed in flight (and billing real usage)
@@ -252,11 +253,11 @@ export async function POST(request: Request) {
 
   console.log(`[generate-howto] Starting generation for "${topic.trim()}"`)
 
-  // Hard deadline for generation, well under Vercel's 60s maxDuration. This
+  // Hard deadline for generation, well under Vercel's maxDuration. This
   // AbortController is what actually stops the request — see the note on the
   // client above.
   const controller = new AbortController()
-  const abortTimer = setTimeout(() => controller.abort(), 50 * 1000)
+  const abortTimer = setTimeout(() => controller.abort(), 170 * 1000)
 
   try {
     console.log('[generate-howto] About to call anthropic.messages.stream')
