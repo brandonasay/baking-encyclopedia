@@ -108,6 +108,7 @@ export async function POST(request: Request) {
       { role: 'user', content: `Recipe to research and create: ${topic.trim()}` },
     ]
 
+    const genStart = Date.now()
     let message = await anthropic.messages.create({
       model: 'claude-opus-5',
       max_tokens: 16000,
@@ -137,6 +138,8 @@ export async function POST(request: Request) {
       continuations++
     }
 
+    console.log(`[generate-recipe] Claude generation took ${Date.now() - genStart}ms (${continuations} continuation${continuations === 1 ? '' : 's'})`)
+
     if (message.stop_reason === 'refusal') {
       throw new Error('Claude declined to generate this recipe')
     }
@@ -149,9 +152,14 @@ export async function POST(request: Request) {
     // Best-effort: link generated ingredients to existing ingredients-table
     // entries by a plain-code whole-word match against ingredient_name — no
     // extra AI output required, so this adds no generation latency. Never
-    // blocks generation.
+    // blocks generation. Hard 5s timeout so a slow/hanging DB call can never
+    // stall the response.
+    const matchStart = Date.now()
     try {
-      const { data: allIngredients } = await supabaseAdmin.from('ingredients').select('id, name')
+      const { data: allIngredients } = await supabaseAdmin
+        .from('ingredients')
+        .select('id, name')
+        .abortSignal(AbortSignal.timeout(5000))
       const candidates = (allIngredients ?? []).map((row) => ({ id: row.id, name: row.name.trim().toLowerCase() }))
 
       const findMatch = (ingredientName: string): string | undefined => {
@@ -179,8 +187,10 @@ export async function POST(request: Request) {
 
       matchList(parsed.ingredients)
       matchList(parsed.gluten_free_ingredients)
-    } catch {
+      console.log(`[generate-recipe] Ingredient matching took ${Date.now() - matchStart}ms`)
+    } catch (matchErr) {
       // Matching is best-effort — never let it block recipe generation.
+      console.log(`[generate-recipe] Ingredient matching failed after ${Date.now() - matchStart}ms:`, (matchErr as Error).message)
     }
 
     return Response.json({ data: parsed })
