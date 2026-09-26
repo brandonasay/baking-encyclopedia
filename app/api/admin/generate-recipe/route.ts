@@ -6,7 +6,7 @@ import Anthropic from '@anthropic-ai/sdk'
 // take 30-90+ seconds depending on how much research the model does. On
 // Vercel Pro, maxDuration can be raised well past that instead of trimming
 // generation quality to fit a tight ceiling.
-export const maxDuration = 180
+export const maxDuration = 285
 
 // The SDK's own `timeout` option was observed NOT firing in this Vercel/Next.js
 // App Router environment — a request would still be in flight (and billing real
@@ -119,7 +119,7 @@ export async function POST(request: Request) {
   // matching and the response itself. This AbortController is what actually
   // stops the request — see the note on the client above.
   const controller = new AbortController()
-  const abortTimer = setTimeout(() => controller.abort(), 170 * 1000)
+  const abortTimer = setTimeout(() => controller.abort(), 275 * 1000)
 
   try {
     let messages: Anthropic.MessageParam[] = [

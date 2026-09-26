@@ -6,7 +6,7 @@ import type { ContentBlock } from '@/lib/database.types'
 // A long article generation can genuinely take a while. On Vercel Pro,
 // maxDuration can be raised well past the old Hobby ceiling instead of
 // trimming generation quality to fit a tight limit.
-export const maxDuration = 180
+export const maxDuration = 285
 
 // The SDK's own `timeout` option was observed NOT firing in this Vercel/Next.js
 // App Router environment — a request stayed in flight (and billing real usage)
@@ -257,7 +257,7 @@ export async function POST(request: Request) {
   // AbortController is what actually stops the request — see the note on the
   // client above.
   const controller = new AbortController()
-  const abortTimer = setTimeout(() => controller.abort(), 170 * 1000)
+  const abortTimer = setTimeout(() => controller.abort(), 275 * 1000)
 
   try {
     console.log('[generate-howto] About to call anthropic.messages.stream')
