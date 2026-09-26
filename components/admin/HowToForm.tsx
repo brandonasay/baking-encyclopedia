@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import type { HowToArticle, HowtoSection, ContentBlock } from '@/lib/database.types'
 import type { GeneratedHowToData } from './HowToGenerator'
+import GoogleSerpPreview from './GoogleSerpPreview'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -609,6 +610,13 @@ export default function HowToForm({ article, initialValues }: HowToFormProps) {
           />
           <p className="text-xs text-[#6D5E6D] mt-1">{seoDescription.length}/160 characters</p>
         </div>
+        <GoogleSerpPreview
+          title={seoTitle}
+          fallbackTitle={title}
+          description={seoDescription}
+          fallbackDescription={headline}
+          urlSegments={['how-to', section, slug || 'article-slug']}
+        />
       </div>
 
       {/* Blocks */}

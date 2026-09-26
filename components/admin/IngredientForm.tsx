@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Ingredient, CommonSubstitute, NutritionInfo } from '@/lib/database.types'
+import GoogleSerpPreview from './GoogleSerpPreview'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -395,6 +396,13 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
                 <textarea id="seoDesc" className={textareaCls} value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="Meta description..." />
                 <p className="text-xs text-[#6D5E6D] mt-1">{seoDescription.length}/160 characters</p>
               </div>
+              <GoogleSerpPreview
+                title={seoTitle}
+                fallbackTitle={name}
+                description={seoDescription}
+                fallbackDescription={headline}
+                urlSegments={['ingredients', slug || 'ingredient-slug']}
+              />
             </div>
           </>
         )}
