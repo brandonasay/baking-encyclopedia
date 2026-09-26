@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import IngredientPicker from './IngredientPicker'
+import GoogleSerpPreview from './GoogleSerpPreview'
 import type {
   Recipe,
   RecipeCategory,
@@ -821,6 +822,13 @@ export default function RecipeForm({ recipe, categories, subcategories, initialV
                 <textarea id="seoDesc" className={textareaCls} value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="Meta description..." />
                 <p className="text-xs text-[#6D5E6D] mt-1">{seoDescription.length}/160 characters</p>
               </div>
+              <GoogleSerpPreview
+                title={seoTitle}
+                fallbackTitle={title}
+                description={seoDescription}
+                fallbackDescription={headline}
+                urlSegments={['recipes', categories.find((c) => c.id === categoryId)?.slug || 'category', slug || 'recipe-slug']}
+              />
             </div>
           </>
         )}
