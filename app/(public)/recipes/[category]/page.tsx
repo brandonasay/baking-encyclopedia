@@ -4,24 +4,44 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import RecipeCard from '@/components/recipes/RecipeCard'
-import type { Recipe, RecipeCategory } from '@/lib/database.types'
+import type { Recipe, RecipeCategory, RecipeSubcategory } from '@/lib/database.types'
 
 export const revalidate = 3600
 
 type Props = {
   params: Promise<{ category: string }>
+  searchParams: Promise<{ sub?: string }>
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { category } = await params
+  const { sub } = await searchParams
   const supabase = await createClient()
   const { data } = await supabase
     .from('recipe_categories')
-    .select('name, description')
+    .select('id, name, description')
     .eq('slug', category)
-    .single() as { data: Pick<RecipeCategory, 'name' | 'description'> | null; error: unknown }
+    .single() as { data: Pick<RecipeCategory, 'id' | 'name' | 'description'> | null; error: unknown }
 
   if (!data) return {}
+
+  if (sub) {
+    const { data: subcat } = await supabase
+      .from('recipe_subcategories')
+      .select('name, description')
+      .eq('category_id', data.id)
+      .eq('slug', sub)
+      .single() as { data: Pick<RecipeSubcategory, 'name' | 'description'> | null; error: unknown }
+
+    if (subcat) {
+      return {
+        title: `${subcat.name} Recipes`,
+        description:
+          subcat.description ??
+          `Browse our collection of ${subcat.name.toLowerCase()} recipes.`,
+      }
+    }
+  }
 
   return {
     title: `${data.name} Recipes`,
@@ -45,8 +65,9 @@ type RecipeCardFields = Pick<
   | 'has_high_protein'
 >
 
-export default async function CategoryPage({ params }: Props) {
+export default async function CategoryPage({ params, searchParams }: Props) {
   const { category } = await params
+  const { sub } = await searchParams
   const supabase = await createClient()
 
   const { data: cat } = await supabase
@@ -60,17 +81,36 @@ export default async function CategoryPage({ params }: Props) {
 
   if (!cat) notFound()
 
-  const { data: recipesData } = await supabase
+  let subcat: Pick<RecipeSubcategory, 'id' | 'slug' | 'name' | 'description'> | null = null
+  if (sub) {
+    const { data: subcatData } = await supabase
+      .from('recipe_subcategories')
+      .select('id, slug, name, description')
+      .eq('category_id', cat.id)
+      .eq('slug', sub)
+      .single() as { data: Pick<RecipeSubcategory, 'id' | 'slug' | 'name' | 'description'> | null; error: unknown }
+    subcat = subcatData
+  }
+
+  let recipesQuery = supabase
     .from('recipes')
     .select(
       'id, slug, title, headline, image_url, difficulty, total_time_minutes, tags, has_gluten_free, has_high_protein'
     )
     .eq('category_id', cat.id)
     .eq('published', true)
+
+  if (subcat) {
+    recipesQuery = recipesQuery.eq('subcategory_id', subcat.id)
+  }
+
+  const { data: recipesData } = await recipesQuery
     .order('featured', { ascending: false })
     .order('created_at', { ascending: false })
 
   const recipes = (recipesData ?? []) as RecipeCardFields[]
+  const heading = subcat?.name ?? cat.name
+  const description = subcat?.description ?? cat.description
 
   return (
     <main className="min-h-screen bg-[#FCFFEB]">
@@ -98,18 +138,28 @@ export default async function CategoryPage({ params }: Props) {
               Recipes
             </Link>
             <span>/</span>
-            <span className="text-white/80">{cat.name}</span>
+            {subcat ? (
+              <>
+                <Link href={`/recipes/${cat.slug}`} className="hover:text-white transition-colors">
+                  {cat.name}
+                </Link>
+                <span>/</span>
+                <span className="text-white/80">{subcat.name}</span>
+              </>
+            ) : (
+              <span className="text-white/80">{cat.name}</span>
+            )}
           </nav>
 
           <h1
             className="text-4xl md:text-5xl font-bold text-white mb-3"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
-            {cat.name}
+            {heading}
           </h1>
 
-          {cat.description && (
-            <p className="text-lg text-white/80 max-w-2xl leading-relaxed">{cat.description}</p>
+          {description && (
+            <p className="text-lg text-white/80 max-w-2xl leading-relaxed">{description}</p>
           )}
 
           <p className="mt-4 text-sm text-white/60">
@@ -136,7 +186,7 @@ export default async function CategoryPage({ params }: Props) {
               No recipes yet
             </h2>
             <p className="text-[#6D5E6D]">
-              We&apos;re working on {cat.name.toLowerCase()} recipes — check back soon!
+              We&apos;re working on {heading.toLowerCase()} recipes — check back soon!
             </p>
             <Link
               href="/recipes"
