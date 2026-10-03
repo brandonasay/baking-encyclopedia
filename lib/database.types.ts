@@ -4,6 +4,12 @@ export type UserRole = 'user' | 'admin'
 export type RecipeDifficulty = 'beginner' | 'intermediate' | 'advanced'
 export type HowtoSection = 'baking' | 'microbakery'
 
+export type CalcUnitCode =
+  | 'g' | 'kg' | 'oz' | 'lb'
+  | 'ml' | 'l' | 'tsp' | 'tbsp' | 'floz' | 'cup' | 'pint' | 'quart' | 'gallon'
+  | 'each' | 'dozen'
+export type CalcPantryKind = 'ingredient' | 'packaging' | 'other'
+
 export interface RecipeIngredient {
   ingredient_id?: string
   ingredient_name: string
@@ -157,6 +163,8 @@ export interface Database {
           seo_description: string | null
           published: boolean
           search_vector: unknown
+          grams_per_cup: number | null
+          grams_per_each: number | null
           created_at: string
           updated_at: string
         }
@@ -181,6 +189,8 @@ export interface Database {
           seo_title?: string | null
           seo_description?: string | null
           published?: boolean
+          grams_per_cup?: number | null
+          grams_per_each?: number | null
         }
         Update: Partial<Database['public']['Tables']['ingredients']['Insert']>
         Relationships: []
@@ -396,6 +406,313 @@ export interface Database {
         Update: { is_checked?: boolean }
         Relationships: []
       }
+      calc_fee_presets: {
+        Row: {
+          id: string
+          name: string
+          fee_pct: number
+          fee_fixed: number
+          source_url: string | null
+          verified_on: string | null
+          sort_order: number
+          active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          name: string
+          fee_pct: number
+          fee_fixed?: number
+          source_url?: string | null
+          verified_on?: string | null
+          sort_order?: number
+          active?: boolean
+        }
+        Update: Partial<Database['public']['Tables']['calc_fee_presets']['Insert']>
+        Relationships: []
+      }
+      calc_settings: {
+        Row: {
+          user_id: string
+          hourly_rate: number
+          monthly_overhead: number
+          expected_products_per_month: number
+          default_margin_pct: number
+          default_fee_preset_id: string | null
+          custom_fee_pct: number | null
+          custom_fee_fixed: number | null
+          price_step: number
+          currency: string
+          count_labor_as_cost: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          hourly_rate?: number
+          monthly_overhead?: number
+          expected_products_per_month?: number
+          default_margin_pct?: number
+          default_fee_preset_id?: string | null
+          custom_fee_pct?: number | null
+          custom_fee_fixed?: number | null
+          price_step?: number
+          currency?: string
+          count_labor_as_cost?: boolean
+        }
+        Update: Partial<Database['public']['Tables']['calc_settings']['Insert']>
+        Relationships: []
+      }
+      calc_pantry_items: {
+        Row: {
+          id: string
+          user_id: string
+          ingredient_id: string | null
+          name: string
+          kind: CalcPantryKind
+          package_qty: number
+          package_unit: CalcUnitCode
+          package_price: number
+          usable_yield_pct: number
+          grams_per_cup: number | null
+          grams_per_each: number | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          ingredient_id?: string | null
+          name: string
+          kind: CalcPantryKind
+          package_qty: number
+          package_unit: CalcUnitCode
+          package_price: number
+          usable_yield_pct?: number
+          grams_per_cup?: number | null
+          grams_per_each?: number | null
+          notes?: string | null
+        }
+        Update: Partial<Database['public']['Tables']['calc_pantry_items']['Insert']>
+        Relationships: []
+      }
+      calc_recipes: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          yield_qty: number
+          yield_unit_label: string
+          active_minutes: number
+          batch_increment: number
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          name: string
+          yield_qty: number
+          yield_unit_label: string
+          active_minutes?: number
+          batch_increment?: number
+          notes?: string | null
+        }
+        Update: Partial<Database['public']['Tables']['calc_recipes']['Insert']>
+        Relationships: []
+      }
+      calc_recipe_lines: {
+        Row: {
+          id: string
+          recipe_id: string
+          pantry_item_id: string
+          qty: number
+          unit: CalcUnitCode
+          note: string | null
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          recipe_id: string
+          pantry_item_id: string
+          qty: number
+          unit: CalcUnitCode
+          note?: string | null
+          sort_order?: number
+        }
+        Update: Partial<Database['public']['Tables']['calc_recipe_lines']['Insert']>
+        Relationships: []
+      }
+      calc_products: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          extra_minutes: number
+          target_margin_pct: number | null
+          fee_preset_id: string | null
+          set_price: number | null
+          price_step: number | null
+          count_labor_as_cost: boolean | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          name: string
+          extra_minutes?: number
+          target_margin_pct?: number | null
+          fee_preset_id?: string | null
+          set_price?: number | null
+          price_step?: number | null
+          count_labor_as_cost?: boolean | null
+        }
+        Update: Partial<Database['public']['Tables']['calc_products']['Insert']>
+        Relationships: []
+      }
+      calc_product_components: {
+        Row: {
+          id: string
+          product_id: string
+          recipe_id: string
+          qty: number
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          recipe_id: string
+          qty: number
+          sort_order?: number
+        }
+        Update: Partial<Database['public']['Tables']['calc_product_components']['Insert']>
+        Relationships: []
+      }
+      calc_product_packaging: {
+        Row: {
+          id: string
+          product_id: string
+          pantry_item_id: string
+          qty: number
+          unit: CalcUnitCode
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          pantry_item_id: string
+          qty: number
+          unit?: CalcUnitCode
+        }
+        Update: Partial<Database['public']['Tables']['calc_product_packaging']['Insert']>
+        Relationships: []
+      }
+      calc_plans: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          sale_date: string | null
+          fee_preset_id: string | null
+          frozen_at: string | null
+          frozen_snapshot: Json | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          name: string
+          sale_date?: string | null
+          fee_preset_id?: string | null
+          frozen_at?: string | null
+          frozen_snapshot?: Json | null
+        }
+        Update: Partial<Database['public']['Tables']['calc_plans']['Insert']>
+        Relationships: []
+      }
+      calc_plan_orders: {
+        Row: {
+          id: string
+          plan_id: string
+          customer_label: string | null
+          note: string | null
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          plan_id: string
+          customer_label?: string | null
+          note?: string | null
+          sort_order?: number
+        }
+        Update: Partial<Database['public']['Tables']['calc_plan_orders']['Insert']>
+        Relationships: []
+      }
+      calc_plan_order_lines: {
+        Row: {
+          id: string
+          order_id: string
+          product_id: string
+          qty: number
+          unit_price_override: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          product_id: string
+          qty: number
+          unit_price_override?: number | null
+        }
+        Update: Partial<Database['public']['Tables']['calc_plan_order_lines']['Insert']>
+        Relationships: []
+      }
+      calc_plan_on_hand: {
+        Row: {
+          plan_id: string
+          pantry_item_id: string
+          qty: number
+          unit: CalcUnitCode
+          checked: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          plan_id: string
+          pantry_item_id: string
+          qty?: number
+          unit: CalcUnitCode
+          checked?: boolean
+        }
+        Update: Partial<Database['public']['Tables']['calc_plan_on_hand']['Insert']>
+        Relationships: []
+      }
+      calc_events: {
+        Row: {
+          id: string
+          user_id: string | null
+          session_id: string | null
+          event_name: string
+          properties: Json
+          created_at: string
+        }
+        Insert: {
+          user_id?: string | null
+          session_id?: string | null
+          event_name: string
+          properties?: Json
+        }
+        Update: Record<string, never>
+        Relationships: []
+      }
     }
     Views: {
       admin_content_counts: {
@@ -526,3 +843,17 @@ export type PageViewStats = Database['public']['Views']['page_view_stats']['Row'
 export type PageViewTopPath = Database['public']['Views']['page_view_top_paths']['Row']
 export type PageViewMonthly = Database['public']['Views']['page_view_monthly']['Row']
 export type PageViewPath = Database['public']['Views']['page_view_paths']['Row']
+
+export type CalcFeePreset = Database['public']['Tables']['calc_fee_presets']['Row']
+export type CalcSettings = Database['public']['Tables']['calc_settings']['Row']
+export type CalcPantryItem = Database['public']['Tables']['calc_pantry_items']['Row']
+export type CalcRecipe = Database['public']['Tables']['calc_recipes']['Row']
+export type CalcRecipeLine = Database['public']['Tables']['calc_recipe_lines']['Row']
+export type CalcProduct = Database['public']['Tables']['calc_products']['Row']
+export type CalcProductComponent = Database['public']['Tables']['calc_product_components']['Row']
+export type CalcProductPackaging = Database['public']['Tables']['calc_product_packaging']['Row']
+export type CalcPlan = Database['public']['Tables']['calc_plans']['Row']
+export type CalcPlanOrder = Database['public']['Tables']['calc_plan_orders']['Row']
+export type CalcPlanOrderLine = Database['public']['Tables']['calc_plan_order_lines']['Row']
+export type CalcPlanOnHand = Database['public']['Tables']['calc_plan_on_hand']['Row']
+export type CalcEvent = Database['public']['Tables']['calc_events']['Row']
