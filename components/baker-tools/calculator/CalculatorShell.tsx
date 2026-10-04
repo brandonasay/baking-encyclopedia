@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCalculatorStore } from '@/lib/calculator/store/use-calculator-store'
 import { useImportOnSignIn } from '@/lib/calculator/store/use-import-on-signin'
+import { trackCalcEvent } from '@/lib/calculator/track'
 import SignInPrompt from './SignInPrompt'
 
 const TABS = [
@@ -16,9 +17,23 @@ const TABS = [
 
 export default function CalculatorShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const { isGuest, localStatus } = useCalculatorStore()
+  const { isGuest, loading, localStatus } = useCalculatorStore()
   const importStatus = useImportOnSignIn()
   const [showSignIn, setShowSignIn] = useState(false)
+  const startTracked = useRef(false)
+
+  useEffect(() => {
+    if (loading || startTracked.current) return
+    startTracked.current = true
+    const entry = pathname.includes('/plans') ? 'plan' : 'price'
+    trackCalcEvent('calc_start', { entry, signed_in: !isGuest })
+  }, [loading, isGuest, pathname])
+
+  useEffect(() => {
+    if (importStatus.phase === 'done' && importStatus.count > 0) {
+      trackCalcEvent('calc_import_completed', { entity_count: importStatus.count })
+    }
+  }, [importStatus])
 
   return (
     <div className="min-h-screen bg-[#FCFFEB]">
@@ -31,7 +46,7 @@ export default function CalculatorShell({ children }: { children: React.ReactNod
                 ? 'Saved on this device only. Sign in to keep it everywhere.'
                 : "Private browsing detected — nothing will be saved after you close this tab."}
             </span>
-            <button onClick={() => setShowSignIn(true)} className="shrink-0 text-[#C58930] font-semibold hover:underline">
+            <button onClick={() => { trackCalcEvent('calc_signin_prompt_clicked', { source: 'guest_banner' }); setShowSignIn(true) }} className="shrink-0 text-[#C58930] font-semibold hover:underline">
               Sign in
             </button>
           </div>

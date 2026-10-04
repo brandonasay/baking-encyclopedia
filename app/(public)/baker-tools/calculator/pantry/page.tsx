@@ -6,6 +6,7 @@ import { costPerBaseUnit } from '@/lib/calculator/costing'
 import { toEnginePantryItem } from '@/lib/calculator/bridge'
 import { UNIT_CODES, type UnitCode } from '@/lib/calculator/units'
 import type { PantryItem, PantryKind } from '@/lib/calculator/types'
+import { trackCalcEvent } from '@/lib/calculator/track'
 
 const inputCls = 'w-full px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] outline-none focus:ring-2 focus:ring-[#C58930]'
 const labelCls = 'block text-xs font-medium text-[#6D5E6D] mb-1'
@@ -34,7 +35,9 @@ export default function PantryPage() {
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
 
   async function handleSave(item: PantryItem) {
+    const isNew = !items.some((i) => i.id === item.id)
     await store.upsertPantryItem(item)
+    if (isNew) trackCalcEvent('calc_pantry_item_created', { kind: item.kind, linked_to_library: !!item.ingredientId })
     setEditing(null)
     refresh()
   }

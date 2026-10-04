@@ -6,6 +6,7 @@ import { computeRecipeBatch } from '@/lib/calculator/bridge'
 import { UNIT_CODES, type UnitCode } from '@/lib/calculator/units'
 import type { PantryItem, Recipe, RecipeLine } from '@/lib/calculator/types'
 import IngredientLinePicker from '@/components/baker-tools/calculator/IngredientLinePicker'
+import { trackCalcEvent } from '@/lib/calculator/track'
 
 const inputCls = 'px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] outline-none focus:ring-2 focus:ring-[#C58930]'
 const labelCls = 'block text-xs font-medium text-[#6D5E6D] mb-1'
@@ -38,7 +39,9 @@ export default function RecipesPage() {
   const pantryById = Object.fromEntries(pantryItems.map((p) => [p.id, p]))
 
   async function handleSave(recipe: Recipe) {
+    const isNew = !recipes.some((r) => r.id === recipe.id)
     await store.upsertRecipe(recipe)
+    if (isNew) trackCalcEvent('calc_recipe_created', { line_count: recipe.lines.length })
     setEditing(null)
     refresh()
   }
