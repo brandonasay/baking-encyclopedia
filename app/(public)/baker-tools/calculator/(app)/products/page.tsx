@@ -9,6 +9,7 @@ import { formatMoney, formatPercent } from '@/lib/calculator/money'
 import { UNIT_CODES, type UnitCode } from '@/lib/calculator/units'
 import type { FeePreset, PantryItem, Product, ProductComponent, ProductPackagingLine, Recipe, Settings } from '@/lib/calculator/types'
 import { DEFAULT_SETTINGS } from '@/lib/calculator/types'
+import { getErrorMessage } from '@/lib/calculator/error-message'
 import PriceCard from '@/components/baker-tools/calculator/PriceCard'
 import HomebakedCta from '@/components/baker-tools/calculator/HomebakedCta'
 
@@ -27,20 +28,27 @@ export default function ProductsPage() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
   const [feePresets, setFeePresets] = useState<FeePreset[]>([])
   const [ready, setReady] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [editing, setEditing] = useState<Product | null>(null)
   const [blockedMessage, setBlockedMessage] = useState<string | null>(null)
 
   const refresh = useCallback(async () => {
-    const supabase = createClient()
-    const [p, r, pa, s, fp] = await Promise.all([
-      store.listProducts(), store.listRecipes(), store.listPantryItems(), store.getSettings(), getFeePresets(supabase),
-    ])
-    setProducts(p)
-    setRecipes(r)
-    setPantryItems(pa)
-    setSettings(s ?? DEFAULT_SETTINGS)
-    setFeePresets(fp)
-    setReady(true)
+    setLoadError(null)
+    try {
+      const supabase = createClient()
+      const [p, r, pa, s, fp] = await Promise.all([
+        store.listProducts(), store.listRecipes(), store.listPantryItems(), store.getSettings(), getFeePresets(supabase),
+      ])
+      setProducts(p)
+      setRecipes(r)
+      setPantryItems(pa)
+      setSettings(s ?? DEFAULT_SETTINGS)
+      setFeePresets(fp)
+    } catch (err) {
+      setLoadError(getErrorMessage(err, 'Something went wrong loading your products.'))
+    } finally {
+      setReady(true)
+    }
   }, [store])
 
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
@@ -61,6 +69,14 @@ export default function ProductsPage() {
   }
 
   if (!ready) return <p className="text-sm text-[#6D5E6D]">Loading…</p>
+  if (loadError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
+        <span>Couldn&apos;t load your products: {loadError}</span>
+        <button onClick={() => refresh()} className="shrink-0 font-semibold hover:underline">Retry</button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

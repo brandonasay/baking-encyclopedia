@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useCalculatorStore } from '@/lib/calculator/store/use-calculator-store'
 import { getFeePresets } from '@/lib/calculator/store/fee-presets'
 import { DEFAULT_SETTINGS, type FeePreset, type Settings } from '@/lib/calculator/types'
+import { getErrorMessage } from '@/lib/calculator/error-message'
 
 const inputCls = 'w-full px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] outline-none focus:ring-2 focus:ring-[#C58930]'
 const labelCls = 'block text-sm font-medium text-[#201D20] mb-1'
@@ -17,19 +18,26 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [ready, setReady] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     if (loading) return
     let cancelled = false
     async function load() {
-      const supabase = createClient()
-      const [existing, presets] = await Promise.all([store.getSettings(), getFeePresets(supabase)])
-      if (cancelled) return
-      const s = existing ?? DEFAULT_SETTINGS
-      setSettings(s)
-      setFeePresets(presets)
-      setFeeChoice(s.defaultFeePresetId ?? (s.customFeePct != null ? 'custom' : presets[0]?.id ?? 'custom'))
-      setReady(true)
+      setLoadError(null)
+      try {
+        const supabase = createClient()
+        const [existing, presets] = await Promise.all([store.getSettings(), getFeePresets(supabase)])
+        if (cancelled) return
+        const s = existing ?? DEFAULT_SETTINGS
+        setSettings(s)
+        setFeePresets(presets)
+        setFeeChoice(s.defaultFeePresetId ?? (s.customFeePct != null ? 'custom' : presets[0]?.id ?? 'custom'))
+      } catch (err) {
+        if (!cancelled) setLoadError(getErrorMessage(err, 'Something went wrong loading settings.'))
+      } finally {
+        if (!cancelled) setReady(true)
+      }
     }
     load()
     return () => { cancelled = true }
@@ -53,6 +61,14 @@ export default function SettingsPage() {
   }
 
   if (!ready) return <p className="text-sm text-[#6D5E6D]">Loading…</p>
+  if (loadError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
+        <span>Couldn&apos;t load settings: {loadError}</span>
+        <button onClick={() => window.location.reload()} className="shrink-0 font-semibold hover:underline">Retry</button>
+      </div>
+    )
+  }
 
   return (
     <form onSubmit={handleSave} className="max-w-xl space-y-6">

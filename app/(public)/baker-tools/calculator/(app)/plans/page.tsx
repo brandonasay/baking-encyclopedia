@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useCalculatorStore } from '@/lib/calculator/store/use-calculator-store'
 import { trackCalcEvent } from '@/lib/calculator/track'
 import type { Plan } from '@/lib/calculator/types'
+import { getErrorMessage } from '@/lib/calculator/error-message'
 
 function emptyPlan(): Plan {
   return { id: crypto.randomUUID(), name: '', saleDate: null, feePresetId: null, frozenAt: null, frozenSnapshot: null, orders: [], onHand: [] }
@@ -14,14 +15,21 @@ export default function PlansPage() {
   const { store, loading } = useCalculatorStore()
   const [plans, setPlans] = useState<Plan[]>([])
   const [ready, setReady] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [name, setName] = useState('')
   const [saleDate, setSaleDate] = useState('')
 
   const refresh = useCallback(async () => {
-    const list = await store.listPlans()
-    setPlans(list)
-    setReady(true)
+    setLoadError(null)
+    try {
+      const list = await store.listPlans()
+      setPlans(list)
+    } catch (err) {
+      setLoadError(getErrorMessage(err, 'Something went wrong loading your plans.'))
+    } finally {
+      setReady(true)
+    }
   }, [store])
 
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
@@ -35,6 +43,14 @@ export default function PlansPage() {
   }
 
   if (!ready) return <p className="text-sm text-[#6D5E6D]">Loading…</p>
+  if (loadError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
+        <span>Couldn&apos;t load your plans: {loadError}</span>
+        <button onClick={() => refresh()} className="shrink-0 font-semibold hover:underline">Retry</button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

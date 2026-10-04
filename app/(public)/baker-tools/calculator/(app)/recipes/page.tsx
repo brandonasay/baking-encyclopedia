@@ -5,6 +5,7 @@ import { useCalculatorStore } from '@/lib/calculator/store/use-calculator-store'
 import { computeRecipeBatch } from '@/lib/calculator/bridge'
 import { UNIT_CODES, type UnitCode } from '@/lib/calculator/units'
 import type { PantryItem, Recipe, RecipeLine } from '@/lib/calculator/types'
+import { getErrorMessage } from '@/lib/calculator/error-message'
 import IngredientLinePicker from '@/components/baker-tools/calculator/IngredientLinePicker'
 import { trackCalcEvent } from '@/lib/calculator/track'
 
@@ -24,14 +25,21 @@ export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [pantryItems, setPantryItems] = useState<PantryItem[]>([])
   const [ready, setReady] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [editing, setEditing] = useState<Recipe | null>(null)
   const [blockedMessage, setBlockedMessage] = useState<string | null>(null)
 
   const refresh = useCallback(async () => {
-    const [r, p] = await Promise.all([store.listRecipes(), store.listPantryItems()])
-    setRecipes(r)
-    setPantryItems(p)
-    setReady(true)
+    setLoadError(null)
+    try {
+      const [r, p] = await Promise.all([store.listRecipes(), store.listPantryItems()])
+      setRecipes(r)
+      setPantryItems(p)
+    } catch (err) {
+      setLoadError(getErrorMessage(err, 'Something went wrong loading your recipes.'))
+    } finally {
+      setReady(true)
+    }
   }, [store])
 
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
@@ -53,6 +61,14 @@ export default function RecipesPage() {
   }
 
   if (!ready) return <p className="text-sm text-[#6D5E6D]">Loading…</p>
+  if (loadError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
+        <span>Couldn&apos;t load your recipes: {loadError}</span>
+        <button onClick={() => refresh()} className="shrink-0 font-semibold hover:underline">Retry</button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

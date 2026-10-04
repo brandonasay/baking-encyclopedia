@@ -10,6 +10,7 @@ import { computePlanSummary, deserializePlanSummary, resolveOrderLinePrice, seri
 import { formatMoney } from '@/lib/calculator/money'
 import { trackCalcEvent } from '@/lib/calculator/track'
 import { DEFAULT_SETTINGS, type FeePreset, type PantryItem, type Plan, type PlanOrder, type PlanOrderLine, type Product, type Recipe, type Settings } from '@/lib/calculator/types'
+import { getErrorMessage } from '@/lib/calculator/error-message'
 import HomebakedCta from '@/components/baker-tools/calculator/HomebakedCta'
 
 const inputCls = 'px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] outline-none focus:ring-2 focus:ring-[#C58930]'
@@ -31,21 +32,28 @@ export default function PlanDetailPage() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
   const [feePresets, setFeePresets] = useState<FeePreset[]>([])
   const [ready, setReady] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>('Orders')
   const [copyLabel, setCopyLabel] = useState('Copy list')
 
   const refresh = useCallback(async () => {
-    const supabase = createClient()
-    const [p, pr, r, pa, s, fp] = await Promise.all([
-      store.getPlan(id), store.listProducts(), store.listRecipes(), store.listPantryItems(), store.getSettings(), getFeePresets(supabase),
-    ])
-    setPlan(p)
-    setProducts(pr)
-    setRecipes(r)
-    setPantryItems(pa)
-    setSettings(s ?? DEFAULT_SETTINGS)
-    setFeePresets(fp)
-    setReady(true)
+    setLoadError(null)
+    try {
+      const supabase = createClient()
+      const [p, pr, r, pa, s, fp] = await Promise.all([
+        store.getPlan(id), store.listProducts(), store.listRecipes(), store.listPantryItems(), store.getSettings(), getFeePresets(supabase),
+      ])
+      setPlan(p)
+      setProducts(pr)
+      setRecipes(r)
+      setPantryItems(pa)
+      setSettings(s ?? DEFAULT_SETTINGS)
+      setFeePresets(fp)
+    } catch (err) {
+      setLoadError(getErrorMessage(err, 'Something went wrong loading this plan.'))
+    } finally {
+      setReady(true)
+    }
   }, [store, id])
 
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
@@ -57,7 +65,16 @@ export default function PlanDetailPage() {
     await store.upsertPlan(updated)
   }
 
-  if (!ready || !plan) return <p className="text-sm text-[#6D5E6D]">Loading…</p>
+  if (!ready) return <p className="text-sm text-[#6D5E6D]">Loading…</p>
+  if (loadError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
+        <span>Couldn&apos;t load this plan: {loadError}</span>
+        <button onClick={() => refresh()} className="shrink-0 font-semibold hover:underline">Retry</button>
+      </div>
+    )
+  }
+  if (!plan) return <p className="text-sm text-[#6D5E6D]">Plan not found.</p>
 
   const productsById = Object.fromEntries(products.map((p) => [p.id, p]))
   const recipesById = Object.fromEntries(recipes.map((r) => [r.id, r]))

@@ -6,6 +6,7 @@ import { costPerBaseUnit } from '@/lib/calculator/costing'
 import { toEnginePantryItem } from '@/lib/calculator/bridge'
 import { UNIT_CODES, type UnitCode } from '@/lib/calculator/units'
 import type { PantryItem, PantryKind } from '@/lib/calculator/types'
+import { getErrorMessage } from '@/lib/calculator/error-message'
 import { trackCalcEvent } from '@/lib/calculator/track'
 
 const inputCls = 'w-full px-3 py-2 bg-white border border-[#EBD2AD] rounded-lg text-sm text-[#201D20] outline-none focus:ring-2 focus:ring-[#C58930]'
@@ -23,13 +24,20 @@ export default function PantryPage() {
   const { store, loading } = useCalculatorStore()
   const [items, setItems] = useState<PantryItem[]>([])
   const [ready, setReady] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [editing, setEditing] = useState<PantryItem | null>(null)
   const [blockedMessage, setBlockedMessage] = useState<string | null>(null)
 
   const refresh = useCallback(async () => {
-    const list = await store.listPantryItems()
-    setItems(list)
-    setReady(true)
+    setLoadError(null)
+    try {
+      const list = await store.listPantryItems()
+      setItems(list)
+    } catch (err) {
+      setLoadError(getErrorMessage(err, 'Something went wrong loading your pantry.'))
+    } finally {
+      setReady(true)
+    }
   }, [store])
 
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
@@ -52,6 +60,14 @@ export default function PantryPage() {
   }
 
   if (!ready) return <p className="text-sm text-[#6D5E6D]">Loading…</p>
+  if (loadError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
+        <span>Couldn&apos;t load your pantry: {loadError}</span>
+        <button onClick={() => refresh()} className="shrink-0 font-semibold hover:underline">Retry</button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

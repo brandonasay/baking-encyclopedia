@@ -14,6 +14,7 @@ const learnLinks = [
   { label: 'Ingredient Glossary', href: '/ingredients' },
   { label: 'Baking Techniques', href: '/how-to?tag=techniques' },
   { label: 'Substitutions', href: '/how-to?tag=substitutions' },
+  { label: 'Home Bakery Calculator', href: '/baker-tools/calculator' },
 ]
 
 export default function Footer() {
