@@ -54,7 +54,6 @@ export default function CalculatorLandingPage() {
 
   return (
     <div className="min-h-screen bg-[#FCFFEB]">
-      {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="bg-white border-b border-[#EBD2AD]">

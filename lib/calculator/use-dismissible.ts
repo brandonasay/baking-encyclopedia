@@ -13,10 +13,14 @@ export function useDismissible(key: string, days = 30): { dismissed: boolean; di
   const storageKey = `be-calc-dismiss:${key}`
 
   useEffect(() => {
+    // Reading localStorage must wait for the client-only effect pass (it's
+    // unavailable during SSR) — this is the standard hydration-safe pattern
+    // for browser-only state, not a prop/state sync that belongs in render.
     try {
       const raw = window.localStorage.getItem(storageKey)
       if (raw) {
         const until = Number(raw)
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (!Number.isNaN(until) && Date.now() < until) setDismissed(true)
       }
     } catch {

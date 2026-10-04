@@ -26,7 +26,15 @@ export default function IngredientLinePicker({
   const [libraryMatches, setLibraryMatches] = useState<LibraryMatch[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => { setQuery(selected?.name ?? '') }, [selected?.name])
+  // Reset the input when the selected pantry item changes out from under us
+  // (e.g. a different line's edit). Adjusting state during render — rather
+  // than in an effect — is React's recommended pattern for this; it bails
+  // out before committing the stale render instead of causing an extra one.
+  const [syncedName, setSyncedName] = useState(selected?.name ?? '')
+  if ((selected?.name ?? '') !== syncedName) {
+    setSyncedName(selected?.name ?? '')
+    setQuery(selected?.name ?? '')
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -37,6 +45,9 @@ export default function IngredientLinePicker({
   }, [])
 
   useEffect(() => {
+    // Clearing stale results before a new debounced fetch starts — the
+    // standard "reset while re-fetching" shape, not state drift from a prop.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (query.trim().length < 2) { setLibraryMatches([]); return }
     let cancelled = false
     const supabase = createClient()

@@ -39,9 +39,12 @@ export function useCalculatorStore(): CalculatorStoreState {
     return new LocalStore()
   }, [supabase, userId])
 
+  // userId isn't read in the body — it's a deliberate recompute trigger, so
+  // local status re-checks after a sign-in clears localStorage via import.
   const localStatus = useMemo(() => {
     if (typeof window === 'undefined') return { persistent: true, recoveredFromBackup: false }
     return LocalStore.status()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
   return { store, isGuest: userId === null, loading: userId === undefined, localStatus }

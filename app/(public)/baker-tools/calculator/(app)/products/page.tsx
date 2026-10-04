@@ -51,6 +51,9 @@ export default function ProductsPage() {
     }
   }, [store])
 
+  // refresh is useCallback-memoized and owns its own try/catch/finally
+  // (including setReady), so this is the standard fetch-on-mount effect.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
 
   const recipesById = Object.fromEntries(recipes.map((r) => [r.id, r]))

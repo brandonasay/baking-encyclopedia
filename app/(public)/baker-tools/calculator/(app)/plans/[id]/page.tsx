@@ -56,6 +56,9 @@ export default function PlanDetailPage() {
     }
   }, [store, id])
 
+  // refresh is useCallback-memoized and owns its own try/catch/finally
+  // (including setReady), so this is the standard fetch-on-mount effect.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { if (!loading) refresh() }, [loading, refresh])
 
   useEffect(() => { if (tab === 'P&L') trackCalcEvent('calc_plan_viewed_pnl', { order_count: plan?.orders.length ?? 0, product_count: products.length }) }, [tab, plan, products.length])
