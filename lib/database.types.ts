@@ -481,6 +481,7 @@ export interface Database {
           updated_at: string
         }
         Insert: {
+          id?: string
           user_id: string
           ingredient_id?: string | null
           name: string
@@ -510,6 +511,7 @@ export interface Database {
           updated_at: string
         }
         Insert: {
+          id?: string
           user_id: string
           name: string
           yield_qty: number
@@ -560,6 +562,7 @@ export interface Database {
           updated_at: string
         }
         Insert: {
+          id?: string
           user_id: string
           name: string
           extra_minutes?: number
@@ -625,6 +628,7 @@ export interface Database {
           updated_at: string
         }
         Insert: {
+          id?: string
           user_id: string
           name: string
           sale_date?: string | null
