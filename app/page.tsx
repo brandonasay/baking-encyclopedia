@@ -11,11 +11,11 @@ const sections = [
 ]
 
 const platformComparisons = [
-  { label: 'Homebaked vs Bakesy', href: 'https://homebakedapp.com/compare/bakesy-alternative' },
-  { label: 'Homebaked vs Homegrown', href: 'https://homebakedapp.com/compare/homegrown-alternative' },
-  { label: 'Homebaked vs Hotplate', href: 'https://homebakedapp.com/compare/hotplate-alternative' },
-  { label: 'Homebaked vs My Custom Bakes', href: 'https://homebakedapp.com/compare/my-custom-bakes-alternative' },
-  { label: 'Homebaked vs Squarespace', href: 'https://homebakedapp.com/compare/squarespace-alternative-for-bakers' },
+  { label: 'Homebaked vs Bakesy', href: '/how-to/microbakery/homebaked-vs-bakesy-comparing-online-ordering-platforms-for-bakers' },
+  { label: 'Homebaked vs Homegrown', href: '/how-to/microbakery/homebaked-vs-homegrown-comparing-online-ordering-platforms-for-bakers' },
+  { label: 'Homebaked vs Hotplate', href: '/how-to/microbakery/homebaked-vs-hotplate-comparing-online-ordering-platforms-for-bakers' },
+  { label: 'Homebaked vs My Custom Bakes', href: '/how-to/microbakery/homebaked-vs-my-custom-bakes-comparing-online-ordering-platforms-for-bakers' },
+  { label: 'Homebaked vs Squarespace', href: '/how-to/microbakery/homebaked-vs-squarespace-comparing-online-ordering-platforms-for-bakers' },
 ]
 
 export default function HomePage() {
@@ -150,11 +150,9 @@ export default function HomePage() {
           }}
         >
           {platformComparisons.map((comparison) => (
-            <a
+            <Link
               key={comparison.href}
               href={comparison.href}
-              target="_blank"
-              rel="noopener noreferrer"
               style={{
                 textDecoration: 'none',
                 padding: '0.625rem 1.125rem',
@@ -174,7 +172,7 @@ export default function HomePage() {
               }}
             >
               {comparison.label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>
