@@ -10,6 +10,14 @@ const sections = [
   { label: 'Baker Tools', href: '/baker-tools', bg: '#A64B2A' },
 ]
 
+const platformComparisons = [
+  { label: 'vs Bakesy', href: 'https://homebakedapp.com/compare/bakesy-alternative' },
+  { label: 'vs Homegrown', href: 'https://homebakedapp.com/compare/homegrown-alternative' },
+  { label: 'vs Hotplate', href: 'https://homebakedapp.com/compare/hotplate-alternative' },
+  { label: 'vs My Custom Bakes', href: 'https://homebakedapp.com/compare/my-custom-bakes-alternative' },
+  { label: 'vs Squarespace', href: 'https://homebakedapp.com/compare/squarespace-alternative-for-bakers' },
+]
+
 export default function HomePage() {
   return (
     <div
@@ -105,8 +113,79 @@ export default function HomePage() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.75rem',
+          gap: '1.25rem',
           marginTop: '4rem',
+          width: '100%',
+          maxWidth: '640px',
+        }}
+      >
+        <div
+          style={{
+            padding: '0.875rem 1.75rem',
+            borderRadius: '999px',
+            backgroundColor: 'var(--color-amber-light)',
+            border: '1px solid var(--color-border)',
+            textAlign: 'center',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: 'var(--font-playfair), Georgia, serif',
+              fontSize: '1rem',
+              fontWeight: 700,
+              color: 'var(--color-text)',
+              margin: 0,
+            }}
+          >
+            Looking to start a home bakery? Compare platforms.
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '0.625rem',
+          }}
+        >
+          {platformComparisons.map((comparison) => (
+            <a
+              key={comparison.href}
+              href={comparison.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                textDecoration: 'none',
+                padding: '0.625rem 1.125rem',
+                borderRadius: '10px',
+                border: '1px solid var(--color-border)',
+                backgroundColor: 'var(--color-surface)',
+                color: 'var(--color-text)',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                transition: 'border-color 0.15s ease',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-amber)'
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-border)'
+              }}
+            >
+              {comparison.label}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.75rem',
+          marginTop: '3rem',
         }}
       >
         <span style={{ fontSize: '1rem', color: 'var(--color-muted)' }}>From the creators of</span>
