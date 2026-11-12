@@ -11,11 +11,11 @@ const sections = [
 ]
 
 const platformComparisons = [
-  { label: 'vs Bakesy', href: 'https://homebakedapp.com/compare/bakesy-alternative' },
-  { label: 'vs Homegrown', href: 'https://homebakedapp.com/compare/homegrown-alternative' },
-  { label: 'vs Hotplate', href: 'https://homebakedapp.com/compare/hotplate-alternative' },
-  { label: 'vs My Custom Bakes', href: 'https://homebakedapp.com/compare/my-custom-bakes-alternative' },
-  { label: 'vs Squarespace', href: 'https://homebakedapp.com/compare/squarespace-alternative-for-bakers' },
+  { label: 'Homebaked vs Bakesy', href: 'https://homebakedapp.com/compare/bakesy-alternative' },
+  { label: 'Homebaked vs Homegrown', href: 'https://homebakedapp.com/compare/homegrown-alternative' },
+  { label: 'Homebaked vs Hotplate', href: 'https://homebakedapp.com/compare/hotplate-alternative' },
+  { label: 'Homebaked vs My Custom Bakes', href: 'https://homebakedapp.com/compare/my-custom-bakes-alternative' },
+  { label: 'Homebaked vs Squarespace', href: 'https://homebakedapp.com/compare/squarespace-alternative-for-bakers' },
 ]
 
 export default function HomePage() {
